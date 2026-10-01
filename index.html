@@ -7,6 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <title>استاد برق خودرو</title>
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <style>
 :root{
   --bg-base:#000;--bg-card:#141414;--bg-elevated:#1F1F1F;--bg-input:#0F0F0F;
@@ -151,7 +152,7 @@ textarea.fld{min-height:140px;resize:vertical}
 .confbox b{color:var(--danger)}
 #toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--bg-elevated);
   border:1px solid var(--stroke-strong);padding:10px 20px;border-radius:var(--r-pill);z-index:120;
-  font-size:var(--fs-body-sm);display:none}
+  font-size:var(--fs-body-sm);display:none;max-width:90%;text-align:center}
 
 #s-chat{padding-bottom:190px}
 .chead{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)}
@@ -221,7 +222,14 @@ textarea.fld{min-height:140px;resize:vertical}
 input[type=range]{width:100%;accent-color:#FF9F1C}
 .line{font-size:var(--fs-body-sm);color:var(--text-secondary);padding:4px 0}
 
-/* حالت دست‌های درگیر */
+/* استخراج، صف و مدل */
+.jobprog{height:8px;background:var(--stroke-subtle);border-radius:var(--r-pill);overflow:hidden;margin:8px 0}
+.jobprog i{display:block;height:100%;background:var(--amber-500);transition:width .3s}
+.sbs{margin:var(--sp-3) 0;border:1px solid var(--stroke-subtle);border-radius:var(--r-md);
+  background:var(--bg-input);max-height:34vh;overflow:auto}
+.sbs canvas{display:block;width:100%}
+.mstat{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:var(--fs-body-sm)}
+
 body.hb{--touch-min:64px;--text-primary:#fff;--text-secondary:#E6E6E6;--stroke-strong:#777}
 body.hb .btn{min-height:64px;font-size:18px}
 body.hb .btn.sm{min-height:48px}
@@ -293,6 +301,8 @@ body.hb .step .btns{flex-direction:column}
     <input class="search" id="q" type="search" placeholder="جستجو در دانش‌نامه...">
     <div class="chips" id="chips"></div>
     <button class="btn full addbtn" onclick="openAdd()">＋ افزودن نکته‌ی دانشی</button>
+    <button class="btn ghost full kbbtn" onclick="$('fileIn').click()">📄 افزودن فایل (PDF یا متن)</button>
+    <input type="file" id="fileIn" accept=".pdf,.txt" style="display:none">
     <button class="btn ghost full kbbtn" onclick="openImport()">📥 وارد کردن متن جزوه</button>
     <button class="btn ghost full kbbtn" id="revBtn" onclick="openReview()">🔍 صف بازبینی (۰)</button>
     <div id="list" style="margin-top:12px"></div>
@@ -301,8 +311,27 @@ body.hb .step .btns{flex-direction:column}
   <section class="screen" id="s-set">
     <h1 class="t">تنظیمات</h1>
     <div class="card">
-      <h3>اتصال</h3>
-      <div class="row"><span>وضعیت</span><b id="setMode">—</b></div>
+      <h3>اتصال و روتر</h3>
+      <div class="row"><span>وضعیت شبکه</span><b id="setMode">—</b></div>
+      <div class="row"><span>حالت کاری فعلی</span><b id="routeMode">—</b></div>
+      <p class="note" id="routeNote"></p>
+    </div>
+    <div class="card">
+      <h3>مدل محلی (هوش مصنوعی روی دستگاه)</h3>
+      <p>مدل کوچک Qwen ۱٫۵ میلیاردی (~۱ گیگ). با این مدل جواب‌های چت طبیعی‌تر می‌شود و کاملاً آفلاین کار می‌کند. دانلود فقط یک‌بار انجام می‌شود؛ بهتر است به وای‌فای و شارژر وصل باشی.</p>
+      <div class="mstat"><span id="mlStat">—</span></div>
+      <div class="jobprog" id="mlProgWrap" style="display:none"><i id="mlProg" style="width:0%"></i></div>
+      <p class="note" id="mlNote" style="display:none"></p>
+      <div class="btns">
+        <button class="btn" id="mlDown" onclick="mlDownload()">دانلود مدل</button>
+        <button class="btn ghost" id="mlToggle" onclick="mlToggleUse()" style="display:none">فعال در چت</button>
+        <button class="btn danger" id="mlDel" onclick="mlDelete()" style="display:none">حذف مدل</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>صف استخراج</h3>
+      <p>پردازش فایل‌ها تکه‌تکه انجام می‌شود؛ روی باتری کم (بدون شارژ) خودش متوقف می‌شود و بعداً ادامه می‌دهی.</p>
+      <div id="jobList"></div>
     </div>
     <div class="card">
       <h3>ظاهر</h3>
@@ -349,7 +378,7 @@ body.hb .step .btns{flex-direction:column}
     </div>
     <div class="card">
       <h3>درباره</h3>
-      <p>استاد برق خودرو · نسخه‌ی مرحله ۱۰ (پروفایل مهارتی، حالت دست‌های درگیر، ویرایش و تعارض)</p>
+      <p>استاد برق خودرو · نسخه‌ی فاز ۱ کامل (مدل محلی، روتر اتصال، استخراج PDF، صف وظایف)</p>
     </div>
   </section>
 </div>
@@ -379,7 +408,7 @@ function toast(t){
 }
 
 // ---------- تنظیمات ظاهر ----------
-let SET = {hb:false, fs:16};
+let SET = {hb:false, fs:16, mlUse:true};
 try { SET = Object.assign(SET, JSON.parse(localStorage.getItem('aem-set')||'{}')); } catch {}
 function applySet(){
   document.body.classList.toggle('hb', !!SET.hb);
@@ -464,7 +493,7 @@ function go(name){
   window.scrollTo(0, 0);
   if (name === 'kb') renderList();
   if (name === 'chat'){ renderChat(); renderQChips(); scrollChat(); }
-  if (name === 'set'){ renderGaps(); renderSkill(); }
+  if (name === 'set'){ renderGaps(); renderSkill(); renderJobs(); renderRoute(); renderML(); }
   if (name === 'diag') renderDiag();
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.t)));
@@ -478,20 +507,37 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   $('greet').textContent = g;
 })();
 
+// ---------- روتر اتصال (مرحله ۱۴) ----------
+let BATT = null;
+if (navigator.getBattery){
+  navigator.getBattery().then(b => {
+    BATT = b;
+    const show = () => { $('battery').textContent = 'باتری: ' + fa(Math.round(b.level*100)) + '٪' + (b.charging ? ' ⚡' : ''); updateNet(); };
+    show(); b.addEventListener('levelchange', show); b.addEventListener('chargingchange', show);
+  });
+} else $('battery').style.display = 'none';
+
+function routeState(){
+  const on = navigator.onLine;
+  if (on && ML.ready && SET.mlUse) return {key:'online_ml', label:'آنلاین + مدل محلی',
+    note:'جواب‌ها با مدل روی همین گوشی از دانش‌نامه ساخته می‌شوند.'};
+  if (on) return {key:'online', label:'آنلاین (جستجوی دانش‌نامه)',
+    note:'مدل محلی هنوز نصب نشده؛ جواب‌ها با جستجوی مستقیم دانش‌نامه داده می‌شوند.'};
+  if (ML.ready && SET.mlUse) return {key:'offline_ml', label:'آفلاین + مدل محلی',
+    note:'آفلاینیم؛ از دانش و مدل روی همین گوشی استفاده می‌کنم.'};
+  return {key:'offline', label:'آفلاین (جستجوی دانش‌نامه)',
+    note:'آفلاینیم و مدل محلی هم نصب نیست؛ از دانش ذخیره‌شده جستجو می‌کنم و سؤال‌های بی‌جواب را برای بعداً ثبت می‌کنم.'};
+}
 function updateNet(){
+  const r = routeState();
   const on = navigator.onLine;
   $('modePill').classList.toggle('off', !on);
   $('modeText').textContent = on ? 'آنلاین' : 'آفلاین';
   $('setMode').textContent = on ? 'آنلاین' : 'آفلاین';
+  $('routeMode').textContent = r.label;
+  $('routeNote').textContent = r.note;
 }
-addEventListener('online', updateNet); addEventListener('offline', updateNet); updateNet();
-
-if (navigator.getBattery){
-  navigator.getBattery().then(b => {
-    const show = () => $('battery').textContent = 'باتری: ' + fa(Math.round(b.level*100)) + '٪';
-    show(); b.addEventListener('levelchange', show);
-  });
-} else $('battery').style.display = 'none';
+addEventListener('online', updateNet); addEventListener('offline', updateNet);
 
 const mb = n => fa((n/1048576).toFixed(1)) + ' مگابایت';
 async function updateStorage(){
@@ -517,10 +563,10 @@ updateStorage();
 let db;
 function openDB(){
   return new Promise((res, rej) => {
-    const r = indexedDB.open('aem-db', 3);
+    const r = indexedDB.open('aem-db', 4);
     r.onupgradeneeded = () => {
       const d = r.result;
-      ['units','gaps','sessions'].forEach(n => {
+      ['units','gaps','sessions','jobs'].forEach(n => {
         if (!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath:'id', autoIncrement:true});
       });
     };
@@ -538,6 +584,9 @@ const getGaps = () => req(st('gaps','readonly').getAll());
 const addGap = g => req(st('gaps','readwrite').put(g));
 const getSessions = () => req(st('sessions','readonly').getAll());
 const putSession = s => req(st('sessions','readwrite').put(s));
+const getJobs = () => req(st('jobs','readonly').getAll());
+const putJob = j => req(st('jobs','readwrite').put(j));
+const delJob = id => req(st('jobs','readwrite').delete(id));
 
 const SYSTEMS = ['شارژ','استارت','جرقه و احتراق','انژکتور و سوخت','سنسورها','ECU','روشنایی','سیم‌کشی و کانکتور','کولر و برقی‌ها','ایربگ (SRS)','سایر'];
 const SRC = {official:'رسمی', training:'آموزشی', practitioner:'تجربی', user:'کاربر', inference:'استنباطی'};
@@ -618,7 +667,6 @@ function openAdd(){
     <div class="btns"><button class="btn" onclick="saveUnit()">ذخیره</button><button class="btn ghost" onclick="closeSheet()">انصراف</button></div>`);
 }
 
-// تعارض: همان عنوان و همان سیستم با متن متفاوت. ادغام نمی‌شود، فقط علامت می‌خورد.
 async function flagConflict(u){
   const raw = await getAllRaw();
   const tn = norm(u.title);
@@ -745,7 +793,6 @@ async function gapDone(id){
   g.done = true; await addGap(g); renderGaps();
 }
 
-// ---------- وارد کردن متن و صف بازبینی ----------
 function openImport(){
   openSheet(`
     <h2>وارد کردن متن جزوه</h2>
@@ -778,6 +825,210 @@ async function doImport(){
   closeSheet(); toast(fa(chunks.length) + ' تکه به صف بازبینی رفت'); refreshCounts();
 }
 
+// ---------- OPFS ----------
+async function opfsSave(file){
+  const dir = await navigator.storage.getDirectory();
+  const id = 'f' + Date.now() + '-' + Math.floor(Math.random()*1e6);
+  const fh = await dir.getFileHandle(id, {create:true});
+  const w = await fh.createWritable(); await w.write(file); await w.close();
+  return id;
+}
+async function opfsGet(id){
+  const dir = await navigator.storage.getDirectory();
+  return (await dir.getFileHandle(id)).getFile();
+}
+
+// ---------- صف استخراج ----------
+const CHUNK_PER_PAUSE = 10;
+let EXTRACTING = false;
+
+$('fileIn').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  e.target.value = '';
+  openSheet(`<h2>افزودن فایل</h2>
+    <p class="line">فایل: <b>${esc(f.name)}</b> (${fa((f.size/1048576).toFixed(1))} مگابایت)</p>
+    <p class="note">فایل خام روی همین گوشی (OPFS) ذخیره می‌شود، متنش تکه‌تکه استخراج می‌شود و همه‌ی تکه‌ها به صف بازبینی می‌روند. صفحه‌های PDF در بازبینی کنار متن نشان داده می‌شوند.</p>
+    <label>سیستم خودرو</label>
+    <select class="fld" id="fx-sys">${SYSTEMS.map(s=>`<option>${s}</option>`).join('')}</select>
+    <label>نوع منبع</label>
+    <select class="fld" id="fx-type">${Object.entries(SRC).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+    <label>خودرو (اختیاری)</label><input class="fld" id="fx-car">
+    <div class="btns"><button class="btn" onclick="queueFile('${esc(f.name)}','${f.type||'application/octet-stream'}')">بفرست به صف استخراج</button>
+    <button class="btn ghost" onclick="closeSheet()">انصراف</button></div>`);
+  window._pendingFile = f;
+});
+
+async function queueFile(name, type){
+  const f = window._pendingFile; window._pendingFile = null;
+  if (!f) return closeSheet();
+  let fileId = '';
+  try { fileId = await opfsSave(f); }
+  catch { toast('ذخیره‌ی فایل روی حافظه ممکن نشد'); return; }
+  const job = {
+    name, fileId, type,
+    system:$('fx-sys').value, srcType:$('fx-type').value, car:$('fx-car').value.trim(),
+    status:'running', total:0, done:0, created:Date.now()
+  };
+  job.id = await putJob(job);
+  closeSheet(); toast('به صف استخراج اضافه شد ⏳');
+  renderJobs(); go('set');
+  runQueue();
+}
+
+async function renderJobs(){
+  if (!db) return;
+  const jobs = (await getJobs()).sort((a,b)=>b.created-a.created);
+  $('jobList').innerHTML = jobs.length ? jobs.map(j => {
+    const pct = j.total ? Math.round(j.done/j.total*100) : 0;
+    const stTxt = {running:'در حال اجرا', paused:'متوقف', done:'تمام شد'}[j.status] || j.status;
+    return `<div class="row" style="flex-direction:column;align-items:stretch">
+      <div style="display:flex;justify-content:space-between;gap:8px">
+        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(j.name)}</span>
+        <b>${j.total ? fa(j.done)+'/'+fa(j.total) : stTxt}</b>
+      </div>
+      <div class="jobprog"><i style="width:${pct}%"></i></div>
+      <div style="display:flex;gap:8px">
+        ${j.status!=='done' ? (j.status==='running'
+          ? `<button class="btn ghost sm" onclick="pauseJob(${j.id})">توقف</button>`
+          : `<button class="btn sm" onclick="resumeJob(${j.id})">ادامه</button>`) : ''}
+        <button class="btn danger sm" onclick="removeJob(${j.id})">حذف</button>
+        <span class="note" style="margin:0;align-self:center">${j.status==='running' ? stTxt : stTxt + (j.total ? ' · '+fa(pct)+'٪' : '')}</span>
+      </div></div>`;
+  }).join('') : '<div class="note">صف خالی است. از دانش‌نامه یک فایل PDF یا متن اضافه کن.</div>';
+}
+async function pauseJob(id){ const js = await getJobs(); const j = js.find(x=>x.id===id); if (!j) return; j.status='paused'; await putJob(j); renderJobs(); toast('توقف شد؛ بعداً ادامه می‌دهی'); }
+async function resumeJob(id){ const js = await getJobs(); const j = js.find(x=>x.id===id); if (!j) return; j.status='running'; await putJob(j); renderJobs(); runQueue(); }
+async function removeJob(id){
+  const js = await getJobs(); const j = js.find(x=>x.id===id); if (!j) return;
+  if (!confirm('این کار از صف حذف شود؟ تکه‌هایی که تأیید شده‌اند در دانش‌نامه می‌مانند.')) return;
+  await delJob(id); renderJobs(); toast('حذف شد');
+}
+
+async function runQueue(){
+  if (EXTRACTING) return;
+  EXTRACTING = true;
+  try {
+    while (true){
+      const jobs = (await getJobs()).filter(j=>j.status==='running');
+      if (!jobs.length) break;
+      const j = jobs[0];
+      await processJob(j);
+    }
+  } catch(e){ console.error(e); toast('صف استخراج دچار خطا شد — از تنظیمات ادامه بده'); }
+  EXTRACTING = false;
+  refreshCounts(); renderJobs();
+}
+
+async function processJob(job){
+  if (BATT && !BATT.charging && BATT.level < .3){
+    job.status = 'paused'; await putJob(job);
+    toast('باتری کم است و شارژ هم وصل نیست؛ استخراج متوقف شد تا شارژ کنی 🔋');
+    renderJobs(); return;
+  }
+  if (job.type === 'application/pdf' || /\.pdf$/i.test(job.name)){
+    await processPdfJob(job);
+  } else {
+    await processTxtJob(job);
+  }
+  if (job.status === 'running' && job.done >= job.total && job.total > 0){
+    job.status = 'done'; await putJob(job);
+    toast('«' + job.name + '» تمام شد — ' + fa(job.total) + ' تکه منتظر بازبینیه ✓');
+  }
+  await putJob(job); renderJobs();
+}
+
+async function processPdfJob(job){
+  const file = await opfsGet(job.fileId);
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+  if (!job.total){
+    let total = 0;
+    for (let p=1; p<=pdf.numPages; p++){
+      const tx = await (await pdf.getPage(p)).getTextContent();
+      const text = tx.items.map(i=>i.str).join(' ').replace(/\s+/g,' ');
+      total += countChunks(text);
+      if (total > 400){ total = 401; break; }
+    }
+    job.total = Math.min(total, 400); await putJob(job);
+  }
+  const made = (await getAllRaw()).filter(u=>u.fileId===job.fileId).length;
+  let chunkIdx = 0, madeNow = 0, sincePause = 0;
+  for (let p=1; p<=pdf.numPages && madeNow + made < job.total; p++){
+    const page = await pdf.getPage(p);
+    const tx = await page.getTextContent();
+    const text = tx.items.map(i=>i.str).join(' ').replace(/\s+/g,' ');
+    for (const c of splitChunks(text)){
+      chunkIdx++;
+      if (chunkIdx <= made) continue;
+      if (madeNow + made >= job.total) break;
+      if (job.status !== 'running') return;
+      await makeChunkUnit(c, String(fa(p)), job);
+      madeNow++; sincePause++; job.done = made + madeNow;
+      if (sincePause % CHUNK_PER_PAUSE === 0){
+        await putJob(job); renderJobs();
+        await new Promise(r=>setTimeout(r, 1500));
+      }
+    }
+  }
+}
+async function processTxtJob(job){
+  const file = await opfsGet(job.fileId);
+  const text = await file.text();
+  const chunks = splitChunks(text).slice(0, 400);
+  if (!job.total){ job.total = chunks.length; await putJob(job); }
+  const made = (await getAllRaw()).filter(u=>u.fileId===job.fileId).length;
+  let madeNow = 0, sincePause = 0;
+  for (let i=made; i<chunks.length; i++){
+    if (job.status !== 'running') return;
+    await makeChunkUnit(chunks[i], 'نامشخص در منبع', job);
+    madeNow++; sincePause++; job.done = made + madeNow;
+    if (sincePause % CHUNK_PER_PAUSE === 0){
+      await putJob(job); renderJobs();
+      await new Promise(r=>setTimeout(r, 1500));
+    }
+  }
+}
+
+function splitChunks(text){
+  return String(text||'').split(/\n\s*\n|\.\s(?=[A-Zآ-ی])/).map(x=>x.trim())
+    .filter(x=>x.length>=20 && x.length<=1200);
+}
+function countChunks(text){ return splitChunks(text).length; }
+
+async function makeChunkUnit(chunk, page, job){
+  const now = Date.now();
+  const t = chunk.replace(/\s+/g,' ').slice(0,40);
+  await putUnit({
+    title:t, body:chunk, system:job.system, srcType:job.srcType,
+    srcName:job.name, page, car:job.car, fileId:job.fileId,
+    confidence:'extracted', review:'pending', hidden:false, created:now,
+    versions:[{at:now, title:t, body:chunk}]
+  });
+}
+
+// ---------- بازبینی side-by-side ----------
+async function renderOrigin(u){
+  if (!u.fileId) return '';
+  try {
+    const file = await opfsGet(u.fileId);
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+    const pageNum = parseInt(String(u.page).replace(/[۰-۹]/g, d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)), 10);
+    if (!pageNum || pageNum < 1 || pageNum > pdf.numPages) return '';
+    const page = await pdf.getPage(pageNum);
+    const vp = page.getViewport({scale: 2});
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width; canvas.height = vp.height;
+    await page.render({canvasContext: canvas.getContext('2d'), viewport: vp}).promise;
+    setTimeout(() => {
+      const holder = document.getElementById('origin-holder');
+      if (holder){ holder.innerHTML = ''; holder.appendChild(canvas); }
+    }, 0);
+    return `<div class="sbs" id="origin-holder"><div class="note" style="padding:12px">در حال بارگذاری صفحه ${esc(u.page)}…</div></div>
+      <div class="meta">مقایسه کن: بالا صفحه‌ی اصلی، پایین متن استخراج‌شده</div>`;
+  } catch { return ''; }
+}
+
 async function openReview(){
   const pend = (await getAllRaw()).filter(u => u.review === 'pending')
     .sort((a,b)=>((a.skippedAt||0)-(b.skippedAt||0)) || (a.id-b.id));
@@ -786,8 +1037,9 @@ async function openReview(){
   openSheet(`
     <h2>بازبینی (${fa(pend.length)} مانده)</h2>
     <span class="b ${esc(u.srcType)}">${SRC[u.srcType]||''}</span><span class="b user">${esc(u.system)}</span>
+    <div id="origin-wrap">${await renderOrigin(u)}</div>
     <label>عنوان</label><input class="fld" id="r-title" value="${esc(u.title)}">
-    <label>متن (عدد و واحد را با منبع اصلی مقایسه کن)</label>
+    <label>متن (عدد و واحد را با صفحه‌ی اصلی مقایسه کن)</label>
     <textarea class="fld" id="r-body" style="min-height:180px">${esc(u.body)}</textarea>
     <div class="meta">منبع: ${esc(u.srcName)} · ${esc(u.page)}</div>
     <div class="btns">
@@ -855,6 +1107,104 @@ function hl(s){
   return esc(s).replace(/([\d۰-۹]+(?:[٫.][\d۰-۹]+)?(?:\s*(?:تا|-|–)\s*[\d۰-۹]+(?:[٫.][\d۰-۹]+)?)?\s*(?:ولت|اهم|آمپر|هرتز|میلی‌آمپر|میلی‌ولت|V|Ω|A|Hz))/g,'<span class="val">$1</span>');
 }
 
+// ---------- مدل محلی WebLLM (مرحله ۱۳) ----------
+const ML = {engine:null, ready:false, loading:false, progress:0};
+const ML_MODEL = 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
+
+async function mlHasCache(){
+  try {
+    if (!window.caches) return false;
+    const keys = await caches.keys();
+    return keys.some(k => k.includes('webllm') || k.includes('mlc'));
+  } catch { return false; }
+}
+
+async function renderML(){
+  const cached = await mlHasCache();
+  const stat = $('mlStat');
+  if (ML.loading){
+    stat.textContent = 'در حال دانلود… ' + fa(Math.round(ML.progress*100)) + '٪';
+    $('mlProgWrap').style.display = 'block';
+    $('mlProg').style.width = (ML.progress*100) + '%';
+    $('mlDown').style.display = 'none'; $('mlDel').style.display = 'none';
+  } else if (ML.ready){
+    stat.textContent = 'مدل آماده است ✓ ' + (SET.mlUse ? '(فعال در چت)' : '(غیرفعال)');
+    $('mlProgWrap').style.display = 'none';
+    $('mlDown').style.display = 'none';
+    $('mlToggle').style.display = 'inline-block';
+    $('mlToggle').textContent = SET.mlUse ? 'خاموش کردن در چت' : 'فعال کردن در چت';
+    $('mlDel').style.display = 'inline-block';
+  } else if (cached){
+    stat.textContent = 'مدل قبلاً دانلود شده — یک بار لودش کن.';
+    $('mlProgWrap').style.display = 'none';
+    $('mlDown').style.display = 'inline-block'; $('mlDown').textContent = 'لود مدل';
+    $('mlDel').style.display = 'inline-block';
+  } else {
+    stat.textContent = 'نصب نشده';
+    $('mlProgWrap').style.display = 'none';
+    $('mlDown').style.display = 'inline-block'; $('mlDown').textContent = 'دانلود مدل';
+    $('mlDel').style.display = 'none';
+  }
+}
+
+async function mlDownload(){
+  if (ML.loading) return;
+  if (!navigator.onLine){ toast('برای دانلود مدل اینترنت لازم است'); return; }
+  if (BATT && !BATT.charging && BATT.level < .5){
+    toast('دانلود مدل سنگین است؛ بهتر است شارژر وصل کنی یا با باتری بالای ۵۰٪ امتحان کنی 🔋');
+  }
+  ML.loading = true; ML.progress = 0; renderML();
+  try {
+    const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+    ML.engine = await webllm.CreateMLCEngine(ML_MODEL, {
+      initProgressCallback: p => {
+        ML.progress = p.progress || 0;
+        $('mlStat').textContent = 'در حال آماده‌سازی… ' + fa(Math.round(ML.progress*100)) + '٪';
+        $('mlProg').style.width = (ML.progress*100) + '%';
+      }
+    });
+    ML.ready = true; ML.loading = false;
+    toast('مدل محلی آماده شد ✓ حالا جواب‌های چت هوشمندتره');
+  } catch(e){
+    console.error(e);
+    ML.loading = false;
+    toast('دانلود یا لود مدل نشد — دوباره امتحان کن (به اینترنت و وای‌فای پایدار نیاز داری)');
+  }
+  renderML(); renderML();
+  updateNet();
+}
+function mlToggleUse(){ SET.mlUse = !SET.mlUse; saveSet(); renderML(); updateNet(); }
+async function mlDelete(){
+  if (!confirm('مدل محلی حذف شود؟ باید دوباره دانلودش کنی.')) return;
+  try {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k.includes('webllm') || k.includes('mlc')).map(k => caches.delete(k)));
+  } catch {}
+  ML.engine = null; ML.ready = false;
+  toast('مدل حذف شد');
+  renderML(); updateNet(); updateStorage();
+}
+
+// پاسخ‌سازی با مدل محلی از روی نکته‌های برتر دانش‌نامه
+async function mlAnswer(q, units){
+  if (!ML.ready || !SET.mlUse) return null;
+  try {
+    const ctx = units.map((u,i) =>
+      `[${i+1}] عنوان: ${u.title}\nمتن: ${u.body}\nمنبع: ${u.srcName} · صفحه ${u.page}`
+    ).join('\n\n');
+    const reply = await ML.engine.chat.completions.create({
+      messages: [
+        {role:'system', content:'تو «استاد برق خودرو» هستی؛ استادکار باتجربه‌ای که فقط بر اساس نکته‌های داده‌شده جواب می‌دهی. از هیچ دانش خارجی استفاده نکن و عدد فنی از خودت نساز. اگر در نکته‌ها جواب نبود، صادقانه بگو «در دانش‌نامه ثبت نشده». جواب کوتاه، گرم و فارسی باشد و به شماره‌ی نکته‌ی منبع [۱] [۲] اشاره کن.'},
+        {role:'user', content:`نکته‌های دانش‌نامه:\n${ctx}\n\nسؤال: ${q}`}
+      ],
+      temperature: 0.3, max_tokens: 400
+    });
+    const text = reply.choices[0]?.message?.content || '';
+    if (!text) return null;
+    return text;
+  } catch(e){ console.error(e); return null; }
+}
+
 // ---------- چت ----------
 let chat = [];
 try { chat = JSON.parse(localStorage.getItem('aem-chat')||'[]'); } catch { chat = []; }
@@ -890,6 +1240,20 @@ async function answer(q){
     .sort((a,b)=>b.s-a.s).slice(0,3);
   const need = Math.max(1, Math.ceil(toks.length/2));
   const good = ranked.filter(x => x.hit >= Math.min(need, toks.length));
+
+  // مسیر مدل محلی (مرحله ۱۴ — روتر): وقتی مدل آماده است و حداقل یک نکته‌ی مرتبط هست
+  if (good.length && ML.ready && SET.mlUse){
+    const txt = await mlAnswer(q, good.map(x=>x.u));
+    if (txt){
+      const cites = good.map((x,i) =>
+        `<br><span class="cite" data-open="${x.u.id}">[${fa(i+1)}] منبع: ${esc(x.u.srcName)} · ${esc(x.u.page)}</span>`).join('');
+      const degraded = navigator.onLine ? '' :
+        '<div class="note">آفلاینیم؛ از دانش و مدل روی همین گوشی استفاده کردم.</div>';
+      return {safety, html: esc(txt).replace(/\[(\d)\]/g,'[$۱]') + cites + degraded};
+    }
+    // مدل خطا داد → جستجوی مستقیم ادامه می‌یابد
+  }
+
   if (!toks.length || !good.length){
     await addGap({q, at:Date.now(), done:false});
     refreshCounts();
@@ -1143,8 +1507,19 @@ async function finishDiag(){
   toast('ثبت شد ✓ توی تاریخچه هم مونده.');
 }
 
-openDB().then(() => { renderChips(); renderList(); refreshCounts(); renderChat(); renderQChips(); })
-  .catch(() => toast('دیتابیس باز نشد'));
+// ---------- راه‌اندازی ----------
+openDB().then(async () => {
+  renderChips(); renderList(); refreshCounts(); renderChat(); renderQChips(); renderJobs();
+  const jobs = await getJobs();
+  for (const j of jobs) if (j.status === 'running'){ j.status = 'paused'; await putJob(j); }
+  renderJobs();
+  updateNet(); renderML();
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+  // اگر مدل قبلاً دانلود شده و کاربر فعالش کرده، در پس‌زمینه لودش کن (بدون بلاک کردن اپ)
+  mlHasCache().then(c => { if (c && SET.mlUse) mlDownload(); });
+}).catch(() => toast('دیتابیس باز نشد'));
+
+if (pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 
 if ('serviceWorker' in navigator) {
   addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
