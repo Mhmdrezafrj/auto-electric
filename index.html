@@ -91,8 +91,8 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
   padding:var(--sp-4);margin-bottom:var(--sp-3)}
 .card h3{font-size:var(--fs-h2);font-weight:600;margin-bottom:var(--sp-2)}
 .card p{color:var(--text-secondary);font-size:var(--fs-body-sm)}
-.row{display:flex;justify-content:space-between;padding:6px 0;font-size:var(--fs-body-sm);
-  border-bottom:1px solid var(--stroke-subtle)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:6px 0;font-size:var(--fs-body-sm);
+  border-bottom:1px solid var(--stroke-subtle);align-items:center}
 .row:last-child{border:none}
 .row b{color:var(--amber-500)}
 .btn{min-height:var(--touch-min);padding:0 var(--sp-6);border-radius:var(--r-md);
@@ -102,6 +102,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 .btn.muted{background:transparent;border:1px solid var(--stroke-subtle);color:var(--text-muted);font-weight:400}
 .btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger);font-weight:600}
 .btn.full{width:100%}
+.btn.sm{min-height:36px;padding:0 12px;font-size:13px}
 .btns{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-3)}
 .btns .btn{flex:1}
 .screen h1.t{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
@@ -116,6 +117,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 .unit{display:block;width:100%;text-align:right;background:var(--bg-card);border:1px solid var(--stroke-subtle);
   border-radius:var(--r-md);padding:var(--sp-4);margin-bottom:var(--sp-3)}
 .unit:active{border-color:var(--amber-500)}
+.unit.conf{border-color:var(--danger)}
 .unit h3{font-size:var(--fs-h2);font-weight:600}
 .unit p{color:var(--text-secondary);font-size:var(--fs-body-sm);margin:4px 0 var(--sp-2);
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -126,6 +128,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 .b.practitioner{color:var(--amber-500);border-color:var(--amber-500)}
 .b.user{color:var(--text-secondary);border-color:var(--text-secondary)}
 .b.inference{color:var(--text-muted);border:1px dashed var(--text-muted)}
+.b.conflict{color:var(--danger);border-color:var(--danger)}
 .addbtn{margin:var(--sp-3) 0}
 .kbbtn{margin-bottom:var(--sp-2)}
 
@@ -143,6 +146,9 @@ textarea.fld{min-height:140px;resize:vertical}
 .det-body{white-space:pre-wrap;margin:var(--sp-3) 0;line-height:1.9}
 .meta{font-size:var(--fs-caption);color:var(--info);margin-top:var(--sp-2)}
 .note{font-size:var(--fs-caption);color:var(--text-muted);margin-top:var(--sp-2)}
+.confbox{border:2px solid var(--danger);border-radius:var(--r-md);padding:var(--sp-3);margin:var(--sp-3) 0;
+  background:rgba(231,76,60,.1);font-size:var(--fs-body-sm)}
+.confbox b{color:var(--danger)}
 #toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--bg-elevated);
   border:1px solid var(--stroke-strong);padding:10px 20px;border-radius:var(--r-pill);z-index:120;
   font-size:var(--fs-body-sm);display:none}
@@ -209,6 +215,22 @@ textarea.fld{min-height:140px;resize:vertical}
   background:var(--bg-card);padding:var(--sp-4);margin:var(--sp-3) 0}
 .diag .chk{width:44px;height:44px;border-radius:50%;border:3px solid var(--safe);color:var(--safe);
   display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:var(--sp-2)}
+.hbtog{width:100%;display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) var(--sp-4);
+  border:1px solid var(--stroke-strong);border-radius:var(--r-md);margin-bottom:var(--sp-3);color:var(--text-secondary)}
+.hbtog.on{border-color:var(--amber-500);color:var(--amber-500)}
+input[type=range]{width:100%;accent-color:#FF9F1C}
+.line{font-size:var(--fs-body-sm);color:var(--text-secondary);padding:4px 0}
+
+/* حالت دست‌های درگیر */
+body.hb{--touch-min:64px;--text-primary:#fff;--text-secondary:#E6E6E6;--stroke-strong:#777}
+body.hb .btn{min-height:64px;font-size:18px}
+body.hb .btn.sm{min-height:48px}
+body.hb .tab{min-height:64px;font-size:14px}
+body.hb .fld,body.hb .search,body.hb #chatIn{min-height:64px}
+body.hb .seg button{min-height:64px;font-size:18px}
+body.hb .meas input{height:72px;font-size:30px}
+body.hb .step .tx,body.hb .msg{font-size:19px}
+body.hb .step .btns{flex-direction:column}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -262,6 +284,7 @@ textarea.fld{min-height:140px;resize:vertical}
 
   <section class="screen" id="s-diag">
     <h1 class="t">عیب‌یابی</h1>
+    <button class="hbtog" id="hbTog" onclick="toggleHB()"><span>🧤 حالت دست‌های درگیر</span><b id="hbState">خاموش</b></button>
     <div id="diagBox"></div>
   </section>
 
@@ -282,11 +305,29 @@ textarea.fld{min-height:140px;resize:vertical}
       <div class="row"><span>وضعیت</span><b id="setMode">—</b></div>
     </div>
     <div class="card">
+      <h3>ظاهر</h3>
+      <button class="hbtog" onclick="toggleHB()"><span>🧤 حالت دست‌های درگیر</span><b id="hbState2">خاموش</b></button>
+      <label>اندازه‌ی نوشته</label>
+      <input type="range" id="fsR" min="14" max="22" step="1">
+    </div>
+    <div class="card">
+      <h3>نصب اپ</h3>
+      <p id="installTxt">اگر مرورگر اجازه بدهد، با دکمه‌ی زیر اپ روی صفحه‌ی گوشی نصب می‌شود.</p>
+      <div class="btns"><button class="btn ghost" onclick="doInstall()">نصب اپ</button></div>
+    </div>
+    <div class="card">
       <h3>حافظه</h3>
       <div class="row"><span>مصرف‌شده</span><b id="setUsed">—</b></div>
       <div class="row"><span>سقف مجاز</span><b id="setQuota">—</b></div>
       <div class="row"><span>حافظه‌ی پایدار</span><b id="setPersist">—</b></div>
       <br><button class="btn full" onclick="askPersist()">فعال‌سازی حافظه‌ی پایدار</button>
+    </div>
+    <div class="card">
+      <h3>پروفایل مهارتی من</h3>
+      <p>فقط روی همین گوشی می‌ماند و جایی فرستاده نمی‌شود.</p>
+      <div id="skillBox"></div>
+      <div class="btns"><button class="btn ghost" onclick="openExercise()">یک تمرین کوتاه</button>
+      <button class="btn danger" onclick="delSkill()">پاک کردن پروفایل</button></div>
     </div>
     <div class="card">
       <h3>خلأهای دانشی</h3>
@@ -303,8 +344,12 @@ textarea.fld{min-height:140px;resize:vertical}
       <input type="file" id="imp" accept=".json,application/json" style="display:none">
     </div>
     <div class="card">
+      <h3>اگر اپ در پس‌زمینه بسته می‌شود (MIUI)</h3>
+      <p class="line">۱) تنظیمات گوشی ← برنامه‌ها ← مدیریت برنامه‌ها ← Chrome (یا اپ نصب‌شده).<br>۲) «صرفه‌جویی باتری» را روی «بدون محدودیت» بگذار.<br>۳) «شروع خودکار» را روشن کن.<br>۴) در لیست برنامه‌های اخیر، اپ را قفل کن (کشیدن کارت و زدن آیکون قفل).</p>
+    </div>
+    <div class="card">
       <h3>درباره</h3>
-      <p>استاد برق خودرو · نسخه‌ی مرحله ۶ (وارد کردن و بازبینی)</p>
+      <p>استاد برق خودرو · نسخه‌ی مرحله ۱۰ (پروفایل مهارتی، حالت دست‌های درگیر، ویرایش و تعارض)</p>
     </div>
   </section>
 </div>
@@ -333,6 +378,85 @@ function toast(t){
   clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = 'none', 2200);
 }
 
+// ---------- تنظیمات ظاهر ----------
+let SET = {hb:false, fs:16};
+try { SET = Object.assign(SET, JSON.parse(localStorage.getItem('aem-set')||'{}')); } catch {}
+function applySet(){
+  document.body.classList.toggle('hb', !!SET.hb);
+  const fs = SET.fs + (SET.hb ? 1 : 0);
+  document.documentElement.style.setProperty('--fs-body', fs + 'px');
+  document.documentElement.style.setProperty('--fs-body-sm', (fs-2) + 'px');
+  const t = SET.hb ? 'روشن' : 'خاموش';
+  $('hbState').textContent = t; $('hbState2').textContent = t;
+  $('hbTog').classList.toggle('on', !!SET.hb);
+  $('fsR').value = SET.fs;
+}
+function saveSet(){ localStorage.setItem('aem-set', JSON.stringify(SET)); applySet(); }
+function toggleHB(){ SET.hb = !SET.hb; saveSet(); toast(SET.hb ? 'حالت دست‌های درگیر روشن شد' : 'حالت دست‌های درگیر خاموش شد'); }
+$('fsR').addEventListener('input', e => { SET.fs = +e.target.value; saveSet(); });
+applySet();
+
+// ---------- پروفایل مهارتی (فقط محلی) ----------
+let skill = {ev:[]};
+try { skill = JSON.parse(localStorage.getItem('aem-skill')||'{"ev":[]}'); } catch {}
+function skLog(type, ref){
+  skill.ev.push({t:Date.now(), type, ref:ref||''});
+  skill.ev = skill.ev.slice(-300);
+  localStorage.setItem('aem-skill', JSON.stringify(skill));
+}
+function skCount(type){ return skill.ev.filter(e=>e.type===type).length; }
+function renderSkill(){
+  const a = skCount('solved_alone'), h = skCount('solved_with_hint'), t = skCount('answer_taken'),
+        sk = skCount('skip'), rp = skCount('repeat'), ex = skCount('exercise_ok'), exb = skCount('exercise_bad');
+  const strengths = [], weak = [];
+  if (a >= 3) strengths.push('حل قدم‌ها بدون کمک (' + fa(a) + ' بار)');
+  if (ex >= 2) strengths.push('پاسخ درست به تمرین‌ها (' + fa(ex) + ' بار)');
+  if (sk >= 3) weak.push('رد کردن زیاد قدم‌ها (' + fa(sk) + ' بار)');
+  if (t >= 2) weak.push('نیاز به راهنمایی کامل (' + fa(t) + ' بار)');
+  if (rp >= 2) weak.push('تکرار یک سؤال (' + fa(rp) + ' بار)');
+  if (exb >= 2) weak.push('خطا در تمرین‌های محدوده (' + fa(exb) + ' بار)');
+  $('skillBox').innerHTML = skill.ev.length
+    ? `<div class="row"><span>بدون کمک</span><b>${fa(a)}</b></div>
+       <div class="row"><span>با راهنمایی</span><b>${fa(h)}</b></div>
+       <div class="row"><span>جواب را گرفتم</span><b>${fa(t)}</b></div>
+       <div class="line"><b>نقاط قوت:</b> ${strengths.length ? esc(strengths.join('، ')) : 'هنوز داده‌ی کافی نیست'}</div>
+       <div class="line"><b>نقاط ضعف:</b> ${weak.length ? esc(weak.join('، ')) : 'موردی ثبت نشده'}</div>`
+    : '<div class="note">هنوز چیزی ثبت نشده. با هر عیب‌یابی پر می‌شود.</div>';
+}
+function delSkill(){
+  if (!confirm('پروفایل مهارتی پاک شود؟')) return;
+  skill = {ev:[]}; localStorage.setItem('aem-skill', JSON.stringify(skill)); renderSkill(); toast('پروفایل پاک شد');
+}
+async function openExercise(){
+  const all = (await getAll()).filter(u=>!u.hidden && findRef(u.body) && u.srcType!=='inference');
+  if (!all.length) return toast('برای تمرین یک نکته با بازه‌ی عددی (مثل ۱۳٫۸ تا ۱۴٫۴ ولت) لازم است');
+  const u = all[Math.floor(Math.random()*all.length)], r = findRef(u.body);
+  const inside = Math.random() < .5, span = r.hi - r.lo || 1;
+  const v = inside ? +(r.lo + span*Math.random()).toFixed(1) : +(r.hi + span*(.3+Math.random())).toFixed(1);
+  const right = v >= r.lo && v <= r.hi;
+  window._ex = {right, uid:u.id};
+  openSheet(`<h2>تمرین کوتاه</h2>
+    <p>طبق نکته‌ی «${esc(u.title)}»، اگر اندازه‌گیری شد <span class="val">${fa(v)} ${UFA[r.unit]}</span>، این عدد در محدوده‌ی مرجع است؟</p>
+    <div class="meta">منبع: ${esc(u.srcName)} · ${esc(u.page)}</div>
+    <div class="btns"><button class="btn" onclick="exAns(true)">در محدوده است</button>
+    <button class="btn ghost" onclick="exAns(false)">خارج از محدوده است</button></div>
+    <div id="exRes"></div>`);
+}
+function exAns(a){
+  const ok = a === window._ex.right;
+  skLog(ok ? 'exercise_ok' : 'exercise_bad', window._ex.uid);
+  $('exRes').innerHTML = `<div class="help">${ok ? 'درسته ✓' : 'نه، این‌طور نیست.'} پاسخ: ${window._ex.right ? 'در محدوده بود' : 'خارج از محدوده بود'}. مقایسه را همیشه با مقدار مرجع منبع انجام بده.</div>
+    <div class="btns"><button class="btn ghost" onclick="closeSheet();renderSkill()">بستن</button></div>`;
+}
+
+// ---------- نصب اپ ----------
+let deferredInstall = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; });
+async function doInstall(){
+  if (deferredInstall){ deferredInstall.prompt(); deferredInstall = null; return; }
+  $('installTxt').textContent = 'مرورگر الان اجازه‌ی نصب مستقیم نمی‌دهد. از منوی Chrome (سه‌نقطه) گزینه‌ی «Add to Home screen» یا «Install app» را بزن. اگر اپ قبلاً نصب شده باشد، این دکمه کاری نمی‌کند.';
+}
+
 function go(name){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   $('s-' + name).classList.add('active');
@@ -340,7 +464,7 @@ function go(name){
   window.scrollTo(0, 0);
   if (name === 'kb') renderList();
   if (name === 'chat'){ renderChat(); renderQChips(); scrollChat(); }
-  if (name === 'set') renderGaps();
+  if (name === 'set'){ renderGaps(); renderSkill(); }
   if (name === 'diag') renderDiag();
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.t)));
@@ -407,7 +531,6 @@ function openDB(){
 const st = (n,m) => db.transaction(n, m).objectStore(n);
 const req = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 const getAllRaw = () => req(st('units','readonly').getAll());
-// فقط نکته‌های تأییدشده یا ثبت‌دستی (برای لیست، چت و عیب‌یابی)
 const getAll = async () => (await getAllRaw()).filter(u => u.review !== 'pending' && u.review !== 'rejected');
 const getOne = id => req(st('units','readonly').get(id));
 const putUnit = u => req(st('units','readwrite').put(u));
@@ -443,11 +566,12 @@ async function renderList(){
     list.innerHTML = `<div class="empty"><p>چیزی پیدا نشد.</p></div>`;
   } else {
     list.innerHTML = items.map(u => `
-      <button class="unit" data-id="${u.id}">
+      <button class="unit ${u.conflictWith?'conf':''}" data-id="${u.id}">
         <h3>${esc(u.title)}</h3>
         <p>${esc(u.body)}</p>
         <span class="b ${esc(u.srcType)}">${SRC[u.srcType]||''}</span>
         <span class="b user">${esc(u.system)}</span>
+        ${u.conflictWith ? '<span class="b conflict">⚠ تعارض</span>' : ''}
       </button>`).join('');
     list.querySelectorAll('.unit').forEach(b => b.onclick = () => openDetail(+b.dataset.id));
   }
@@ -494,35 +618,93 @@ function openAdd(){
     <div class="btns"><button class="btn" onclick="saveUnit()">ذخیره</button><button class="btn ghost" onclick="closeSheet()">انصراف</button></div>`);
 }
 
+// تعارض: همان عنوان و همان سیستم با متن متفاوت. ادغام نمی‌شود، فقط علامت می‌خورد.
+async function flagConflict(u){
+  const raw = await getAllRaw();
+  const tn = norm(u.title);
+  const other = raw.find(o => o.id !== u.id && !o.hidden && o.review !== 'rejected' &&
+    o.system === u.system && norm(o.title) === tn && norm(o.body) !== norm(u.body));
+  if (!other) return false;
+  u.conflictWith = other.id; await putUnit(u);
+  other.conflictWith = u.id; await putUnit(other);
+  return true;
+}
+
 async function saveUnit(){
   const g = id => $(id).value.trim();
   const title = g('f-title'), body = g('f-body');
   if (!title || !body) return toast('عنوان و متن لازم است');
   const now = Date.now();
-  await putUnit({
+  const u = {
     title, body, system:g('f-sys'), srcType:g('f-type'),
     srcName:g('f-src') || 'نامشخص در منبع', page:g('f-page') || 'نامشخص در منبع',
     car:g('f-car'), confidence:'extracted', hidden:false, created:now,
     versions:[{at:now, title, body}]
-  });
-  closeSheet(); toast('ثبت شد ✓ توی تاریخچه هم مونده.'); renderList(); renderQChips(); refreshCounts();
+  };
+  u.id = await putUnit(u);
+  const c = await flagConflict(u);
+  closeSheet(); toast(c ? '⚠ ثبت شد، ولی با نکته‌ی دیگری تعارض دارد' : 'ثبت شد ✓ توی تاریخچه هم مونده.');
+  renderList(); renderQChips(); refreshCounts();
 }
 
 async function openDetail(id){
   const u = await getOne(id); if (!u) return;
   const conf = u.confidence === 'verified' ? 'تأییدشده توسط خودت' : 'استخراج‌شده (هنوز تأییدنشده)';
+  let cbox = '';
+  if (u.conflictWith){
+    const o = await getOne(u.conflictWith);
+    if (o) cbox = `<div class="confbox"><b>⚠ تعارض ثبت‌شده</b><br>نسخه‌ی این نکته:<br>${esc(u.body)}<br><span class="meta">منبع: ${esc(u.srcName)} · ${esc(u.page)}</span><hr style="border-color:#444;margin:8px 0">نسخه‌ی دیگر:<br>${esc(o.body)}<br><span class="meta">منبع: ${esc(o.srcName)} · ${esc(o.page)}</span>
+      <div class="btns"><button class="btn ghost sm" onclick="resolveConf(${u.id})">بررسی کردم، تعارض برطرف شد</button></div></div>`;
+  }
+  const hist = (u.versions||[]);
   openSheet(`
     <h2>${esc(u.title)}</h2>
     <span class="b ${esc(u.srcType)}">${SRC[u.srcType]||''}</span>
     <span class="b user">${esc(u.system)}</span>
+    ${cbox}
     <div class="det-body">${esc(u.body)}</div>
     <div class="meta">منبع: ${esc(u.srcName)} · ${esc(u.page)}</div>
     ${u.car ? `<div class="note">خودرو: ${esc(u.car)}</div>` : ''}
     <div class="note">اعتبار: ${conf} · ثبت: ${new Date(u.created).toLocaleDateString('fa-IR')}</div>
+    <div class="note">تعداد نسخه‌ها: ${fa(hist.length)}</div>
     <div class="btns">
+      <button class="btn ghost" onclick="openEdit(${u.id})">ویرایش</button>
       <button class="btn ghost" onclick="closeSheet()">بستن</button>
       <button class="btn danger" onclick="hideUnit(${u.id})">پنهان کردن</button>
     </div>`);
+}
+
+async function resolveConf(id){
+  const u = await getOne(id); if (!u) return;
+  const o = u.conflictWith ? await getOne(u.conflictWith) : null;
+  delete u.conflictWith; await putUnit(u);
+  if (o){ delete o.conflictWith; await putUnit(o); }
+  closeSheet(); toast('ثبت شد ✓ توی تاریخچه هم مونده.'); renderList();
+}
+
+async function openEdit(id){
+  const u = await getOne(id); if (!u) return;
+  openSheet(`<h2>ویرایش نکته</h2>
+    <label>عنوان</label><input class="fld" id="e-title" value="${esc(u.title)}">
+    <label>متن</label><textarea class="fld" id="e-body">${esc(u.body)}</textarea>
+    <label>منبع</label><input class="fld" id="e-src" value="${esc(u.srcName)}">
+    <label>صفحه یا زمان</label><input class="fld" id="e-page" value="${esc(u.page)}">
+    <p class="note">نسخه‌ی قبلی در تاریخچه می‌ماند.</p>
+    <div class="btns"><button class="btn" onclick="saveEdit(${u.id})">ذخیره</button><button class="btn ghost" onclick="openDetail(${u.id})">انصراف</button></div>`);
+}
+async function saveEdit(id){
+  const u = await getOne(id); if (!u) return;
+  const t = $('e-title').value.trim(), b = $('e-body').value.trim();
+  if (!t || !b) return toast('عنوان و متن لازم است');
+  u.versions = u.versions || [];
+  u.versions.push({at:Date.now(), title:t, body:b, edited:true});
+  u.title = t; u.body = b;
+  u.srcName = $('e-src').value.trim() || 'نامشخص در منبع';
+  u.page = $('e-page').value.trim() || 'نامشخص در منبع';
+  await putUnit(u);
+  const c = await flagConflict(u);
+  toast(c ? '⚠ ذخیره شد، ولی تعارض دارد' : 'ثبت شد ✓ توی تاریخچه هم مونده.');
+  renderList(); renderQChips(); openDetail(id);
 }
 
 async function hideUnit(id){
@@ -555,8 +737,12 @@ $('q').addEventListener('input', e => { fText = e.target.value; renderList(); })
 async function renderGaps(){
   const gaps = (await getGaps()).filter(g=>!g.done).sort((a,b)=>b.at-a.at);
   $('gapList').innerHTML = gaps.length
-    ? gaps.slice(0,15).map(g=>`<div class="row"><span>${esc(g.q)}</span></div>`).join('')
+    ? gaps.slice(0,15).map(g=>`<div class="row"><span>${esc(g.q)}</span><button class="btn ghost sm" onclick="gapDone(${g.id})">انجام شد</button></div>`).join('')
     : '<div class="note">فعلاً چیزی ثبت نشده.</div>';
+}
+async function gapDone(id){
+  const gs = await getGaps(); const g = gs.find(x=>x.id===id); if (!g) return;
+  g.done = true; await addGap(g); renderGaps();
 }
 
 // ---------- وارد کردن متن و صف بازبینی ----------
@@ -622,7 +808,9 @@ async function reviewAct(id, act){
     if (!t || !b) return toast('عنوان و متن لازم است');
     if (t !== u.title || b !== u.body) u.versions.push({at:now, title:t, body:b, edited:true});
     u.title = t; u.body = b; u.review = 'approved'; u.confidence = 'verified';
-    await putUnit(u); toast('ثبت شد ✓ توی تاریخچه هم مونده.');
+    await putUnit(u);
+    const c = await flagConflict(u);
+    toast(c ? '⚠ تأیید شد، ولی تعارض دارد' : 'ثبت شد ✓ توی تاریخچه هم مونده.');
   } else {
     u.review = 'rejected'; u.rejectedAt = now;
     await putUnit(u); toast('رد شد؛ تاریخچه‌اش مانده');
@@ -636,7 +824,7 @@ const norm = s => String(s||'').toLowerCase()
   .replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u200f]/g,' ')
   .replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
   .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))
-  .replace(/[^\p{L}\p{N}\s]/gu,' ');
+  .replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();
 const STOP = new Set('و در به از که را این آن با برای چی چیه چرا چطور چگونه چقدر چند است هست باید می شود میشه میشود کنم کنیم کرد کن بگو بده یه یک من ما تو اگه اگر هم یا اما ولی بعد قبل وقتی خیلی چیست کدام کجا کی چه'.split(' '));
 function tokens(s){
   return norm(s).split(/\s+/).filter(t => t.length>=2 && !STOP.has(t))
@@ -714,7 +902,8 @@ async function answer(q){
     const u = x.u;
     let body = u.body.length>260 ? u.body.slice(0,260)+'…' : u.body;
     const unsure = u.srcType==='inference' ? '<div class="note">⚠ این مورد استنباطی است، نه مستند.</div>' : '';
-    return `<div class="fact"><b class="ft">${esc(u.title)}</b><div class="tx">${hl(body)}</div>${unsure}
+    const cf = u.conflictWith ? '<div class="note" style="color:var(--danger)">⚠ این نکته با نکته‌ی دیگری تعارض دارد؛ جزئیات را ببین.</div>' : '';
+    return `<div class="fact"><b class="ft">${esc(u.title)}</b><div class="tx">${hl(body)}</div>${unsure}${cf}
       <span class="cite" data-open="${u.id}">منبع: ${esc(u.srcName)} · ${esc(u.page)}</span>
       <span class="b ${esc(u.srcType)}" style="margin-top:6px">${SRC[u.srcType]||''}</span></div>`;
   }).join('');
@@ -723,6 +912,7 @@ async function answer(q){
 
 async function ask(q){
   q = (q||'').trim(); if (!q) return;
+  if (chat.some(m => m.r==='u' && norm(m.text)===norm(q))) skLog('repeat', q);
   const inp = $('chatIn');
   inp.value = ''; $('sendBtn').disabled = true;
   chat.push({r:'u', text:q}); renderChat(); scrollChat();
@@ -812,7 +1002,7 @@ async function startDiag(){
   const steps = [SAFE_STEP, ...ranked.map(x => {
     const u = x.u;
     return {type:'unit', uid:u.id, title:u.title, body:u.body, srcType:u.srcType, srcName:u.srcName, page:u.page,
-            ref:findRef(u.body), status:'', value:null, unit:null, result:'', help:0};
+            conflict:!!u.conflictWith, ref:findRef(u.body), status:'', value:null, unit:null, result:'', help:0};
   })];
   if (!ranked.length) await addGap({q:'عیب‌یابی: ' + formDraft.sym, at:Date.now(), done:false});
   S = {car:formDraft.car, sys:formDraft.sys, symptom:formDraft.sym, dtc:formDraft.dtc,
@@ -845,6 +1035,7 @@ function renderSession(box){
       const unit = ref ? ref.unit : 'V';
       h += `<div class="step"><span class="num">${fa(n)}</span><h3>${esc(s.title)}</h3>
         <div class="tx">${hl(s.body)}</div>
+        ${s.conflict ? '<div class="note" style="color:var(--danger)">⚠ این نکته با نکته‌ی دیگری تعارض دارد. قبل از قضاوت منبع‌ها را مقایسه کن.</div>' : ''}
         <span class="cite" data-open="${s.uid}">منبع: ${esc(s.srcName)} · ${esc(s.page)}</span>
         <span class="b ${esc(s.srcType)}">${SRC[s.srcType]||''}</span>
         ${s.srcType==='inference' ? '<div class="note">⚠ این مورد استنباطی است، نه مستند.</div>' : ''}
@@ -915,10 +1106,12 @@ async function doneStep(){
     s.result = 'none';
   }
   s.status = 'done';
+  skLog(s.help>=3 ? 'answer_taken' : s.help>0 ? 'solved_with_hint' : 'solved_alone', S.sys);
   S.idx++; await saveS(); renderDiag(); window.scrollTo(0,0);
 }
 async function skipStep(){
   const s = S.steps[S.idx]; s.status = 'skip'; s.result = 'skip';
+  skLog('skip', S.sys);
   S.idx++; await saveS(); renderDiag();
 }
 
@@ -940,7 +1133,8 @@ function summaryHtml(){
     t += '<p>مقدار عددی ثبت نشد، پس نتیجه‌ی مبتنی بر اندازه‌گیری ندارم.</p>';
   }
   t += `<div class="note">اطمینان: نامشخص. این جمع‌بندی فقط بر پایه‌ی اندازه‌گیری‌های تو و دانش‌نامه‌ی خودت است، نه تشخیص قطعی.${skipped.length ? ' '+fa(skipped.length)+' قدم رد شد.' : ''}</div>
-    <div class="btns"><button class="btn" onclick="finishDiag()">پایان و شروع جدید</button></div></div>`;
+    <div class="btns"><button class="btn" onclick="finishDiag()">پایان و شروع جدید</button>
+    <button class="btn ghost" onclick="openExercise()">یک تمرین کوتاه</button></div></div>`;
   return t;
 }
 async function finishDiag(){
