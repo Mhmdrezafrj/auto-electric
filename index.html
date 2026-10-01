@@ -105,10 +105,9 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 .btns .btn{flex:1}
 .screen h1.t{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
 
-/* KB */
 .search{width:100%;height:var(--touch-min);background:var(--bg-input);border:1px solid var(--stroke-subtle);
   border-radius:var(--r-md);padding:0 var(--sp-4);font-size:var(--fs-body);margin-bottom:var(--sp-3)}
-.search:focus,.fld:focus{outline:none;border-color:var(--amber-500);box-shadow:0 0 0 3px var(--amber-glow)}
+.search:focus,.fld:focus,#chatIn:focus{outline:none;border-color:var(--amber-500);box-shadow:0 0 0 3px var(--amber-glow)}
 .chips{display:flex;gap:var(--sp-2);overflow-x:auto;padding-bottom:var(--sp-3);margin-bottom:var(--sp-2)}
 .chip{flex:none;padding:6px 14px;border-radius:var(--r-pill);border:1px solid var(--stroke-strong);
   font-size:var(--fs-body-sm);color:var(--text-secondary);white-space:nowrap}
@@ -128,7 +127,6 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 .b.inference{color:var(--text-muted);border:1px dashed var(--text-muted)}
 .addbtn{margin:var(--sp-3) 0}
 
-/* sheet */
 #sheet{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:80;display:none}
 #sheet.open{display:block}
 .sheet-in{position:absolute;bottom:0;left:0;right:0;max-width:720px;margin:0 auto;max-height:92%;
@@ -146,6 +144,40 @@ textarea.fld{min-height:140px;resize:vertical}
 #toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--bg-elevated);
   border:1px solid var(--stroke-strong);padding:10px 20px;border-radius:var(--r-pill);z-index:120;
   font-size:var(--fs-body-sm);display:none}
+
+/* ---- Chat ---- */
+#s-chat{padding-bottom:190px}
+.chead{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)}
+.chead h1{margin:0!important}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--bg-card);border:1px solid var(--stroke-strong);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.avatar svg{width:26px;height:26px}
+.avatar.think{animation:breathe 3s ease-in-out infinite;box-shadow:0 0 14px var(--amber-glow)}
+@keyframes breathe{50%{transform:scale(1.04)}}
+.msg{max-width:85%;padding:var(--sp-3) var(--sp-4);margin-bottom:var(--sp-3);border-radius:var(--r-md);
+  font-size:var(--fs-body);line-height:1.8;word-wrap:break-word}
+.msg.m{background:var(--bg-card);border:1px solid var(--stroke-subtle);border-top-right-radius:4px;margin-left:auto;margin-right:0}
+.msg.u{background:#2B2013;border-top-left-radius:4px;margin-right:auto;margin-left:0}
+.msg .fact{margin-top:var(--sp-3);padding-top:var(--sp-2);border-top:1px solid var(--stroke-subtle)}
+.msg .fact b.ft{display:block;font-weight:600}
+.msg .fact .tx{color:var(--text-primary)}
+.cite{display:inline-block;margin-top:6px;font-size:var(--fs-caption);color:var(--info);
+  border:1px solid var(--info);border-radius:var(--r-pill);padding:1px 10px}
+.val{font-weight:800;color:var(--amber-500);text-shadow:0 0 10px var(--amber-glow)}
+.safety{background:rgba(231,76,60,.12);border:2px solid var(--danger);border-radius:var(--r-md);
+  padding:var(--sp-3) var(--sp-4);margin-bottom:var(--sp-3);color:#ffd7d2;font-size:var(--fs-body-sm)}
+.safety b{color:var(--danger);display:block;font-size:var(--fs-body)}
+.chatbar{position:fixed;left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom));z-index:40;
+  background:var(--bg-base);padding:var(--sp-2) var(--sp-4) var(--sp-2)}
+.chatbar-in{max-width:720px;margin:0 auto}
+.qchips{display:flex;gap:var(--sp-2);overflow-x:auto;padding-bottom:var(--sp-2)}
+.inrow{display:flex;gap:var(--sp-2)}
+#chatIn{flex:1;height:var(--touch-min);background:var(--bg-input);border:1px solid var(--stroke-subtle);
+  border-radius:var(--r-pill);padding:0 var(--sp-4);font-size:var(--fs-body)}
+#sendBtn{width:var(--touch-min);height:var(--touch-min);border-radius:50%;background:var(--amber-500);
+  color:#fff;font-size:22px;flex:none}
+#sendBtn:disabled{opacity:.35}
+.clr{font-size:var(--fs-caption);color:var(--text-muted);text-align:center;margin:var(--sp-3) 0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -175,19 +207,25 @@ textarea.fld{min-height:140px;resize:vertical}
     </button>
     <div class="stats">
       <div class="mini"><div class="n" id="kbCount">۰</div><div class="l">نکات دانشی</div></div>
-      <div class="mini"><div class="n">۰</div><div class="l">در انتظار بازبینی</div></div>
+      <div class="mini"><div class="n" id="gapCount">۰</div><div class="l">خلأ دانشی</div></div>
       <div class="mini"><div class="n" id="lastAdd">—</div><div class="l">آخرین افزودن</div></div>
     </div>
   </section>
 
   <section class="screen" id="s-chat">
-    <h1 class="t">استاد</h1>
-    <div class="empty">
-      <svg viewBox="0 0 96 96" fill="none"><circle cx="48" cy="48" r="34" stroke="#3D3D3D" stroke-width="3"/><path d="M26 48 A22 22 0 0 1 70 48" stroke="#FF9F1C" stroke-width="5" stroke-linecap="round"/></svg>
-      <h3>چت با استاد</h3>
-      <p>اینجا می‌تونی از استاد سؤال بپرسی.</p>
-      <span class="badge-soon">مرحله ۴</span>
+    <div class="chead">
+      <div class="avatar" id="avatar"><svg viewBox="0 0 26 26" fill="none"><path d="M5 15 A8 8 0 0 1 21 15" stroke="#FF9F1C" stroke-width="3" stroke-linecap="round"/></svg></div>
+      <h1 class="t">استاد</h1>
     </div>
+    <div id="msgs"></div>
+    <div class="clr"><button onclick="clearChat()" style="color:inherit;text-decoration:underline">پاک کردن گفتگو</button></div>
+    <div class="chatbar"><div class="chatbar-in">
+      <div class="qchips" id="qchips"></div>
+      <div class="inrow">
+        <input id="chatIn" placeholder="سؤالت رو بپرس..." autocomplete="off">
+        <button id="sendBtn" disabled aria-label="ارسال">➤</button>
+      </div>
+    </div></div>
   </section>
 
   <section class="screen" id="s-diag">
@@ -222,6 +260,11 @@ textarea.fld{min-height:140px;resize:vertical}
       <br><button class="btn full" onclick="askPersist()">فعال‌سازی حافظه‌ی پایدار</button>
     </div>
     <div class="card">
+      <h3>خلأهای دانشی</h3>
+      <p>سؤال‌هایی که استاد جواب نداشت و ثبت کرده.</p>
+      <div id="gapList"></div>
+    </div>
+    <div class="card">
       <h3>پشتیبان‌گیری</h3>
       <p>کل دانش‌نامه را به‌صورت یک فایل ذخیره کن یا از فایل قبلی برگردان.</p>
       <div class="btns">
@@ -232,7 +275,7 @@ textarea.fld{min-height:140px;resize:vertical}
     </div>
     <div class="card">
       <h3>درباره</h3>
-      <p>استاد برق خودرو · نسخه‌ی مرحله ۳ (دانش‌نامه‌ی روی گوشی)</p>
+      <p>استاد برق خودرو · نسخه‌ی مرحله ۴ (چت استاد)</p>
     </div>
   </section>
 </div>
@@ -260,13 +303,14 @@ function toast(t){
   clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = 'none', 2200);
 }
 
-// ---------- ناوبری ----------
 function go(name){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('s-' + name).classList.add('active');
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.t === name));
   window.scrollTo(0, 0);
   if (name === 'kb') renderList();
+  if (name === 'chat'){ renderChat(); renderQChips(); scrollChat(); }
+  if (name === 'set') renderGaps();
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.t)));
 
@@ -314,28 +358,33 @@ async function askPersist(){
 }
 updateStorage();
 
-// ---------- دیتابیس (IndexedDB) ----------
+// ---------- دیتابیس ----------
 let db;
 function openDB(){
   return new Promise((res, rej) => {
-    const r = indexedDB.open('aem-db', 1);
-    r.onupgradeneeded = () => r.result.createObjectStore('units', {keyPath:'id', autoIncrement:true});
+    const r = indexedDB.open('aem-db', 2);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      if (!d.objectStoreNames.contains('units')) d.createObjectStore('units', {keyPath:'id', autoIncrement:true});
+      if (!d.objectStoreNames.contains('gaps')) d.createObjectStore('gaps', {keyPath:'id', autoIncrement:true});
+    };
     r.onsuccess = () => { db = r.result; res(); };
     r.onerror = () => rej(r.error);
   });
 }
-const store = m => db.transaction('units', m).objectStore('units');
+const st = (n,m) => db.transaction(n, m).objectStore(n);
 const req = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-const getAll = () => req(store('readonly').getAll());
-const getOne = id => req(store('readonly').get(id));
-const putUnit = u => req(store('readwrite').put(u));
+const getAll = () => req(st('units','readonly').getAll());
+const getOne = id => req(st('units','readonly').get(id));
+const putUnit = u => req(st('units','readwrite').put(u));
+const getGaps = () => req(st('gaps','readonly').getAll());
+const addGap = g => req(st('gaps','readwrite').put(g));
 
-// ---------- دسته‌ها ----------
 const SYSTEMS = ['شارژ','استارت','جرقه و احتراق','انژکتور و سوخت','سنسورها','ECU','روشنایی','سیم‌کشی و کانکتور','کولر و برقی‌ها','ایربگ (SRS)','سایر'];
 const SRC = {official:'رسمی', training:'آموزشی', practitioner:'تجربی', user:'کاربر', inference:'استنباطی'};
 let fSystem = '', fText = '';
 
-async function renderChips(){
+function renderChips(){
   const el = document.getElementById('chips');
   el.innerHTML = ['همه', ...SYSTEMS].map(s =>
     `<button class="chip ${(s==='همه'&&!fSystem)||s===fSystem?'on':''}" data-s="${esc(s)}">${esc(s)}</button>`).join('');
@@ -374,9 +423,11 @@ function updateCount(all){
   const last = all.reduce((m,u) => Math.max(m,u.created), 0);
   document.getElementById('lastAdd').textContent = last ? new Date(last).toLocaleDateString('fa-IR') : '—';
 }
-async function refreshCount(){ updateCount((await getAll()).filter(u => !u.hidden)); }
+async function refreshCounts(){
+  updateCount((await getAll()).filter(u => !u.hidden));
+  document.getElementById('gapCount').textContent = fa((await getGaps()).filter(g=>!g.done).length);
+}
 
-// ---------- پنجره‌ی پایین ----------
 function openSheet(html){ document.getElementById('sheetBody').innerHTML = html; document.getElementById('sheet').classList.add('open'); }
 function closeSheet(){ document.getElementById('sheet').classList.remove('open'); }
 
@@ -408,7 +459,7 @@ async function saveUnit(){
     car:g('f-car'), confidence:'extracted', hidden:false, created:now,
     versions:[{at:now, title, body}]
   });
-  closeSheet(); toast('ثبت شد ✓ توی تاریخچه هم مونده.'); renderList();
+  closeSheet(); toast('ثبت شد ✓ توی تاریخچه هم مونده.'); renderList(); renderQChips();
 }
 
 async function openDetail(id){
@@ -433,9 +484,8 @@ async function hideUnit(id){
   await putUnit(u); closeSheet(); toast('پنهان شد؛ تاریخچه‌اش مانده'); renderList();
 }
 
-// ---------- خروجی و ورودی ----------
 async function exportKB(){
-  const data = {app:'auto-electric-master', exported:new Date().toISOString(), units: await getAll()};
+  const data = {app:'auto-electric-master', exported:new Date().toISOString(), units: await getAll(), gaps: await getGaps()};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -453,11 +503,129 @@ document.getElementById('imp').addEventListener('change', async e => {
   } catch { toast('این فایل پشتیبان معتبر نیست'); }
   e.target.value = '';
 });
-
 document.getElementById('q').addEventListener('input', e => { fText = e.target.value; renderList(); });
 
-// ---------- شروع ----------
-openDB().then(() => { renderChips(); renderList(); }).catch(() => toast('دیتابیس باز نشد'));
+// ---------- خلأهای دانشی ----------
+async function renderGaps(){
+  const gaps = (await getGaps()).filter(g=>!g.done).sort((a,b)=>b.at-a.at);
+  document.getElementById('gapList').innerHTML = gaps.length
+    ? gaps.slice(0,15).map(g=>`<div class="row"><span>${esc(g.q)}</span></div>`).join('')
+    : '<div class="note">فعلاً چیزی ثبت نشده.</div>';
+}
+
+// ---------- موتور جستجوی استاد ----------
+const norm = s => String(s||'').toLowerCase()
+  .replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u200f]/g,' ')
+  .replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+  .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+  .replace(/[^\p{L}\p{N}\s]/gu,' ');
+const STOP = new Set('و در به از که را این آن با برای چی چیه چرا چطور چگونه چقدر چند است هست باید می شود میشه میشود کنم کنیم کرد کن بگو بده یه یک من ما تو اگه اگر هم یا اما ولی بعد قبل وقتی خیلی چیست کدام کجا کی چه'.split(' '));
+function tokens(s){
+  return norm(s).split(/\s+/).filter(t => t.length>=2 && !STOP.has(t))
+    .map(t => t.replace(/(ها|های)$/,'')).filter(t=>t.length>=2);
+}
+function score(u, toks){
+  const T = norm(u.title), B = norm(u.body), M = norm([u.car,u.system,u.srcName].join(' '));
+  let s = 0, hit = 0;
+  for (const t of toks){
+    let h = 0;
+    if (T.includes(t)) h += 3;
+    if (B.includes(t)) h += 1.5;
+    if (M.includes(t)) h += 1;
+    if (h) hit++;
+    s += h;
+  }
+  return {s: s + hit*1.5, hit};
+}
+const DANGER = [
+  {k:['ایربگ','airbag','srs','کیسه هوا'], t:'مدار ایربگ (SRS) را هرگز با مولتی‌متر یا لامپ تست اندازه‌گیری نکن. فقط توسط تعمیرکار مجاز و با دستگاه دیاگ.'},
+  {k:['ولتاژ بالا','نارنجی','هیبرید','برقی کامل','hv'], t:'سیستم‌های ولتاژ بالا (کابل نارنجی) خطر جانی دارند. بازکردن یا اندازه‌گیری‌شان فقط برای تعمیرکار دارای گواهی است.'}
+];
+function safetyFor(q){
+  const n = norm(q);
+  return DANGER.filter(d => d.k.some(k => n.includes(norm(k))));
+}
+function hl(s){
+  return esc(s).replace(/([\d۰-۹]+(?:[٫.][\d۰-۹]+)?(?:\s*(?:تا|-|–)\s*[\d۰-۹]+(?:[٫.][\d۰-۹]+)?)?\s*(?:ولت|اهم|آمپر|هرتز|میلی‌آمپر|میلی‌ولت|V|Ω|A|Hz))/g,'<span class="val">$1</span>');
+}
+
+// ---------- چت ----------
+let chat = [];
+try { chat = JSON.parse(localStorage.getItem('aem-chat')||'[]'); } catch { chat = []; }
+const saveChat = () => localStorage.setItem('aem-chat', JSON.stringify(chat.slice(-40)));
+const scrollChat = () => setTimeout(()=>window.scrollTo(0, document.body.scrollHeight), 50);
+const WELCOME = {r:'m', html:'خب، من آماده‌ام. هر چی از دانش‌نامه‌ات می‌خوای بپرس تا با منبع جوابت رو بدم. 🔧'};
+
+function renderChat(){
+  const box = document.getElementById('msgs');
+  const list = chat.length ? chat : [WELCOME];
+  box.innerHTML = list.map(m => m.r==='u'
+    ? `<div class="msg u">${esc(m.text)}</div>`
+    : (m.safety||'') + `<div class="msg m">${m.html}</div>`).join('');
+  box.querySelectorAll('[data-open]').forEach(c => c.onclick = () => openDetail(+c.dataset.open));
+}
+
+async function renderQChips(){
+  if (!db) return;
+  const all = (await getAll()).filter(u=>!u.hidden).sort((a,b)=>b.created-a.created).slice(0,5);
+  const el = document.getElementById('qchips');
+  el.innerHTML = all.map(u=>`<button class="chip" data-q="${esc(u.title)}">${esc(u.title)}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(c => c.onclick = () => { ask(c.dataset.q); });
+}
+
+async function answer(q){
+  const toks = tokens(q);
+  const safety = safetyFor(q).map(d=>`<div class="safety"><b>🔒 هشدار ایمنی</b>${esc(d.t)}</div>`).join('');
+  const all = (await getAll()).filter(u=>!u.hidden);
+  if (!all.length){
+    return {safety, html:'دانش‌نامه هنوز خالیه و من فقط از چیزی که ثبت کردی جواب می‌دم. اول چند نکته به دانش‌نامه اضافه کن 🔧'};
+  }
+  const ranked = all.map(u=>({u, ...score(u,toks)})).filter(x=>x.s>0)
+    .sort((a,b)=>b.s-a.s).slice(0,3);
+  const need = Math.max(1, Math.ceil(toks.length/2));
+  const good = ranked.filter(x => x.hit >= Math.min(need, toks.length));
+  if (!toks.length || !good.length){
+    await addGap({q, at:Date.now(), done:false});
+    refreshCounts();
+    let html = 'تو دانش‌نامه‌ام چیزی که مستقیم به این سؤال جواب بده پیدا نکردم و حدس هم نمی‌زنم. سؤالت رو برای بعداً ثبت کردم.<br><br>برای شروع، یک مسیر امن: <b>اول اندازه‌گیری، بعد حدس.</b> مدار مورد نظر رو مشخص کن و ولتاژ باتری رو با مولتی‌متر اندازه بگیر.';
+    if (ranked.length) html += '<br><br>شاید این نزدیک باشه:' + ranked.map(x=>`<br><span class="cite" data-open="${x.u.id}">${esc(x.u.title)}</span>`).join('');
+    return {safety, html};
+  }
+  const hook = good.length===1 ? 'خب، این رو توی دانش‌نامه‌ات پیدا کردم:' : 'خب، این چند مورد رو پیدا کردم:';
+  const facts = good.map(x=>{
+    const u = x.u;
+    let body = u.body.length>260 ? u.body.slice(0,260)+'…' : u.body;
+    const unsure = u.srcType==='inference' ? '<div class="note">⚠ این مورد استنباطی است، نه مستند.</div>' : '';
+    return `<div class="fact"><b class="ft">${esc(u.title)}</b><div class="tx">${hl(body)}</div>${unsure}
+      <span class="cite" data-open="${u.id}">منبع: ${esc(u.srcName)} · ${esc(u.page)}</span>
+      <span class="b ${esc(u.srcType)}" style="margin-top:6px">${SRC[u.srcType]||''}</span></div>`;
+  }).join('');
+  return {safety, html: hook + facts};
+}
+
+async function ask(q){
+  q = (q||'').trim(); if (!q) return;
+  const inp = document.getElementById('chatIn');
+  inp.value = ''; document.getElementById('sendBtn').disabled = true;
+  chat.push({r:'u', text:q}); renderChat(); scrollChat();
+  const av = document.getElementById('avatar'); av.classList.add('think');
+  const a = await answer(q);
+  await new Promise(r=>setTimeout(r,350));
+  av.classList.remove('think');
+  chat.push({r:'m', html:a.html, safety:a.safety}); saveChat();
+  renderChat(); scrollChat();
+}
+function clearChat(){
+  if (!confirm('گفتگو پاک شود؟ دانش‌نامه دست‌نخورده می‌ماند.')) return;
+  chat = []; saveChat(); renderChat();
+}
+const chatIn = document.getElementById('chatIn');
+chatIn.addEventListener('input', ()=>document.getElementById('sendBtn').disabled = !chatIn.value.trim());
+chatIn.addEventListener('keydown', e=>{ if(e.key==='Enter') ask(chatIn.value); });
+document.getElementById('sendBtn').addEventListener('click', ()=>ask(chatIn.value));
+
+openDB().then(() => { renderChips(); renderList(); refreshCounts(); renderChat(); renderQChips(); })
+  .catch(() => toast('دیتابیس باز نشد'));
 
 if ('serviceWorker' in navigator) {
   addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
