@@ -23,9 +23,9 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg-base);color:var(--text-primary);
   font-family:'Vazirmatn',system-ui,sans-serif;font-size:var(--fs-body);line-height:var(--lh-persian)}
-button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+button,input,select,textarea{font-family:inherit;color:inherit}
+button{border:none;background:none;cursor:pointer}
 
-/* Splash */
 #splash{position:fixed;inset:0;background:#000;z-index:100;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:var(--sp-4);transition:opacity .25s}
 #splash.hide{opacity:0;pointer-events:none}
@@ -37,13 +37,11 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 #splash h1{font-size:var(--fs-hero);font-weight:800;opacity:0;animation:fade .4s .7s forwards}
 @keyframes fade{to{opacity:1}}
 
-/* App shell */
 #app{max-width:720px;margin:0 auto;height:100%;display:flex;flex-direction:column}
 .screen{display:none;flex:1;overflow-y:auto;padding:var(--sp-4);padding-bottom:120px}
 .screen.active{display:block;animation:in .22s cubic-bezier(.2,0,0,1)}
 @keyframes in{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
 
-/* Status strip */
 .status{display:flex;gap:var(--sp-3);align-items:center;font-size:var(--fs-caption);
   color:var(--text-muted);padding:var(--sp-2) 0 var(--sp-4);flex-wrap:wrap}
 .pill{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:var(--r-pill);
@@ -52,10 +50,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .pill.off .dot{background:var(--text-muted)}
 .bar{flex:1;min-width:60px;height:6px;background:var(--stroke-subtle);border-radius:var(--r-pill);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--amber-500)}
-
 h2.greet{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
 
-/* Hero card */
 .hero{width:100%;min-height:36vh;border-radius:var(--r-lg);padding:var(--sp-6);text-align:right;
   background:linear-gradient(var(--bg-card),var(--bg-card)) padding-box,
   linear-gradient(135deg,var(--amber-400),#4a2d05) border-box;border:2px solid transparent;
@@ -66,22 +62,18 @@ h2.greet{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
 .hero span{color:var(--text-secondary);font-size:var(--fs-body-sm)}
 .hero:active{transform:scale(.99)}
 
-/* Stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-top:var(--sp-4)}
 .mini{background:var(--bg-card);border:1px solid var(--stroke-subtle);border-radius:var(--r-md);
   padding:var(--sp-3);text-align:center}
-.mini .n{font-size:var(--fs-h1);font-weight:800;color:var(--amber-500);
-  text-shadow:0 0 12px var(--amber-glow)}
+.mini .n{font-size:var(--fs-h1);font-weight:800;color:var(--amber-500);text-shadow:0 0 12px var(--amber-glow)}
 .mini .l{font-size:var(--fs-caption);color:var(--text-secondary);line-height:1.5}
 
-/* Empty state */
 .empty{text-align:center;padding:var(--sp-8) var(--sp-4);color:var(--text-secondary)}
 .empty svg{width:96px;height:96px;margin-bottom:var(--sp-4)}
 .empty h3{font-size:var(--fs-h2);font-weight:600;color:var(--text-primary);margin-bottom:var(--sp-2)}
 .badge-soon{display:inline-block;margin-top:var(--sp-3);padding:2px 12px;border-radius:var(--r-pill);
   border:1px dashed var(--stroke-strong);font-size:var(--fs-caption);color:var(--text-muted)}
 
-/* Bottom nav */
 nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
   border-top:1px solid var(--stroke-subtle);padding-bottom:env(safe-area-inset-bottom);z-index:50}
 .nav-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end}
@@ -94,9 +86,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
   box-shadow:0 0 22px rgba(255,159,28,.5);font-size:24px}
 .tab.center{color:var(--text-secondary)}
 .tab.center.active{color:var(--amber-500)}
-.tab:active .ic{opacity:.7}
 
-/* Settings cards */
 .card{background:var(--bg-card);border:1px solid var(--stroke-subtle);border-radius:var(--r-md);
   padding:var(--sp-4);margin-bottom:var(--sp-3)}
 .card h3{font-size:var(--fs-h2);font-weight:600;margin-bottom:var(--sp-2)}
@@ -108,7 +98,54 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 .btn{min-height:var(--touch-min);padding:0 var(--sp-6);border-radius:var(--r-md);
   background:var(--amber-500);color:var(--text-on-amber);font-weight:800;font-size:var(--fs-body)}
 .btn:active{background:var(--amber-600)}
+.btn.ghost{background:transparent;border:1px solid var(--stroke-strong);color:var(--text-primary);font-weight:600}
+.btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger);font-weight:600}
+.btn.full{width:100%}
+.btns{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-3)}
+.btns .btn{flex:1}
 .screen h1.t{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
+
+/* KB */
+.search{width:100%;height:var(--touch-min);background:var(--bg-input);border:1px solid var(--stroke-subtle);
+  border-radius:var(--r-md);padding:0 var(--sp-4);font-size:var(--fs-body);margin-bottom:var(--sp-3)}
+.search:focus,.fld:focus{outline:none;border-color:var(--amber-500);box-shadow:0 0 0 3px var(--amber-glow)}
+.chips{display:flex;gap:var(--sp-2);overflow-x:auto;padding-bottom:var(--sp-3);margin-bottom:var(--sp-2)}
+.chip{flex:none;padding:6px 14px;border-radius:var(--r-pill);border:1px solid var(--stroke-strong);
+  font-size:var(--fs-body-sm);color:var(--text-secondary);white-space:nowrap}
+.chip.on{background:var(--amber-500);color:var(--text-on-amber);border-color:var(--amber-500);font-weight:600}
+.unit{display:block;width:100%;text-align:right;background:var(--bg-card);border:1px solid var(--stroke-subtle);
+  border-radius:var(--r-md);padding:var(--sp-4);margin-bottom:var(--sp-3)}
+.unit:active{border-color:var(--amber-500)}
+.unit h3{font-size:var(--fs-h2);font-weight:600}
+.unit p{color:var(--text-secondary);font-size:var(--fs-body-sm);margin:4px 0 var(--sp-2);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.b{display:inline-block;font-size:var(--fs-caption);padding:1px 10px;border-radius:var(--r-pill);
+  border:1px solid;margin-left:6px}
+.b.official{color:var(--safe);border-color:var(--safe)}
+.b.training{color:var(--info);border-color:var(--info)}
+.b.practitioner{color:var(--amber-500);border-color:var(--amber-500)}
+.b.user{color:var(--text-secondary);border-color:var(--text-secondary)}
+.b.inference{color:var(--text-muted);border:1px dashed var(--text-muted)}
+.addbtn{margin:var(--sp-3) 0}
+
+/* sheet */
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:80;display:none}
+#sheet.open{display:block}
+.sheet-in{position:absolute;bottom:0;left:0;right:0;max-width:720px;margin:0 auto;max-height:92%;
+  overflow-y:auto;background:var(--bg-elevated);border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:var(--sp-4);padding-bottom:calc(var(--sp-6) + env(safe-area-inset-bottom));animation:up .22s cubic-bezier(.2,0,0,1)}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet-in h2{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-3)}
+label{display:block;font-size:var(--fs-body-sm);color:var(--text-secondary);margin:var(--sp-3) 0 4px}
+.fld{width:100%;min-height:var(--touch-min);background:var(--bg-input);border:1px solid var(--stroke-subtle);
+  border-radius:var(--r-md);padding:8px var(--sp-4);font-size:var(--fs-body)}
+textarea.fld{min-height:140px;resize:vertical}
+.det-body{white-space:pre-wrap;margin:var(--sp-3) 0;line-height:1.9}
+.meta{font-size:var(--fs-caption);color:var(--info);margin-top:var(--sp-2)}
+.note{font-size:var(--fs-caption);color:var(--text-muted);margin-top:var(--sp-2)}
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--bg-elevated);
+  border:1px solid var(--stroke-strong);padding:10px 20px;border-radius:var(--r-pill);z-index:120;
+  font-size:var(--fs-body-sm);display:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -123,7 +160,6 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 </div>
 
 <div id="app">
-  <!-- خانه -->
   <section class="screen active" id="s-home">
     <div class="status">
       <span class="pill" id="modePill"><i class="dot"></i><span id="modeText">آنلاین</span></span>
@@ -140,11 +176,10 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
     <div class="stats">
       <div class="mini"><div class="n" id="kbCount">۰</div><div class="l">نکات دانشی</div></div>
       <div class="mini"><div class="n">۰</div><div class="l">در انتظار بازبینی</div></div>
-      <div class="mini"><div class="n">—</div><div class="l">آخرین استخراج</div></div>
+      <div class="mini"><div class="n" id="lastAdd">—</div><div class="l">آخرین افزودن</div></div>
     </div>
   </section>
 
-  <!-- استاد -->
   <section class="screen" id="s-chat">
     <h1 class="t">استاد</h1>
     <div class="empty">
@@ -155,7 +190,6 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
     </div>
   </section>
 
-  <!-- عیب‌یابی -->
   <section class="screen" id="s-diag">
     <h1 class="t">عیب‌یابی</h1>
     <div class="empty">
@@ -166,18 +200,14 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
     </div>
   </section>
 
-  <!-- دانش‌نامه -->
   <section class="screen" id="s-kb">
     <h1 class="t">دانش‌نامه</h1>
-    <div class="empty">
-      <svg viewBox="0 0 96 96" fill="none"><path d="M12 60 H34 L40 40 L54 76 L62 56 H84" stroke="#3D3D3D" stroke-width="3"/><circle cx="40" cy="40" r="5" fill="#FF9F1C"/></svg>
-      <h3>دانش‌نامه هنوز خالیه</h3>
-      <p>اولین منبع رو اضافه کن تا شروع کنیم 🔧</p>
-      <span class="badge-soon">مرحله ۳</span>
-    </div>
+    <input class="search" id="q" type="search" placeholder="جستجو در دانش‌نامه...">
+    <div class="chips" id="chips"></div>
+    <button class="btn full addbtn" onclick="openAdd()">＋ افزودن نکته‌ی دانشی</button>
+    <div id="list"></div>
   </section>
 
-  <!-- تنظیمات -->
   <section class="screen" id="s-set">
     <h1 class="t">تنظیمات</h1>
     <div class="card">
@@ -189,14 +219,26 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
       <div class="row"><span>مصرف‌شده</span><b id="setUsed">—</b></div>
       <div class="row"><span>سقف مجاز</span><b id="setQuota">—</b></div>
       <div class="row"><span>حافظه‌ی پایدار</span><b id="setPersist">—</b></div>
-      <br><button class="btn" onclick="askPersist()">فعال‌سازی حافظه‌ی پایدار</button>
+      <br><button class="btn full" onclick="askPersist()">فعال‌سازی حافظه‌ی پایدار</button>
+    </div>
+    <div class="card">
+      <h3>پشتیبان‌گیری</h3>
+      <p>کل دانش‌نامه را به‌صورت یک فایل ذخیره کن یا از فایل قبلی برگردان.</p>
+      <div class="btns">
+        <button class="btn ghost" onclick="exportKB()">خروجی</button>
+        <button class="btn ghost" onclick="document.getElementById('imp').click()">ورودی</button>
+      </div>
+      <input type="file" id="imp" accept=".json,application/json" style="display:none">
     </div>
     <div class="card">
       <h3>درباره</h3>
-      <p>استاد برق خودرو · نسخه‌ی مرحله ۲ (نصب‌شدنی و آفلاین)</p>
+      <p>استاد برق خودرو · نسخه‌ی مرحله ۳ (دانش‌نامه‌ی روی گوشی)</p>
     </div>
   </section>
 </div>
+
+<div id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sheet-in" id="sheetBody"></div></div>
+<div id="toast"></div>
 
 <nav><div class="nav-in">
   <button class="tab active" data-t="home"><span class="ic">🏠</span>خانه</button>
@@ -207,11 +249,16 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 </div></nav>
 
 <script>
-// ---------- ابزارها ----------
 const fa = s => String(s).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function hideSplash(){ document.getElementById('splash').classList.add('hide'); }
 setTimeout(hideSplash, 1300);
+
+function toast(t){
+  const e = document.getElementById('toast');
+  e.textContent = t; e.style.display = 'block';
+  clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = 'none', 2200);
+}
 
 // ---------- ناوبری ----------
 function go(name){
@@ -219,10 +266,10 @@ function go(name){
   document.getElementById('s-' + name).classList.add('active');
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.t === name));
   window.scrollTo(0, 0);
+  if (name === 'kb') renderList();
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.t)));
 
-// ---------- سلام بر اساس ساعت ----------
 (function(){
   const h = new Date().getHours();
   let g = 'شب بخیر! امشب سراغ کدوم مدار بریم؟ ⚡';
@@ -232,28 +279,21 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   document.getElementById('greet').textContent = g;
 })();
 
-// ---------- وضعیت اتصال ----------
 function updateNet(){
   const on = navigator.onLine;
   document.getElementById('modePill').classList.toggle('off', !on);
   document.getElementById('modeText').textContent = on ? 'آنلاین' : 'آفلاین';
   document.getElementById('setMode').textContent = on ? 'آنلاین' : 'آفلاین';
 }
-addEventListener('online', updateNet);
-addEventListener('offline', updateNet);
-updateNet();
+addEventListener('online', updateNet); addEventListener('offline', updateNet); updateNet();
 
-// ---------- باتری ----------
 if (navigator.getBattery){
   navigator.getBattery().then(b => {
     const show = () => document.getElementById('battery').textContent = 'باتری: ' + fa(Math.round(b.level*100)) + '٪';
     show(); b.addEventListener('levelchange', show);
   });
-} else {
-  document.getElementById('battery').style.display = 'none';
-}
+} else document.getElementById('battery').style.display = 'none';
 
-// ---------- حافظه ----------
 const mb = n => fa((n/1048576).toFixed(1)) + ' مگابایت';
 async function updateStorage(){
   if (!navigator.storage || !navigator.storage.estimate) return;
@@ -269,18 +309,158 @@ async function updateStorage(){
   }
 }
 async function askPersist(){
-  if (navigator.storage && navigator.storage.persist){
-    await navigator.storage.persist();
-  }
+  if (navigator.storage && navigator.storage.persist) await navigator.storage.persist();
   updateStorage();
 }
 updateStorage();
 
-// ---------- آفلاین‌کار شدن ----------
-if ('serviceWorker' in navigator) {
-  addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js');
+// ---------- دیتابیس (IndexedDB) ----------
+let db;
+function openDB(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('aem-db', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('units', {keyPath:'id', autoIncrement:true});
+    r.onsuccess = () => { db = r.result; res(); };
+    r.onerror = () => rej(r.error);
   });
+}
+const store = m => db.transaction('units', m).objectStore('units');
+const req = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+const getAll = () => req(store('readonly').getAll());
+const getOne = id => req(store('readonly').get(id));
+const putUnit = u => req(store('readwrite').put(u));
+
+// ---------- دسته‌ها ----------
+const SYSTEMS = ['شارژ','استارت','جرقه و احتراق','انژکتور و سوخت','سنسورها','ECU','روشنایی','سیم‌کشی و کانکتور','کولر و برقی‌ها','ایربگ (SRS)','سایر'];
+const SRC = {official:'رسمی', training:'آموزشی', practitioner:'تجربی', user:'کاربر', inference:'استنباطی'};
+let fSystem = '', fText = '';
+
+async function renderChips(){
+  const el = document.getElementById('chips');
+  el.innerHTML = ['همه', ...SYSTEMS].map(s =>
+    `<button class="chip ${(s==='همه'&&!fSystem)||s===fSystem?'on':''}" data-s="${esc(s)}">${esc(s)}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    fSystem = c.dataset.s === 'همه' ? '' : c.dataset.s; renderChips(); renderList();
+  });
+}
+
+async function renderList(){
+  const all = (await getAll()).filter(u => !u.hidden);
+  const q = fText.trim().toLowerCase();
+  const items = all.filter(u =>
+    (!fSystem || u.system === fSystem) &&
+    (!q || [u.title,u.body,u.car,u.srcName].join(' ').toLowerCase().includes(q))
+  ).sort((a,b) => b.created - a.created);
+  const list = document.getElementById('list');
+  if (!all.length){
+    list.innerHTML = `<div class="empty"><svg viewBox="0 0 96 96" fill="none"><path d="M12 60 H34 L40 40 L54 76 L62 56 H84" stroke="#3D3D3D" stroke-width="3"/><circle cx="40" cy="40" r="5" fill="#FF9F1C"/></svg><h3>دانش‌نامه هنوز خالیه</h3><p>اولین منبع رو اضافه کن تا شروع کنیم 🔧</p></div>`;
+  } else if (!items.length){
+    list.innerHTML = `<div class="empty"><p>چیزی پیدا نشد.</p></div>`;
+  } else {
+    list.innerHTML = items.map(u => `
+      <button class="unit" data-id="${u.id}">
+        <h3>${esc(u.title)}</h3>
+        <p>${esc(u.body)}</p>
+        <span class="b ${esc(u.srcType)}">${SRC[u.srcType]||''}</span>
+        <span class="b user">${esc(u.system)}</span>
+      </button>`).join('');
+    list.querySelectorAll('.unit').forEach(b => b.onclick = () => openDetail(+b.dataset.id));
+  }
+  updateCount(all);
+}
+
+function updateCount(all){
+  document.getElementById('kbCount').textContent = fa(all.length);
+  const last = all.reduce((m,u) => Math.max(m,u.created), 0);
+  document.getElementById('lastAdd').textContent = last ? new Date(last).toLocaleDateString('fa-IR') : '—';
+}
+async function refreshCount(){ updateCount((await getAll()).filter(u => !u.hidden)); }
+
+// ---------- پنجره‌ی پایین ----------
+function openSheet(html){ document.getElementById('sheetBody').innerHTML = html; document.getElementById('sheet').classList.add('open'); }
+function closeSheet(){ document.getElementById('sheet').classList.remove('open'); }
+
+function openAdd(){
+  openSheet(`
+    <h2>نکته‌ی دانشی جدید</h2>
+    <label>عنوان *</label><input class="fld" id="f-title" placeholder="مثلاً: ولتاژ شارژ آلترناتور">
+    <label>متن نکته * (عددها را با واحد و شرایط تست بنویس)</label>
+    <textarea class="fld" id="f-body" placeholder="مثلاً: با موتور روشن، ولتاژ باتری باید ۱۳٫۸ تا ۱۴٫۴ ولت باشد."></textarea>
+    <label>سیستم خودرو</label>
+    <select class="fld" id="f-sys">${SYSTEMS.map(s=>`<option>${s}</option>`).join('')}</select>
+    <label>نوع منبع</label>
+    <select class="fld" id="f-type">${Object.entries(SRC).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+    <label>نام منبع (کتاب، جزوه، ویدئو)</label><input class="fld" id="f-src" placeholder="مثلاً: دفترچه پژو ۲۰۷">
+    <label>شماره‌ی صفحه یا زمان ویدئو</label><input class="fld" id="f-page" placeholder="مثلاً: ۴۵">
+    <label>خودرو (اختیاری)</label><input class="fld" id="f-car" placeholder="مثلاً: پژو ۲۰۷ مدل ۱۴۰۰">
+    <p class="note">اگر منبع را نمی‌دانی، خالی بگذار؛ «نامشخص در منبع» ثبت می‌شود.</p>
+    <div class="btns"><button class="btn" onclick="saveUnit()">ذخیره</button><button class="btn ghost" onclick="closeSheet()">انصراف</button></div>`);
+}
+
+async function saveUnit(){
+  const g = id => document.getElementById(id).value.trim();
+  const title = g('f-title'), body = g('f-body');
+  if (!title || !body) return toast('عنوان و متن لازم است');
+  const now = Date.now();
+  await putUnit({
+    title, body, system:g('f-sys'), srcType:g('f-type'),
+    srcName:g('f-src') || 'نامشخص در منبع', page:g('f-page') || 'نامشخص در منبع',
+    car:g('f-car'), confidence:'extracted', hidden:false, created:now,
+    versions:[{at:now, title, body}]
+  });
+  closeSheet(); toast('ثبت شد ✓ توی تاریخچه هم مونده.'); renderList();
+}
+
+async function openDetail(id){
+  const u = await getOne(id); if (!u) return;
+  openSheet(`
+    <h2>${esc(u.title)}</h2>
+    <span class="b ${esc(u.srcType)}">${SRC[u.srcType]||''}</span>
+    <span class="b user">${esc(u.system)}</span>
+    <div class="det-body">${esc(u.body)}</div>
+    <div class="meta">منبع: ${esc(u.srcName)} · ${esc(u.page)}</div>
+    ${u.car ? `<div class="note">خودرو: ${esc(u.car)}</div>` : ''}
+    <div class="note">اعتبار: استخراج‌شده (هنوز تأییدنشده) · ثبت: ${new Date(u.created).toLocaleDateString('fa-IR')}</div>
+    <div class="btns">
+      <button class="btn ghost" onclick="closeSheet()">بستن</button>
+      <button class="btn danger" onclick="hideUnit(${u.id})">پنهان کردن</button>
+    </div>`);
+}
+
+async function hideUnit(id){
+  if (!confirm('این نکته پنهان شود؟ از تاریخچه پاک نمی‌شود.')) return;
+  const u = await getOne(id); u.hidden = true; u.hiddenAt = Date.now();
+  await putUnit(u); closeSheet(); toast('پنهان شد؛ تاریخچه‌اش مانده'); renderList();
+}
+
+// ---------- خروجی و ورودی ----------
+async function exportKB(){
+  const data = {app:'auto-electric-master', exported:new Date().toISOString(), units: await getAll()};
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'auto-electric-backup.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('فایل پشتیبان ساخته شد');
+}
+document.getElementById('imp').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try{
+    const data = JSON.parse(await f.text());
+    if (!Array.isArray(data.units)) throw 0;
+    for (const u of data.units){ delete u.id; await putUnit(u); }
+    toast(fa(data.units.length) + ' نکته وارد شد ✓'); renderList();
+  } catch { toast('این فایل پشتیبان معتبر نیست'); }
+  e.target.value = '';
+});
+
+document.getElementById('q').addEventListener('input', e => { fText = e.target.value; renderList(); });
+
+// ---------- شروع ----------
+openDB().then(() => { renderChips(); renderList(); }).catch(() => toast('دیتابیس باز نشد'));
+
+if ('serviceWorker' in navigator) {
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
 }
 </script>
 </body>
