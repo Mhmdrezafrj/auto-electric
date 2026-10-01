@@ -127,6 +127,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
 .b.user{color:var(--text-secondary);border-color:var(--text-secondary)}
 .b.inference{color:var(--text-muted);border:1px dashed var(--text-muted)}
 .addbtn{margin:var(--sp-3) 0}
+.kbbtn{margin-bottom:var(--sp-2)}
 
 #sheet{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:80;display:none}
 #sheet.open{display:block}
@@ -146,7 +147,6 @@ textarea.fld{min-height:140px;resize:vertical}
   border:1px solid var(--stroke-strong);padding:10px 20px;border-radius:var(--r-pill);z-index:120;
   font-size:var(--fs-body-sm);display:none}
 
-/* Chat */
 #s-chat{padding-bottom:190px}
 .chead{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)}
 .chead h1{margin:0!important}
@@ -179,7 +179,6 @@ textarea.fld{min-height:140px;resize:vertical}
 #sendBtn:disabled{opacity:.35}
 .clr{font-size:var(--fs-caption);color:var(--text-muted);text-align:center;margin:var(--sp-3) 0}
 
-/* Diagnosis */
 .tl{display:flex;gap:var(--sp-3);align-items:center;padding:8px 0;font-size:var(--fs-body-sm);
   color:var(--text-secondary);border-bottom:1px solid var(--stroke-subtle)}
 .tl .ic{width:24px;text-align:center;flex:none}
@@ -192,7 +191,7 @@ textarea.fld{min-height:140px;resize:vertical}
 .step h3{font-size:var(--fs-h2);font-weight:600;display:inline}
 .step .tx{margin:var(--sp-3) 0;line-height:1.9}
 .meas{display:flex;gap:var(--sp-2);margin-top:var(--sp-3)}
-.meas input{flex:1;height:60px;font-size:24px;font-weight:800;text-align:center;background:var(--bg-input);
+.meas input{flex:1;min-width:0;height:60px;font-size:24px;font-weight:800;text-align:center;background:var(--bg-input);
   border:1px solid var(--stroke-strong);border-radius:var(--r-md);color:var(--amber-500)}
 .meas input:focus{outline:none;border-color:var(--amber-500)}
 .seg{display:flex;border:1px solid var(--stroke-strong);border-radius:var(--r-md);overflow:hidden}
@@ -240,7 +239,7 @@ textarea.fld{min-height:140px;resize:vertical}
     <button class="cont" id="contCard" onclick="go('diag')">▶ ادامه بده: عیب‌یابی نیمه‌کاره</button>
     <div class="stats">
       <div class="mini"><div class="n" id="kbCount">۰</div><div class="l">نکات دانشی</div></div>
-      <div class="mini"><div class="n" id="gapCount">۰</div><div class="l">خلأ دانشی</div></div>
+      <div class="mini"><div class="n" id="pendCount">۰</div><div class="l">در انتظار بازبینی</div></div>
       <div class="mini"><div class="n" id="lastAdd">—</div><div class="l">آخرین افزودن</div></div>
     </div>
   </section>
@@ -271,7 +270,9 @@ textarea.fld{min-height:140px;resize:vertical}
     <input class="search" id="q" type="search" placeholder="جستجو در دانش‌نامه...">
     <div class="chips" id="chips"></div>
     <button class="btn full addbtn" onclick="openAdd()">＋ افزودن نکته‌ی دانشی</button>
-    <div id="list"></div>
+    <button class="btn ghost full kbbtn" onclick="openImport()">📥 وارد کردن متن جزوه</button>
+    <button class="btn ghost full kbbtn" id="revBtn" onclick="openReview()">🔍 صف بازبینی (۰)</button>
+    <div id="list" style="margin-top:12px"></div>
   </section>
 
   <section class="screen" id="s-set">
@@ -303,7 +304,7 @@ textarea.fld{min-height:140px;resize:vertical}
     </div>
     <div class="card">
       <h3>درباره</h3>
-      <p>استاد برق خودرو · نسخه‌ی مرحله ۵ (عیب‌یابی)</p>
+      <p>استاد برق خودرو · نسخه‌ی مرحله ۶ (وارد کردن و بازبینی)</p>
     </div>
   </section>
 </div>
@@ -405,7 +406,9 @@ function openDB(){
 }
 const st = (n,m) => db.transaction(n, m).objectStore(n);
 const req = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-const getAll = () => req(st('units','readonly').getAll());
+const getAllRaw = () => req(st('units','readonly').getAll());
+// فقط نکته‌های تأییدشده یا ثبت‌دستی (برای لیست، چت و عیب‌یابی)
+const getAll = async () => (await getAllRaw()).filter(u => u.review !== 'pending' && u.review !== 'rejected');
 const getOne = id => req(st('units','readonly').get(id));
 const putUnit = u => req(st('units','readwrite').put(u));
 const getGaps = () => req(st('gaps','readonly').getAll());
@@ -449,6 +452,7 @@ async function renderList(){
     list.querySelectorAll('.unit').forEach(b => b.onclick = () => openDetail(+b.dataset.id));
   }
   updateCount(all);
+  updateRevCount();
 }
 
 function updateCount(all){
@@ -456,9 +460,16 @@ function updateCount(all){
   const last = all.reduce((m,u) => Math.max(m,u.created), 0);
   $('lastAdd').textContent = last ? new Date(last).toLocaleDateString('fa-IR') : '—';
 }
+async function updateRevCount(){
+  if (!db) return 0;
+  const n = (await getAllRaw()).filter(u => u.review === 'pending').length;
+  $('revBtn').textContent = '🔍 صف بازبینی (' + fa(n) + ')';
+  $('pendCount').textContent = fa(n);
+  return n;
+}
 async function refreshCounts(){
   updateCount((await getAll()).filter(u => !u.hidden));
-  $('gapCount').textContent = fa((await getGaps()).filter(g=>!g.done).length);
+  await updateRevCount();
   const open = (await getSessions()).some(s => !s.done);
   $('contCard').style.display = open ? 'block' : 'none';
 }
@@ -494,11 +505,12 @@ async function saveUnit(){
     car:g('f-car'), confidence:'extracted', hidden:false, created:now,
     versions:[{at:now, title, body}]
   });
-  closeSheet(); toast('ثبت شد ✓ توی تاریخچه هم مونده.'); renderList(); renderQChips();
+  closeSheet(); toast('ثبت شد ✓ توی تاریخچه هم مونده.'); renderList(); renderQChips(); refreshCounts();
 }
 
 async function openDetail(id){
   const u = await getOne(id); if (!u) return;
+  const conf = u.confidence === 'verified' ? 'تأییدشده توسط خودت' : 'استخراج‌شده (هنوز تأییدنشده)';
   openSheet(`
     <h2>${esc(u.title)}</h2>
     <span class="b ${esc(u.srcType)}">${SRC[u.srcType]||''}</span>
@@ -506,7 +518,7 @@ async function openDetail(id){
     <div class="det-body">${esc(u.body)}</div>
     <div class="meta">منبع: ${esc(u.srcName)} · ${esc(u.page)}</div>
     ${u.car ? `<div class="note">خودرو: ${esc(u.car)}</div>` : ''}
-    <div class="note">اعتبار: استخراج‌شده (هنوز تأییدنشده) · ثبت: ${new Date(u.created).toLocaleDateString('fa-IR')}</div>
+    <div class="note">اعتبار: ${conf} · ثبت: ${new Date(u.created).toLocaleDateString('fa-IR')}</div>
     <div class="btns">
       <button class="btn ghost" onclick="closeSheet()">بستن</button>
       <button class="btn danger" onclick="hideUnit(${u.id})">پنهان کردن</button>
@@ -516,11 +528,11 @@ async function openDetail(id){
 async function hideUnit(id){
   if (!confirm('این نکته پنهان شود؟ از تاریخچه پاک نمی‌شود.')) return;
   const u = await getOne(id); u.hidden = true; u.hiddenAt = Date.now();
-  await putUnit(u); closeSheet(); toast('پنهان شد؛ تاریخچه‌اش مانده'); renderList();
+  await putUnit(u); closeSheet(); toast('پنهان شد؛ تاریخچه‌اش مانده'); renderList(); refreshCounts();
 }
 
 async function exportKB(){
-  const data = {app:'auto-electric-master', exported:new Date().toISOString(), units: await getAll(), gaps: await getGaps(), sessions: await getSessions()};
+  const data = {app:'auto-electric-master', exported:new Date().toISOString(), units: await getAllRaw(), gaps: await getGaps(), sessions: await getSessions()};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -534,7 +546,7 @@ $('imp').addEventListener('change', async e => {
     const data = JSON.parse(await f.text());
     if (!Array.isArray(data.units)) throw 0;
     for (const u of data.units){ delete u.id; await putUnit(u); }
-    toast(fa(data.units.length) + ' نکته وارد شد ✓'); renderList();
+    toast(fa(data.units.length) + ' نکته وارد شد ✓'); renderList(); refreshCounts();
   } catch { toast('این فایل پشتیبان معتبر نیست'); }
   e.target.value = '';
 });
@@ -545,6 +557,78 @@ async function renderGaps(){
   $('gapList').innerHTML = gaps.length
     ? gaps.slice(0,15).map(g=>`<div class="row"><span>${esc(g.q)}</span></div>`).join('')
     : '<div class="note">فعلاً چیزی ثبت نشده.</div>';
+}
+
+// ---------- وارد کردن متن و صف بازبینی ----------
+function openImport(){
+  openSheet(`
+    <h2>وارد کردن متن جزوه</h2>
+    <p class="note">متن را بچسبان. هر پاراگراف (جداشده با یک خط خالی) یک تکه می‌شود و به صف بازبینی می‌رود. حداکثر ۴۰ تکه در هر بار. تا تأیید نکنی، تکه‌ها در چت و عیب‌یابی استفاده نمی‌شوند.</p>
+    <label>متن *</label><textarea class="fld" id="i-text" style="min-height:200px"></textarea>
+    <label>سیستم خودرو</label>
+    <select class="fld" id="i-sys">${SYSTEMS.map(s=>`<option>${s}</option>`).join('')}</select>
+    <label>نوع منبع</label>
+    <select class="fld" id="i-type">${Object.entries(SRC).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+    <label>نام منبع</label><input class="fld" id="i-src" placeholder="مثلاً: جزوه‌ی برق خودرو">
+    <label>صفحه یا زمان (اختیاری)</label><input class="fld" id="i-page">
+    <label>خودرو (اختیاری)</label><input class="fld" id="i-car">
+    <div class="btns"><button class="btn" onclick="doImport()">بفرست به صف بازبینی</button><button class="btn ghost" onclick="closeSheet()">انصراف</button></div>`);
+}
+
+async function doImport(){
+  const g = id => $(id).value.trim();
+  const chunks = g('i-text').split(/\n\s*\n/).map(x=>x.trim()).filter(x=>x.length>=20).slice(0,40);
+  if (!chunks.length) return toast('متن کافی نیست (هر پاراگراف حداقل ۲۰ حرف)');
+  const now = Date.now();
+  for (const c of chunks){
+    const t = c.replace(/\s+/g,' ').slice(0,40);
+    await putUnit({
+      title:t, body:c, system:g('i-sys'), srcType:g('i-type'),
+      srcName:g('i-src') || 'نامشخص در منبع', page:g('i-page') || 'نامشخص در منبع',
+      car:g('i-car'), confidence:'extracted', review:'pending', hidden:false, created:now,
+      versions:[{at:now, title:t, body:c}]
+    });
+  }
+  closeSheet(); toast(fa(chunks.length) + ' تکه به صف بازبینی رفت'); refreshCounts();
+}
+
+async function openReview(){
+  const pend = (await getAllRaw()).filter(u => u.review === 'pending')
+    .sort((a,b)=>((a.skippedAt||0)-(b.skippedAt||0)) || (a.id-b.id));
+  if (!pend.length){ closeSheet(); return toast('صف بازبینی خالی است ✓'); }
+  const u = pend[0];
+  openSheet(`
+    <h2>بازبینی (${fa(pend.length)} مانده)</h2>
+    <span class="b ${esc(u.srcType)}">${SRC[u.srcType]||''}</span><span class="b user">${esc(u.system)}</span>
+    <label>عنوان</label><input class="fld" id="r-title" value="${esc(u.title)}">
+    <label>متن (عدد و واحد را با منبع اصلی مقایسه کن)</label>
+    <textarea class="fld" id="r-body" style="min-height:180px">${esc(u.body)}</textarea>
+    <div class="meta">منبع: ${esc(u.srcName)} · ${esc(u.page)}</div>
+    <div class="btns">
+      <button class="btn" onclick="reviewAct(${u.id},'approve')">تأیید ✓</button>
+      <button class="btn danger" onclick="reviewAct(${u.id},'reject')">رد ✕</button>
+    </div>
+    <div class="btns"><button class="btn ghost" onclick="reviewAct(${u.id},'skip')">بعداً</button>
+    <button class="btn ghost" onclick="closeSheet();refreshCounts()">بستن</button></div>`);
+}
+
+async function reviewAct(id, act){
+  const u = await getOne(id); if (!u) return;
+  const now = Date.now();
+  if (act === 'skip'){
+    u.skippedAt = now; await putUnit(u);
+  } else if (act === 'approve'){
+    const t = $('r-title').value.trim(), b = $('r-body').value.trim();
+    if (!t || !b) return toast('عنوان و متن لازم است');
+    if (t !== u.title || b !== u.body) u.versions.push({at:now, title:t, body:b, edited:true});
+    u.title = t; u.body = b; u.review = 'approved'; u.confidence = 'verified';
+    await putUnit(u); toast('ثبت شد ✓ توی تاریخچه هم مونده.');
+  } else {
+    u.review = 'rejected'; u.rejectedAt = now;
+    await putUnit(u); toast('رد شد؛ تاریخچه‌اش مانده');
+  }
+  renderList(); renderQChips(); refreshCounts();
+  openReview();
 }
 
 // ---------- موتور جستجو ----------
@@ -612,7 +696,7 @@ async function answer(q){
   const safety = safetyFor(q).map(d=>`<div class="safety"><b>🔒 هشدار ایمنی</b>${esc(d.t)}</div>`).join('');
   const all = (await getAll()).filter(u=>!u.hidden);
   if (!all.length){
-    return {safety, html:'دانش‌نامه هنوز خالیه و من فقط از چیزی که ثبت کردی جواب می‌دم. اول چند نکته به دانش‌نامه اضافه کن 🔧'};
+    return {safety, html:'دانش‌نامه هنوز خالیه و من فقط از چیزی که ثبت یا تأیید کردی جواب می‌دم. اول چند نکته اضافه کن 🔧'};
   }
   const ranked = all.map(u=>({u, ...score(u,toks)})).filter(x=>x.s>0)
     .sort((a,b)=>b.s-a.s).slice(0,3);
@@ -659,7 +743,7 @@ chatIn.addEventListener('keydown', e=>{ if(e.key==='Enter') ask(chatIn.value); }
 $('sendBtn').addEventListener('click', ()=>ask(chatIn.value));
 
 // ---------- عیب‌یابی ----------
-let S = null;          // جلسه‌ی فعلی
+let S = null;
 let formDraft = {};
 const UMAP = {'ولت':'V','اهم':'Ω','آمپر':'A','هرتز':'Hz','V':'V','Ω':'Ω','A':'A','Hz':'Hz'};
 const UFA = {V:'ولت', 'Ω':'اهم', A:'آمپر', Hz:'هرتز'};
@@ -800,7 +884,7 @@ function liveHint(){
 }
 function helpHtml(s){
   if (!s.help) return '';
-  const U = (s.ref ? s.ref.unit : curUnitSafe());
+  const U = s.ref ? s.ref.unit : 'V';
   const method = {
     V:'مولتی‌متر را روی ولت DC بگذار. پروب مشکی به بدنه (منفی) و پروب قرمز به نقطه‌ی مورد نظر. اندازه‌گیری موازی است.',
     'Ω':'قبل از اهم‌سنجی مدار را از برق جدا کن (باتری یا کانکتور). اهم‌سنجی روی مدار برقدار مقدار غلط می‌دهد و مولتی‌متر را خراب می‌کند.',
@@ -812,7 +896,6 @@ function helpHtml(s){
   if (s.help >= 3) t += `<div class="help"><b>راهنمایی ۳ (روند کامل):</b> ۱) ایمنی را رعایت کن. ۲) گستره و پروب را تنظیم کن. ۳) اندازه بگیر و عدد را در کادر بنویس. ۴) با مقدار مرجع مقایسه کن. ${s.ref ? 'مرجع: '+fa(s.ref.text) : ''} ۵) اگر خارج از محدوده بود، اول اتصالات و سیم‌کشی را بررسی کن، نه تعویض قطعه.</div>`;
   return t;
 }
-function curUnitSafe(){ return 'V'; }
 function moreHelp(){
   const s = S.steps[S.idx];
   s.help = Math.min(3, (s.help||0)+1);
