@@ -1,4 +1,4 @@
-const CACHE = 'aem-v1';
+const CACHE = 'aem-v2';
 const CORE = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
