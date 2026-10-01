@@ -52,7 +52,7 @@ button{border:none;background:none;cursor:pointer}
 .bar i{display:block;height:100%;width:0;background:var(--amber-500)}
 h2.greet{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
 
-.hero{width:100%;min-height:36vh;border-radius:var(--r-lg);padding:var(--sp-6);text-align:right;
+.hero{width:100%;min-height:30vh;border-radius:var(--r-lg);padding:var(--sp-6);text-align:right;
   background:linear-gradient(var(--bg-card),var(--bg-card)) padding-box,
   linear-gradient(135deg,var(--amber-400),#4a2d05) border-box;border:2px solid transparent;
   display:flex;flex-direction:column;justify-content:center;gap:var(--sp-3);
@@ -61,6 +61,8 @@ h2.greet{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
 .hero b{font-size:var(--fs-h1);font-weight:800}
 .hero span{color:var(--text-secondary);font-size:var(--fs-body-sm)}
 .hero:active{transform:scale(.99)}
+.cont{display:none;width:100%;text-align:right;margin-top:var(--sp-3);background:var(--bg-card);
+  border:1px solid var(--amber-500);border-radius:var(--r-md);padding:var(--sp-4);color:var(--amber-500);font-weight:600}
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-top:var(--sp-4)}
 .mini{background:var(--bg-card);border:1px solid var(--stroke-subtle);border-radius:var(--r-md);
@@ -71,8 +73,6 @@ h2.greet{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-4)}
 .empty{text-align:center;padding:var(--sp-8) var(--sp-4);color:var(--text-secondary)}
 .empty svg{width:96px;height:96px;margin-bottom:var(--sp-4)}
 .empty h3{font-size:var(--fs-h2);font-weight:600;color:var(--text-primary);margin-bottom:var(--sp-2)}
-.badge-soon{display:inline-block;margin-top:var(--sp-3);padding:2px 12px;border-radius:var(--r-pill);
-  border:1px dashed var(--stroke-strong);font-size:var(--fs-caption);color:var(--text-muted)}
 
 nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
   border-top:1px solid var(--stroke-subtle);padding-bottom:env(safe-area-inset-bottom);z-index:50}
@@ -99,6 +99,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);
   background:var(--amber-500);color:var(--text-on-amber);font-weight:800;font-size:var(--fs-body)}
 .btn:active{background:var(--amber-600)}
 .btn.ghost{background:transparent;border:1px solid var(--stroke-strong);color:var(--text-primary);font-weight:600}
+.btn.muted{background:transparent;border:1px solid var(--stroke-subtle);color:var(--text-muted);font-weight:400}
 .btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger);font-weight:600}
 .btn.full{width:100%}
 .btns{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-3)}
@@ -145,7 +146,7 @@ textarea.fld{min-height:140px;resize:vertical}
   border:1px solid var(--stroke-strong);padding:10px 20px;border-radius:var(--r-pill);z-index:120;
   font-size:var(--fs-body-sm);display:none}
 
-/* ---- Chat ---- */
+/* Chat */
 #s-chat{padding-bottom:190px}
 .chead{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)}
 .chead h1{margin:0!important}
@@ -160,7 +161,6 @@ textarea.fld{min-height:140px;resize:vertical}
 .msg.u{background:#2B2013;border-top-left-radius:4px;margin-right:auto;margin-left:0}
 .msg .fact{margin-top:var(--sp-3);padding-top:var(--sp-2);border-top:1px solid var(--stroke-subtle)}
 .msg .fact b.ft{display:block;font-weight:600}
-.msg .fact .tx{color:var(--text-primary)}
 .cite{display:inline-block;margin-top:6px;font-size:var(--fs-caption);color:var(--info);
   border:1px solid var(--info);border-radius:var(--r-pill);padding:1px 10px}
 .val{font-weight:800;color:var(--amber-500);text-shadow:0 0 10px var(--amber-glow)}
@@ -178,6 +178,38 @@ textarea.fld{min-height:140px;resize:vertical}
   color:#fff;font-size:22px;flex:none}
 #sendBtn:disabled{opacity:.35}
 .clr{font-size:var(--fs-caption);color:var(--text-muted);text-align:center;margin:var(--sp-3) 0}
+
+/* Diagnosis */
+.tl{display:flex;gap:var(--sp-3);align-items:center;padding:8px 0;font-size:var(--fs-body-sm);
+  color:var(--text-secondary);border-bottom:1px solid var(--stroke-subtle)}
+.tl .ic{width:24px;text-align:center;flex:none}
+.tl.out{color:var(--danger)}
+.tl.ok{color:var(--safe)}
+.step{border:1px solid var(--amber-500);border-radius:var(--r-md);padding:var(--sp-4);margin:var(--sp-3) 0;
+  background:var(--bg-card);box-shadow:0 0 24px var(--amber-glow)}
+.step .num{display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--amber-500);
+  color:var(--text-on-amber);font-weight:800;align-items:center;justify-content:center;font-size:14px;margin-left:8px}
+.step h3{font-size:var(--fs-h2);font-weight:600;display:inline}
+.step .tx{margin:var(--sp-3) 0;line-height:1.9}
+.meas{display:flex;gap:var(--sp-2);margin-top:var(--sp-3)}
+.meas input{flex:1;height:60px;font-size:24px;font-weight:800;text-align:center;background:var(--bg-input);
+  border:1px solid var(--stroke-strong);border-radius:var(--r-md);color:var(--amber-500)}
+.meas input:focus{outline:none;border-color:var(--amber-500)}
+.seg{display:flex;border:1px solid var(--stroke-strong);border-radius:var(--r-md);overflow:hidden}
+.seg button{padding:0 14px;color:var(--text-secondary)}
+.seg button.on{background:var(--amber-500);color:var(--text-on-amber);font-weight:800}
+.hint{font-size:var(--fs-body-sm);color:var(--text-muted);margin-top:var(--sp-2);min-height:22px}
+.hint.ok{color:var(--safe)}.hint.out{color:var(--danger)}
+.help{background:var(--bg-input);border-radius:var(--r-sm);padding:var(--sp-3);margin-top:var(--sp-3);
+  font-size:var(--fs-body-sm);color:var(--text-secondary);line-height:1.9}
+.sbanner{background:rgba(231,76,60,.14);border:2px solid var(--danger);border-radius:var(--r-md);
+  padding:var(--sp-4);margin:var(--sp-3) 0;color:#ffd7d2}
+.sbanner b{color:var(--danger);display:block;font-size:var(--fs-h2);margin-bottom:var(--sp-2)}
+.sbanner ul{padding-right:20px;font-size:var(--fs-body-sm)}
+.diag{border:1px solid var(--stroke-subtle);border-right:4px solid var(--safe);border-radius:var(--r-md);
+  background:var(--bg-card);padding:var(--sp-4);margin:var(--sp-3) 0}
+.diag .chk{width:44px;height:44px;border-radius:50%;border:3px solid var(--safe);color:var(--safe);
+  display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:var(--sp-2)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -205,6 +237,7 @@ textarea.fld{min-height:140px;resize:vertical}
       <b>عیب‌یابی جدید</b>
       <span>مشکل ماشین رو بگو؛ قدم‌به‌قدم با اندازه‌گیری و شواهد جلو می‌ریم.</span>
     </button>
+    <button class="cont" id="contCard" onclick="go('diag')">▶ ادامه بده: عیب‌یابی نیمه‌کاره</button>
     <div class="stats">
       <div class="mini"><div class="n" id="kbCount">۰</div><div class="l">نکات دانشی</div></div>
       <div class="mini"><div class="n" id="gapCount">۰</div><div class="l">خلأ دانشی</div></div>
@@ -230,12 +263,7 @@ textarea.fld{min-height:140px;resize:vertical}
 
   <section class="screen" id="s-diag">
     <h1 class="t">عیب‌یابی</h1>
-    <div class="empty">
-      <svg viewBox="0 0 96 96" fill="none"><rect x="22" y="14" width="52" height="68" rx="8" stroke="#3D3D3D" stroke-width="3"/><circle cx="48" cy="42" r="14" stroke="#FF9F1C" stroke-width="4"/><path d="M48 42 L56 34" stroke="#FF9F1C" stroke-width="4" stroke-linecap="round"/></svg>
-      <h3>عیب‌یابی قدم‌به‌قدم</h3>
-      <p>اندازه‌گیری و شواهد، بعد حدس. تعویض قطعه‌ی کورکورانه ممنوع.</p>
-      <span class="badge-soon">مرحله ۵</span>
-    </div>
+    <div id="diagBox"></div>
   </section>
 
   <section class="screen" id="s-kb">
@@ -275,7 +303,7 @@ textarea.fld{min-height:140px;resize:vertical}
     </div>
     <div class="card">
       <h3>درباره</h3>
-      <p>استاد برق خودرو · نسخه‌ی مرحله ۴ (چت استاد)</p>
+      <p>استاد برق خودرو · نسخه‌ی مرحله ۵ (عیب‌یابی)</p>
     </div>
   </section>
 </div>
@@ -292,25 +320,27 @@ textarea.fld{min-height:140px;resize:vertical}
 </div></nav>
 
 <script>
+const $ = id => document.getElementById(id);
 const fa = s => String(s).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function hideSplash(){ document.getElementById('splash').classList.add('hide'); }
+function hideSplash(){ $('splash').classList.add('hide'); }
 setTimeout(hideSplash, 1300);
 
 function toast(t){
-  const e = document.getElementById('toast');
+  const e = $('toast');
   e.textContent = t; e.style.display = 'block';
   clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = 'none', 2200);
 }
 
 function go(name){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('s-' + name).classList.add('active');
+  $('s-' + name).classList.add('active');
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.t === name));
   window.scrollTo(0, 0);
   if (name === 'kb') renderList();
   if (name === 'chat'){ renderChat(); renderQChips(); scrollChat(); }
   if (name === 'set') renderGaps();
+  if (name === 'diag') renderDiag();
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.t)));
 
@@ -320,36 +350,36 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   if (h >= 5 && h < 12) g = 'صبح بخیر! امروز کدوم عیب رو شکار کنیم؟ ⚡';
   else if (h >= 12 && h < 17) g = 'ظهر بخیر! کارگاه چه خبره؟ ⚡';
   else if (h >= 17 && h < 21) g = 'عصر بخیر! بریم سراغ مدار بعدی ⚡';
-  document.getElementById('greet').textContent = g;
+  $('greet').textContent = g;
 })();
 
 function updateNet(){
   const on = navigator.onLine;
-  document.getElementById('modePill').classList.toggle('off', !on);
-  document.getElementById('modeText').textContent = on ? 'آنلاین' : 'آفلاین';
-  document.getElementById('setMode').textContent = on ? 'آنلاین' : 'آفلاین';
+  $('modePill').classList.toggle('off', !on);
+  $('modeText').textContent = on ? 'آنلاین' : 'آفلاین';
+  $('setMode').textContent = on ? 'آنلاین' : 'آفلاین';
 }
 addEventListener('online', updateNet); addEventListener('offline', updateNet); updateNet();
 
 if (navigator.getBattery){
   navigator.getBattery().then(b => {
-    const show = () => document.getElementById('battery').textContent = 'باتری: ' + fa(Math.round(b.level*100)) + '٪';
+    const show = () => $('battery').textContent = 'باتری: ' + fa(Math.round(b.level*100)) + '٪';
     show(); b.addEventListener('levelchange', show);
   });
-} else document.getElementById('battery').style.display = 'none';
+} else $('battery').style.display = 'none';
 
 const mb = n => fa((n/1048576).toFixed(1)) + ' مگابایت';
 async function updateStorage(){
   if (!navigator.storage || !navigator.storage.estimate) return;
   const {usage=0, quota=0} = await navigator.storage.estimate();
   const pct = quota ? Math.min(100, usage/quota*100) : 0;
-  document.getElementById('storBar').style.width = pct + '%';
-  document.getElementById('storText').textContent = 'حافظه ' + fa(pct.toFixed(1)) + '٪';
-  document.getElementById('setUsed').textContent = mb(usage);
-  document.getElementById('setQuota').textContent = fa((quota/1073741824).toFixed(1)) + ' گیگابایت';
+  $('storBar').style.width = pct + '%';
+  $('storText').textContent = 'حافظه ' + fa(pct.toFixed(1)) + '٪';
+  $('setUsed').textContent = mb(usage);
+  $('setQuota').textContent = fa((quota/1073741824).toFixed(1)) + ' گیگابایت';
   if (navigator.storage.persisted){
     const p = await navigator.storage.persisted();
-    document.getElementById('setPersist').textContent = p ? 'فعال ✓' : 'غیرفعال';
+    $('setPersist').textContent = p ? 'فعال ✓' : 'غیرفعال';
   }
 }
 async function askPersist(){
@@ -362,11 +392,12 @@ updateStorage();
 let db;
 function openDB(){
   return new Promise((res, rej) => {
-    const r = indexedDB.open('aem-db', 2);
+    const r = indexedDB.open('aem-db', 3);
     r.onupgradeneeded = () => {
       const d = r.result;
-      if (!d.objectStoreNames.contains('units')) d.createObjectStore('units', {keyPath:'id', autoIncrement:true});
-      if (!d.objectStoreNames.contains('gaps')) d.createObjectStore('gaps', {keyPath:'id', autoIncrement:true});
+      ['units','gaps','sessions'].forEach(n => {
+        if (!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath:'id', autoIncrement:true});
+      });
     };
     r.onsuccess = () => { db = r.result; res(); };
     r.onerror = () => rej(r.error);
@@ -379,13 +410,15 @@ const getOne = id => req(st('units','readonly').get(id));
 const putUnit = u => req(st('units','readwrite').put(u));
 const getGaps = () => req(st('gaps','readonly').getAll());
 const addGap = g => req(st('gaps','readwrite').put(g));
+const getSessions = () => req(st('sessions','readonly').getAll());
+const putSession = s => req(st('sessions','readwrite').put(s));
 
 const SYSTEMS = ['شارژ','استارت','جرقه و احتراق','انژکتور و سوخت','سنسورها','ECU','روشنایی','سیم‌کشی و کانکتور','کولر و برقی‌ها','ایربگ (SRS)','سایر'];
 const SRC = {official:'رسمی', training:'آموزشی', practitioner:'تجربی', user:'کاربر', inference:'استنباطی'};
 let fSystem = '', fText = '';
 
 function renderChips(){
-  const el = document.getElementById('chips');
+  const el = $('chips');
   el.innerHTML = ['همه', ...SYSTEMS].map(s =>
     `<button class="chip ${(s==='همه'&&!fSystem)||s===fSystem?'on':''}" data-s="${esc(s)}">${esc(s)}</button>`).join('');
   el.querySelectorAll('.chip').forEach(c => c.onclick = () => {
@@ -400,7 +433,7 @@ async function renderList(){
     (!fSystem || u.system === fSystem) &&
     (!q || [u.title,u.body,u.car,u.srcName].join(' ').toLowerCase().includes(q))
   ).sort((a,b) => b.created - a.created);
-  const list = document.getElementById('list');
+  const list = $('list');
   if (!all.length){
     list.innerHTML = `<div class="empty"><svg viewBox="0 0 96 96" fill="none"><path d="M12 60 H34 L40 40 L54 76 L62 56 H84" stroke="#3D3D3D" stroke-width="3"/><circle cx="40" cy="40" r="5" fill="#FF9F1C"/></svg><h3>دانش‌نامه هنوز خالیه</h3><p>اولین منبع رو اضافه کن تا شروع کنیم 🔧</p></div>`;
   } else if (!items.length){
@@ -419,17 +452,19 @@ async function renderList(){
 }
 
 function updateCount(all){
-  document.getElementById('kbCount').textContent = fa(all.length);
+  $('kbCount').textContent = fa(all.length);
   const last = all.reduce((m,u) => Math.max(m,u.created), 0);
-  document.getElementById('lastAdd').textContent = last ? new Date(last).toLocaleDateString('fa-IR') : '—';
+  $('lastAdd').textContent = last ? new Date(last).toLocaleDateString('fa-IR') : '—';
 }
 async function refreshCounts(){
   updateCount((await getAll()).filter(u => !u.hidden));
-  document.getElementById('gapCount').textContent = fa((await getGaps()).filter(g=>!g.done).length);
+  $('gapCount').textContent = fa((await getGaps()).filter(g=>!g.done).length);
+  const open = (await getSessions()).some(s => !s.done);
+  $('contCard').style.display = open ? 'block' : 'none';
 }
 
-function openSheet(html){ document.getElementById('sheetBody').innerHTML = html; document.getElementById('sheet').classList.add('open'); }
-function closeSheet(){ document.getElementById('sheet').classList.remove('open'); }
+function openSheet(html){ $('sheetBody').innerHTML = html; $('sheet').classList.add('open'); }
+function closeSheet(){ $('sheet').classList.remove('open'); }
 
 function openAdd(){
   openSheet(`
@@ -449,7 +484,7 @@ function openAdd(){
 }
 
 async function saveUnit(){
-  const g = id => document.getElementById(id).value.trim();
+  const g = id => $(id).value.trim();
   const title = g('f-title'), body = g('f-body');
   if (!title || !body) return toast('عنوان و متن لازم است');
   const now = Date.now();
@@ -485,7 +520,7 @@ async function hideUnit(id){
 }
 
 async function exportKB(){
-  const data = {app:'auto-electric-master', exported:new Date().toISOString(), units: await getAll(), gaps: await getGaps()};
+  const data = {app:'auto-electric-master', exported:new Date().toISOString(), units: await getAll(), gaps: await getGaps(), sessions: await getSessions()};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -493,7 +528,7 @@ async function exportKB(){
   document.body.appendChild(a); a.click(); a.remove();
   toast('فایل پشتیبان ساخته شد');
 }
-document.getElementById('imp').addEventListener('change', async e => {
+$('imp').addEventListener('change', async e => {
   const f = e.target.files[0]; if (!f) return;
   try{
     const data = JSON.parse(await f.text());
@@ -503,17 +538,16 @@ document.getElementById('imp').addEventListener('change', async e => {
   } catch { toast('این فایل پشتیبان معتبر نیست'); }
   e.target.value = '';
 });
-document.getElementById('q').addEventListener('input', e => { fText = e.target.value; renderList(); });
+$('q').addEventListener('input', e => { fText = e.target.value; renderList(); });
 
-// ---------- خلأهای دانشی ----------
 async function renderGaps(){
   const gaps = (await getGaps()).filter(g=>!g.done).sort((a,b)=>b.at-a.at);
-  document.getElementById('gapList').innerHTML = gaps.length
+  $('gapList').innerHTML = gaps.length
     ? gaps.slice(0,15).map(g=>`<div class="row"><span>${esc(g.q)}</span></div>`).join('')
     : '<div class="note">فعلاً چیزی ثبت نشده.</div>';
 }
 
-// ---------- موتور جستجوی استاد ----------
+// ---------- موتور جستجو ----------
 const norm = s => String(s||'').toLowerCase()
   .replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u200f]/g,' ')
   .replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
@@ -557,7 +591,7 @@ const scrollChat = () => setTimeout(()=>window.scrollTo(0, document.body.scrollH
 const WELCOME = {r:'m', html:'خب، من آماده‌ام. هر چی از دانش‌نامه‌ات می‌خوای بپرس تا با منبع جوابت رو بدم. 🔧'};
 
 function renderChat(){
-  const box = document.getElementById('msgs');
+  const box = $('msgs');
   const list = chat.length ? chat : [WELCOME];
   box.innerHTML = list.map(m => m.r==='u'
     ? `<div class="msg u">${esc(m.text)}</div>`
@@ -568,7 +602,7 @@ function renderChat(){
 async function renderQChips(){
   if (!db) return;
   const all = (await getAll()).filter(u=>!u.hidden).sort((a,b)=>b.created-a.created).slice(0,5);
-  const el = document.getElementById('qchips');
+  const el = $('qchips');
   el.innerHTML = all.map(u=>`<button class="chip" data-q="${esc(u.title)}">${esc(u.title)}</button>`).join('');
   el.querySelectorAll('.chip').forEach(c => c.onclick = () => { ask(c.dataset.q); });
 }
@@ -605,10 +639,10 @@ async function answer(q){
 
 async function ask(q){
   q = (q||'').trim(); if (!q) return;
-  const inp = document.getElementById('chatIn');
-  inp.value = ''; document.getElementById('sendBtn').disabled = true;
+  const inp = $('chatIn');
+  inp.value = ''; $('sendBtn').disabled = true;
   chat.push({r:'u', text:q}); renderChat(); scrollChat();
-  const av = document.getElementById('avatar'); av.classList.add('think');
+  const av = $('avatar'); av.classList.add('think');
   const a = await answer(q);
   await new Promise(r=>setTimeout(r,350));
   av.classList.remove('think');
@@ -619,10 +653,218 @@ function clearChat(){
   if (!confirm('گفتگو پاک شود؟ دانش‌نامه دست‌نخورده می‌ماند.')) return;
   chat = []; saveChat(); renderChat();
 }
-const chatIn = document.getElementById('chatIn');
-chatIn.addEventListener('input', ()=>document.getElementById('sendBtn').disabled = !chatIn.value.trim());
+const chatIn = $('chatIn');
+chatIn.addEventListener('input', ()=>$('sendBtn').disabled = !chatIn.value.trim());
 chatIn.addEventListener('keydown', e=>{ if(e.key==='Enter') ask(chatIn.value); });
-document.getElementById('sendBtn').addEventListener('click', ()=>ask(chatIn.value));
+$('sendBtn').addEventListener('click', ()=>ask(chatIn.value));
+
+// ---------- عیب‌یابی ----------
+let S = null;          // جلسه‌ی فعلی
+let formDraft = {};
+const UMAP = {'ولت':'V','اهم':'Ω','آمپر':'A','هرتز':'Hz','V':'V','Ω':'Ω','A':'A','Hz':'Hz'};
+const UFA = {V:'ولت', 'Ω':'اهم', A:'آمپر', Hz:'هرتز'};
+const toNum = s => parseFloat(String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+  .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace('٫','.').replace('،','.'));
+
+function findRef(body){
+  const re = /([\d۰-۹]+(?:[٫.][\d۰-۹]+)?)\s*(?:تا|-|–)\s*([\d۰-۹]+(?:[٫.][\d۰-۹]+)?)\s*(ولت|اهم|آمپر|هرتز|V|Ω|A|Hz)/;
+  const m = String(body).match(re);
+  if (!m) return null;
+  const lo = toNum(m[1]), hi = toNum(m[2]);
+  if (isNaN(lo) || isNaN(hi)) return null;
+  return {lo:Math.min(lo,hi), hi:Math.max(lo,hi), unit:UMAP[m[3]], text:m[0]};
+}
+
+const SAFE_STEP = {
+  type:'safety', title:'ایمنی قبل از شروع',
+  items:['استارت یا کلید را خاموش کن.','انگشتر، دستبند و هر فلز آویزان را در بیار.','مولتی‌متر را روی گستره‌ی درست بگذار.','دو قطب باتری را هرگز با ابزار فلزی به هم وصل نکن.','اگر موتور روشن می‌شود، از تسمه و فن دست و لباست را دور نگه دار.']
+};
+
+async function renderDiag(){
+  if (!S){
+    const all = await getSessions();
+    S = all.filter(s => !s.done).sort((a,b)=>b.created-a.created)[0] || null;
+  }
+  const box = $('diagBox');
+  if (!S) return renderForm(box);
+  renderSession(box);
+}
+
+function renderForm(box){
+  const d = formDraft;
+  box.innerHTML = `
+    <div class="card"><p>مشخصات رو بنویس. قدم‌ها فقط از دانش‌نامه‌ات ساخته می‌شه و هر قدم منبع داره.</p></div>
+    <label>خودرو (مدل و سال)</label><input class="fld" id="d-car" value="${esc(d.car||'')}" placeholder="مثلاً: پژو ۲۰۷ مدل ۱۴۰۰">
+    <label>سیستم مشکوک</label>
+    <select class="fld" id="d-sys">${SYSTEMS.map(s=>`<option ${d.sys===s?'selected':''}>${s}</option>`).join('')}</select>
+    <label>علامت یا مشکل</label><textarea class="fld" id="d-sym" style="min-height:100px" placeholder="مثلاً: باتری شارژ نمی‌شود و چراغ باتری روشن است">${esc(d.sym||'')}</textarea>
+    <label>کد خطا (اگر داری)</label><input class="fld" id="d-dtc" dir="ltr" value="${esc(d.dtc||'')}" placeholder="P0562">
+    <div class="btns"><button class="btn full" onclick="startDiag()">شروع عیب‌یابی ⚡</button></div>`;
+}
+
+function banner(title, lines, ackLabel, ackFn){
+  return `<div class="sbanner"><b>🔒 ${esc(title)}</b>${lines}
+    <div class="btns"><button class="btn" onclick="${ackFn}">${esc(ackLabel)}</button></div></div>`;
+}
+
+async function startDiag(){
+  const g = id => $(id).value.trim();
+  formDraft = {car:g('d-car'), sys:g('d-sys'), sym:g('d-sym'), dtc:g('d-dtc')};
+  if (!formDraft.sym) return toast('علامت مشکل را بنویس');
+  const hits = safetyFor(formDraft.sym + ' ' + formDraft.sys + ' ' + formDraft.dtc);
+  if (formDraft.sys === 'ایربگ (SRS)' && !hits.some(h=>h.k.includes('srs'))) hits.push(DANGER[0]);
+  if (hits.length){
+    $('diagBox').innerHTML = banner('این مدار خطرناک است',
+      '<ul>' + hits.map(h=>`<li>${esc(h.t)}</li>`).join('') + '</ul><p style="margin-top:8px;font-size:14px">راه امن: خودرو را به تعمیرکار مجاز یا نمایندگی ببر. من اینجا قدم اندازه‌گیری برای این مدار نمی‌سازم.</p>',
+      'متوجه شدم', "formDraft={};renderDiag()");
+    if (navigator.vibrate) navigator.vibrate([40,60,40]);
+    return;
+  }
+  const toks = tokens(formDraft.sym + ' ' + formDraft.car + ' ' + formDraft.dtc);
+  const all = (await getAll()).filter(u=>!u.hidden);
+  const ranked = all.map(u=>{ const r = score(u,toks); return {u, hit:r.hit, s:r.s + (u.system===formDraft.sys ? 5 : 0)}; })
+    .filter(x => x.u.system===formDraft.sys || x.hit>0)
+    .sort((a,b)=>b.s-a.s).slice(0,6);
+  const steps = [SAFE_STEP, ...ranked.map(x => {
+    const u = x.u;
+    return {type:'unit', uid:u.id, title:u.title, body:u.body, srcType:u.srcType, srcName:u.srcName, page:u.page,
+            ref:findRef(u.body), status:'', value:null, unit:null, result:'', help:0};
+  })];
+  if (!ranked.length) await addGap({q:'عیب‌یابی: ' + formDraft.sym, at:Date.now(), done:false});
+  S = {car:formDraft.car, sys:formDraft.sys, symptom:formDraft.sym, dtc:formDraft.dtc,
+       created:Date.now(), idx:0, steps, done:false, noKB: !ranked.length};
+  S.id = await putSession(S);
+  formDraft = {};
+  refreshCounts(); renderDiag();
+}
+
+const saveS = () => putSession(S);
+
+function renderSession(box){
+  let h = `<div class="card"><h3>${esc(S.sys)}${S.car ? ' · '+esc(S.car) : ''}</h3><p>${esc(S.symptom)}</p>
+    ${S.dtc ? `<p dir="ltr" style="text-align:right">کد ${esc(S.dtc)}</p>` : ''}</div>`;
+  if (S.noKB) h += `<div class="card"><p>در دانش‌نامه برای این سیستم چیزی پیدا نکردم و حدس هم نمی‌زنم. این مسئله ثبت شد. تا نکته‌ی مرتبط اضافه کنی فقط مسیر امن عمومی را داری: ولتاژ باتری را با مولتی‌متر اندازه بگیر و مدار را مشخص کن.</p></div>`;
+  S.steps.forEach((s,i) => {
+    if (i < S.idx){
+      const ic = s.type==='safety' ? '🔒' : s.result==='out' ? '⚠' : s.result==='ok' ? '✓' : s.status==='skip' ? '—' : '•';
+      const cl = s.result==='out' ? 'out' : s.result==='ok' ? 'ok' : '';
+      h += `<div class="tl ${cl}"><span class="ic">${ic}</span><span>${esc(s.title)}${s.value!=null ? ' — '+fa(s.value)+' '+UFA[s.unit] : ''}</span></div>`;
+    }
+  });
+  if (S.idx < S.steps.length){
+    const s = S.steps[S.idx], n = S.idx + 1;
+    if (s.type === 'safety'){
+      h += `<div class="sbanner"><b>🔒 ${esc(s.title)}</b><ul>${s.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+        <div class="btns"><button class="btn" onclick="ackSafety()">متوجه شدم، ادامه بده</button></div></div>`;
+    } else {
+      const ref = s.ref;
+      const unit = ref ? ref.unit : 'V';
+      h += `<div class="step"><span class="num">${fa(n)}</span><h3>${esc(s.title)}</h3>
+        <div class="tx">${hl(s.body)}</div>
+        <span class="cite" data-open="${s.uid}">منبع: ${esc(s.srcName)} · ${esc(s.page)}</span>
+        <span class="b ${esc(s.srcType)}">${SRC[s.srcType]||''}</span>
+        ${s.srcType==='inference' ? '<div class="note">⚠ این مورد استنباطی است، نه مستند.</div>' : ''}
+        <div class="meas">
+          <input id="mv" type="text" inputmode="decimal" placeholder="۰٫۰" oninput="liveHint()">
+          <div class="seg" id="seg">${['V','Ω','A','Hz'].map(u=>`<button data-u="${u}" class="${u===unit?'on':''}">${UFA[u]}</button>`).join('')}</div>
+        </div>
+        <div class="hint" id="hint">${ref ? 'مقدار مرجع: '+fa(ref.lo)+' تا '+fa(ref.hi)+' '+UFA[ref.unit] : 'مقدار مرجع: نامشخص در منبع'}</div>
+        <div id="helpBox">${helpHtml(s)}</div>
+        <div class="btns"><button class="btn" onclick="doneStep()">انجام دادم</button></div>
+        <div class="btns"><button class="btn ghost" onclick="moreHelp()">راهنمایی بیشتر</button>
+        <button class="btn muted" onclick="skipStep()">نمی‌تونم</button></div></div>`;
+    }
+  } else {
+    h += summaryHtml();
+  }
+  box.innerHTML = h;
+  box.querySelectorAll('[data-open]').forEach(c => c.onclick = () => openDetail(+c.dataset.open));
+  const seg = $('seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+    seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); liveHint();
+  });
+}
+
+function curUnit(){ const b = document.querySelector('#seg .on'); return b ? b.dataset.u : 'V'; }
+function judge(s, v, u){
+  if (!s.ref || isNaN(v) || u !== s.ref.unit) return '';
+  return (v >= s.ref.lo && v <= s.ref.hi) ? 'ok' : 'out';
+}
+function liveHint(){
+  const s = S.steps[S.idx], v = toNum($('mv').value), h = $('hint');
+  const r = judge(s, v, curUnit());
+  h.className = 'hint ' + r;
+  if (r === 'ok') h.textContent = 'توی محدوده‌ست ✓';
+  else if (r === 'out') h.textContent = 'خارج از محدوده‌ی مرجع است ⚠';
+  else h.textContent = s.ref ? 'مقدار مرجع: ' + fa(s.ref.lo) + ' تا ' + fa(s.ref.hi) + ' ' + UFA[s.ref.unit] : 'مقدار مرجع: نامشخص در منبع';
+}
+function helpHtml(s){
+  if (!s.help) return '';
+  const U = (s.ref ? s.ref.unit : curUnitSafe());
+  const method = {
+    V:'مولتی‌متر را روی ولت DC بگذار. پروب مشکی به بدنه (منفی) و پروب قرمز به نقطه‌ی مورد نظر. اندازه‌گیری موازی است.',
+    'Ω':'قبل از اهم‌سنجی مدار را از برق جدا کن (باتری یا کانکتور). اهم‌سنجی روی مدار برقدار مقدار غلط می‌دهد و مولتی‌متر را خراب می‌کند.',
+    A:'آمپرمتر باید با مدار سری شود، نه موازی. گستره را بالا بگذار و پروب را درست در جک آمپر بزن.',
+    Hz:'گستره‌ی فرکانس را انتخاب کن و سیم سیگنال را با پروب نازک (back-probe) بگیر. هرگز مستقیم به پین ECU ولت ۱۲ نده.'
+  }[U];
+  let t = '<div class="help"><b>راهنمایی ۱:</b> شرایط تست را از متن بالا دقیق بخوان (موتور خاموش یا روشن، بار و ...). اگر شرایط نوشته نشده، یعنی «نامشخص در منبع» و قبل از قضاوت بهتر است منبع را بازبینی کنی.</div>';
+  if (s.help >= 2) t += `<div class="help"><b>راهنمایی ۲ (روش اندازه‌گیری):</b> ${esc(method)}</div>`;
+  if (s.help >= 3) t += `<div class="help"><b>راهنمایی ۳ (روند کامل):</b> ۱) ایمنی را رعایت کن. ۲) گستره و پروب را تنظیم کن. ۳) اندازه بگیر و عدد را در کادر بنویس. ۴) با مقدار مرجع مقایسه کن. ${s.ref ? 'مرجع: '+fa(s.ref.text) : ''} ۵) اگر خارج از محدوده بود، اول اتصالات و سیم‌کشی را بررسی کن، نه تعویض قطعه.</div>`;
+  return t;
+}
+function curUnitSafe(){ return 'V'; }
+function moreHelp(){
+  const s = S.steps[S.idx];
+  s.help = Math.min(3, (s.help||0)+1);
+  saveS(); $('helpBox').innerHTML = helpHtml(s);
+}
+async function ackSafety(){
+  if (navigator.vibrate) navigator.vibrate([40,60,40]);
+  S.steps[S.idx].status = 'ack'; S.idx++; await saveS(); renderDiag();
+}
+async function doneStep(){
+  const s = S.steps[S.idx], raw = $('mv').value.trim();
+  if (raw){
+    const v = toNum(raw);
+    if (isNaN(v)) return toast('عدد را درست بنویس');
+    s.value = v; s.unit = curUnit(); s.result = judge(s, v, s.unit) || 'rec';
+  } else {
+    s.result = 'none';
+  }
+  s.status = 'done';
+  S.idx++; await saveS(); renderDiag(); window.scrollTo(0,0);
+}
+async function skipStep(){
+  const s = S.steps[S.idx]; s.status = 'skip'; s.result = 'skip';
+  S.idx++; await saveS(); renderDiag();
+}
+
+function summaryHtml(){
+  const units = S.steps.filter(s=>s.type==='unit');
+  const outs = units.filter(s=>s.result==='out');
+  const oks = units.filter(s=>s.result==='ok');
+  const skipped = units.filter(s=>s.status==='skip');
+  let t = '<div class="diag"><div class="chk">✓</div><h3>جمع‌بندی عیب‌یابی</h3>';
+  if (!units.length){
+    t += '<p>قدمی از دانش‌نامه نداشتیم، پس نتیجه‌ای نمی‌دهم. نکته‌های مرتبط را اضافه کن و دوباره شروع کن.</p>';
+  } else if (outs.length){
+    t += '<p>این اندازه‌گیری‌ها خارج از مقدار مرجع بودند:</p>' + outs.map(s =>
+      `<div class="tl out"><span class="ic">⚠</span><span>${esc(s.title)} — <span class="val">${fa(s.value)} ${UFA[s.unit]}</span> (مرجع: ${fa(s.ref.lo)} تا ${fa(s.ref.hi)})<br><span style="font-size:12px">منبع: ${esc(s.srcName)} · ${esc(s.page)}</span></span></div>`).join('');
+    t += '<p style="margin-top:12px"><b>قدم بعدی:</b> همین مدار را دقیق‌تر بررسی کن (کانکتور، اتصال بدنه، سیم‌کشی) و قبل از تعویض قطعه یک بار دیگر اندازه بگیر.</p>';
+  } else if (oks.length){
+    t += '<p>همه‌ی مقدارهای اندازه‌گیری‌شده در محدوده‌ی مرجع بودند. پس این مدارها فعلاً سالم‌اند و باید سراغ سیستم یا نکته‌ی دیگری بروی.</p>';
+  } else {
+    t += '<p>مقدار عددی ثبت نشد، پس نتیجه‌ی مبتنی بر اندازه‌گیری ندارم.</p>';
+  }
+  t += `<div class="note">اطمینان: نامشخص. این جمع‌بندی فقط بر پایه‌ی اندازه‌گیری‌های تو و دانش‌نامه‌ی خودت است، نه تشخیص قطعی.${skipped.length ? ' '+fa(skipped.length)+' قدم رد شد.' : ''}</div>
+    <div class="btns"><button class="btn" onclick="finishDiag()">پایان و شروع جدید</button></div></div>`;
+  return t;
+}
+async function finishDiag(){
+  S.done = true; S.finished = Date.now(); await saveS();
+  S = null; refreshCounts(); renderDiag();
+  toast('ثبت شد ✓ توی تاریخچه هم مونده.');
+}
 
 openDB().then(() => { renderChips(); renderList(); refreshCounts(); renderChat(); renderQChips(); })
   .catch(() => toast('دیتابیس باز نشد'));
