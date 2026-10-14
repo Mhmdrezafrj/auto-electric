@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>کارگاه عملی برق خودرو</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+:root{
+  --bg-base:#000;--bg-card:#121212;--bg-elevated:#1C1C1C;--bg-input:#0C0C0C;
+  --stroke-subtle:#242424;--stroke-strong:#383838;
+  --amber-500:#FF9F1C;--amber-400:#FFB627;--amber-600:#E8890C;--amber-glow:rgba(255,159,28,.12);
+  --safe:#2ECC71;--warn:#F39C12;--danger:#E74C3C;--info:#5DADE2;--skill:#C8A2FF;
+  --text-primary:#F2F2F2;--text-secondary:#A8A8A8;--text-muted:#666;--text-on-amber:#1A1206;
+  --fs-h1:19px;--fs-h2:16.5px;--fs-body:15px;--fs-body-sm:13.5px;--fs-caption:12px;
+  --lh:1.7;--r-md:11px;--r-lg:16px;--r-pill:999px;
+  --sp-2:6px;--sp-3:9px;--sp-4:12px;--sp-6:18px;--touch-min:48px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg-base);color:var(--text-primary);
+  font-family:'Vazirmatn',system-ui,sans-serif;font-size:var(--fs-body);line-height:var(--lh)}
+button,input,select,textarea{font-family:inherit;color:inherit}
+button{border:none;background:none;cursor:pointer}
+.top{position:sticky;top:0;background:rgba(10,10,10,.96);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--stroke-subtle);z-index:60;padding:var(--sp-3);
+  display:flex;align-items:center;gap:var(--sp-2);padding-top:calc(var(--sp-3) + env(safe-area-inset-top))}
+.top h1{font-size:var(--fs-h1);font-weight:800;flex:1}
+.top .home{font-size:12px;border:1px solid var(--stroke-strong);border-radius:var(--r-pill);
+  padding:4px 12px;color:var(--text-secondary);text-decoration:none}
+.app{max-width:680px;margin:0 auto;padding:var(--sp-3);padding-bottom:120px}
+.page{display:none;animation:in .2s ease-out}
+.page.on{display:block}
+@keyframes in{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-2);margin-top:var(--sp-3)}
+.mcell{display:flex;flex-direction:column;gap:2px;text-align:right;background:var(--bg-card);
+  border:1px solid var(--stroke-subtle);border-radius:var(--r-md);padding:var(--sp-3);min-height:78px;transition:border-color .15s}
+.mcell:active{border-color:var(--amber-500)}
+.mcell .em{font-size:22px}
+.mcell b{font-size:var(--fs-body-sm);font-weight:700}
+.mcell span{font-size:11px;color:var(--text-muted)}
+.mcell.wide{grid-column:1/-1}
+.mcell.dash{background:linear-gradient(160deg,rgba(255,159,28,.08),var(--bg-card));border-color:#5A3E10}
+h1.t{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-3)}
+h2.s{font-size:var(--fs-h2);font-weight:700;margin:var(--sp-4) 0 var(--sp-2)}
+.card{background:var(--bg-card);border:1px solid var(--stroke-subtle);border-radius:var(--r-md);
+  padding:var(--sp-3);margin-bottom:var(--sp-2)}
+.card p{color:var(--text-secondary);font-size:var(--fs-body-sm)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:5px 0;font-size:var(--fs-body-sm);
+  border-bottom:1px solid var(--stroke-subtle);align-items:center}
+.row:last-child{border:none}
+.row b{color:var(--amber-500)}
+.btn{min-height:var(--touch-min);padding:0 var(--sp-4);border-radius:var(--r-md);
+  background:var(--amber-500);color:var(--text-on-amber);font-weight:700;font-size:var(--fs-body-sm)}
+.btn:active{background:var(--amber-600)}
+.btn.ghost{background:transparent;border:1px solid var(--stroke-strong);color:var(--text-primary);font-weight:600}
+.btn.muted{background:transparent;border:1px solid var(--stroke-subtle);color:var(--text-muted)}
+.btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger);font-weight:600}
+.btn.sm{min-height:36px;padding:0 12px;font-size:12px}
+.btn.full{width:100%}
+.btns{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-2)}
+.btns .btn{flex:1}
+label{display:block;font-size:var(--fs-body-sm);color:var(--text-secondary);margin:var(--sp-2) 0 3px}
+.fld{width:100%;min-height:var(--touch-min);background:var(--bg-input);border:1px solid var(--stroke-subtle);
+  border-radius:var(--r-md);padding:7px var(--sp-3);font-size:var(--fs-body)}
+.fld:focus{outline:none;border-color:var(--amber-500);box-shadow:0 0 0 3px var(--amber-glow)}
+textarea.fld{min-height:110px;resize:vertical}
+select.fld{height:var(--touch-min)}
+.search{width:100%;height:var(--touch-min);background:var(--bg-input);border:1px solid var(--stroke-subtle);
+  border-radius:var(--r-md);padding:0 var(--sp-3);font-size:var(--fs-body);margin-bottom:var(--sp-2)}
+.note{font-size:var(--fs-caption);color:var(--text-muted);margin-top:var(--sp-1)}
+.warnbox{background:rgba(231,76,60,.13);border:2px solid var(--danger);border-radius:var(--r-md);
+  padding:var(--sp-3);margin:var(--sp-2) 0;color:#ffd7d2;font-size:var(--fs-body-sm)}
+.warnbox b{color:var(--danger);display:block;font-size:var(--fs-h2);margin-bottom:4px}
+.infobox{background:rgba(93,173,226,.08);border:1px solid #2A4A5E;border-radius:var(--r-md);
+  padding:var(--sp-3);margin:var(--sp-2) 0;font-size:var(--fs-body-sm);color:#CFE9F5}
+.okbox{background:rgba(46,204,113,.09);border:1px solid #3D8B57;border-radius:var(--r-md);
+  padding:var(--sp-3);margin:var(--sp-2) 0;font-size:var(--fs-body-sm);color:#CFF5DC}
+.stopbox{background:rgba(243,156,18,.12);border:1px solid var(--warn);border-radius:var(--r-md);
+  padding:var(--sp-3);margin:var(--sp-2) 0;font-size:var(--fs-body-sm);color:#FFE3B8}
+.lesson{border:1px solid var(--stroke-subtle);border-radius:var(--r-md);background:var(--bg-card);
+  padding:var(--sp-3);margin-bottom:var(--sp-2)}
+.lesson h3{font-size:var(--fs-body-sm);font-weight:700}
+.lesson .meta{font-size:11px;color:var(--text-muted);margin-top:2px}
+.lesson.locked{opacity:.45}
+.lvlchip{display:inline-block;font-size:10px;border:1px solid var(--skill);color:var(--skill);
+  border-radius:var(--r-pill);padding:0 8px;line-height:1.9;margin-right:4px}
+.steps-list{counter-reset:stp}
+.stepitem{border:1px solid var(--stroke-subtle);border-radius:var(--r-md);background:var(--bg-input);
+  padding:var(--sp-3);margin:var(--sp-2) 0}
+.stepitem.done{border-color:var(--safe)}
+.stepitem .sh{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.stepitem .sh b{font-size:var(--fs-body-sm);flex:1}
+.stepitem .num{width:24px;height:24px;border-radius:50%;background:var(--amber-500);color:var(--text-on-amber);
+  display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;margin-left:8px}
+.stepitem .sb{display:none;margin-top:var(--sp-2);font-size:var(--fs-body-sm);line-height:1.8;color:var(--text-secondary)}
+.stepitem.open .sb{display:block}
+.qa{border:1px solid var(--stroke-subtle);border-radius:var(--r-md);background:var(--bg-input);
+  padding:var(--sp-3);margin:var(--sp-2) 0;font-size:var(--fs-body-sm)}
+.qa b{display:block;margin-bottom:var(--sp-2)}
+.bar{height:6px;background:var(--stroke-subtle);border-radius:var(--r-pill);overflow:hidden;margin:4px 0}
+.bar i{display:block;height:100%;background:var(--amber-500)}
+.statbar .sb-t{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-secondary)}
+.statbar{margin:6px 0}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg-elevated);
+  border:1px solid var(--stroke-strong);padding:8px 16px;border-radius:var(--r-pill);z-index:120;
+  font-size:var(--fs-body-sm);display:none;max-width:90%;text-align:center}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:80;display:none}
+.sheet.open{display:block}
+.sheet-in{position:absolute;bottom:0;left:0;right:0;max-width:680px;margin:0 auto;max-height:92%;
+  overflow-y:auto;background:var(--bg-elevated);border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:var(--sp-4);padding-bottom:calc(var(--sp-6) + env(safe-area-inset-bottom));animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.sheet-in h2{font-size:var(--fs-h1);font-weight:800;margin-bottom:var(--sp-2)}
+.back{display:inline-block;margin-bottom:var(--sp-3);font-size:var(--fs-body-sm);
+  color:var(--amber-500);border:none;font-weight:600}
+.pill{display:inline-block;font-size:10.5px;border:1px solid var(--stroke-strong);color:var(--text-secondary);
+  border-radius:var(--r-pill);padding:0 8px;line-height:1.9;margin-left:4px}
+.pill.dg{color:var(--danger);border-color:var(--danger)}
+.pill.ok{color:var(--safe);border-color:var(--safe)}
+.pill.wn{color:var(--warn);border-color:var(--warn)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:var(--sp-2)}
+.chip{flex:none;padding:3px 11px;border-radius:var(--r-pill);border:1px solid var(--stroke-strong);
+  font-size:12px;color:var(--text-secondary);white-space:nowrap}
+.chip.on{background:var(--amber-500);color:var(--text-on-amber);border-color:var(--amber-500);font-weight:600}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:var(--sp-2) 0}
+.tbl th,.tbl td{border:1px solid var(--stroke-subtle);padding:4px 8px;text-align:right}
+.tbl th{background:var(--bg-input);color:var(--text-secondary)}
+.val{font-weight:800;color:var(--amber-500)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>🔧 کارگاه عملی برق خودرو</h1>
+  <a class="home" href="index.html">→ اپ اصلی</a>
+</div>
+
+<div class="app">
+
+  <!-- ===== داشبورد ===== -->
+  <div class="page on" id="p-dash">
+    <div class="warnbox" id="safetyWarn" style="display:none"></div>
+    <div class="infobox" id="nextPractice"></div>
+    <div class="mgrid">
+      <button class="mcell wide dash" onclick="go('plan')">
+        <span class="em">📅</span><b>تمرین امروز — برنامه‌ریز ۶۰ دقیقه</b>
+        <span id="planHint">۱۰ دقیقه یادگیری · ۳۵ تمرین · ۱۰ ثبت · ۵ بازیابی</span>
+      </button>
+      <button class="mcell" onclick="go('courses')"><span class="em">📚</span><b>مسیر یادگیری</b><span>۱۱ دوره، از ایمنی تا پیشرفته</span></button>
+      <button class="mcell" onclick="go('mentor')"><span class="em">🧑‍🏫</span><b>استادکار راهنما</b><span>راهنمای عملی گام‌به‌گام</span></button>
+      <button class="mcell" onclick="go('lab')"><span class="em">🧪</span><b>آزمایشگاه ابزار</b><span>مولتی‌متر، چراغ تست، جامپر</span></button>
+      <button class="mcell" onclick="go('diag')"><span class="em">🔍</span><b>عیب‌یابی مرحله‌به‌مرحله</b><span>در همین اپ اصلی</span></button>
+      <button class="mcell" onclick="go('skills')"><span class="em">🎯</span><b>تسلط و مرور</b><span>سطح هر مهارت، مرور عقب‌افتاده</span></button>
+      <button class="mcell" onclick="go('vehicles')"><span class="em">🚗</span><b>پرونده خودروها</b><span>مشخصات، آزمایش‌ها، نتایج</span></button>
+      <button class="mcell" onclick="go('logbook')"><span class="em">📓</span><b>دفتر تمرین‌ها</b><span>ثبت نتایج واقعی و خطاها</span></button>
+      <button class="mcell" onclick="go('exam')"><span class="em">📝</span><b>آزمون مهارت</b><span>ارزیابی تسلط و آزمون هفتگی</span></button>
+      <button class="mcell" onclick="go('library')"><span class="em">📖</span><b>کتابخانه دانش</b><span>منابع معتبر و تحقیق وب</span></button>
+      <button class="mcell" onclick="go('guide')"><span class="em">🧭</span><b>راهنمای اپ</b><span>آموزش تعاملی استفاده از برنامه</span></button>
+    </div>
+    <h2 class="s">وضعیت پیشرفت واقعی</h2>
+    <div class="card" id="dashStats"></div>
+    <h2 class="s">آخرین نتایج واقعی</h2>
+    <div class="card" id="dashRecent"></div>
+  </div>
+
+  <!-- ===== برنامه‌ریز ===== -->
+  <div class="page" id="p-plan">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">📅 برنامه‌ریز جلسه</h1>
+    <div class="card">
+      <label>نوع جلسه</label>
+      <select class="fld" id="plan-type">
+        <option value="main">۱) روی خودروی اصلی (پارس ۱۳۹۴)</option>
+        <option value="other">۲) محدود روی خودروی دیگر (حدود ۱ ساعت)</option>
+        <option value="bench">۳) بدون خودرو — با ابزار/نقشه/تحلیل</option>
+      </select>
+      <label>انرژی و شرایط امروز</label>
+      <select class="fld" id="plan-energy">
+        <option value="full">سرحالم</option>
+        <option value="tired">خسته‌ام</option>
+        <option value="short">فقط کمی وقت دارم</option>
+      </select>
+      <div class="btns"><button class="btn full" onclick="makePlan()">برنامه‌ی امروز را بساز</button></div>
+    </div>
+    <div id="planOut"></div>
+    <div class="infobox" id="otherCarPrep" style="display:none">
+      <b>پروتکل خودروی دیگر (قبل از رفتن):</b> ۱) مدل/سال/موتور را بپرس و در پرونده ثبت کن ۲) ابزار لازم را از «آزمایشگاه» چک کن ۳) یک سناریوی مشخص انتخاب کن — از این ور کار جست‌وجوی پراکنده ممنوع است.
+    </div>
+  </div>
+
+  <!-- ===== دوره‌ها ===== -->
+  <div class="page" id="p-courses">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">📚 مسیر یادگیری</h1>
+    <p class="note">درصد پیشرفت از معیارهای واقعی (آزمون اجرای مستقل + تسلط مهارت‌ها) محاسبه می‌شود، نه از «خواندن».</p>
+    <div id="coursesList"></div>
+  </div>
+
+  <!-- ===== درس ===== -->
+  <div class="page" id="p-lesson">
+    <button class="back" onclick="go('courses')">→ دوره‌ها</button>
+    <div id="lessonBody"></div>
+  </div>
+
+  <!-- ===== استادکار ===== -->
+  <div class="page" id="p-mentor">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">🧑‍🏫 استادکار راهنمای عملی</h1>
+    <div class="infobox">من مربی‌ام، نه پیشگوی. هر قدم فقط بعد از تأیید ابزار و تنظیمات می‌آید؛ هیچ عدد استانداردی از خودم نمی‌سازم و اگر مرجع معتبر نداشته باشم صادقانه می‌گویم.</div>
+    <div id="mentorBody"></div>
+  </div>
+
+  <!-- ===== آزمایشگاه ===== -->
+  <div class="page" id="p-lab">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">🧪 آزمایشگاه ابزار و قطعات</h1>
+    <div class="card">
+      <label>ابزارهای من (هر بار که خریدی، اینجا ثبت کن)</label>
+      <div id="toolsList"></div>
+      <div class="btns"><button class="btn ghost sm" onclick="openToolAdd()">＋ ابزار جدید</button></div>
+    </div>
+    <div id="labBody"></div>
+  </div>
+
+  <!-- ===== مهارت‌ها ===== -->
+  <div class="page" id="p-skills">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">🎯 تسلط و مرور هوشمند</h1>
+    <p class="note">تسلط از معیارهای قابل سنجش می‌آید: اجرای مستقل، خطاها، وابستگی به راهنما، تفسیر نتیجه — نه از زدن «انجام شد».</p>
+    <div class="card" id="skillsDue"></div>
+    <div id="skillsList"></div>
+  </div>
+
+  <!-- ===== خودروها ===== -->
+  <div class="page" id="p-vehicles">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">🚗 پرونده خودروها</h1>
+    <div id="vehBody"></div>
+  </div>
+
+  <!-- ===== دفتر ثبت ===== -->
+  <div class="page" id="p-logbook">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">📓 دفتر ثبت تمرین‌ها</h1>
+    <div class="btns" style="margin-bottom:var(--sp-2)">
+      <button class="btn" onclick="openLogAdd()">＋ ثبت تمرین</button>
+    </div>
+    <div id="logBody"></div>
+  </div>
+
+  <!-- ===== آزمون ===== -->
+  <div class="page" id="p-exam">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">📝 آزمون مهارت</h1>
+    <div id="examBody"></div>
+  </div>
+
+  <!-- ===== کتابخانه ===== -->
+  <div class="page" id="p-library">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">📖 کتابخانه دانش برق خودرو</h1>
+    <div class="infobox" id="libStatus"></div>
+    <div class="card">
+      <label>موضوع تحقیق</label>
+      <input class="fld" id="res-q" placeholder="مثلاً: ولتاژ مرجع باتری">
+      <div class="btns"><button class="btn" onclick="addResearch()">افزودن به صف تحقیق</button></div>
+    </div>
+    <div id="resDash"></div>
+  </div>
+
+  <!-- ===== راهنمای اپ ===== -->
+  <div class="page" id="p-guide">
+    <button class="back" onclick="go('dash')">→ داشبورد</button>
+    <h1 class="t">🧭 آموزش استفاده از اپ</h1>
+    <p class="note">این راهنما درباره‌ی خود برنامه است، نه برق خودرو. هر بخش مستقل است و تمرین کوچکی دارد.</p>
+    <div id="guideList"></div>
+  </div>
+
+</div>
+
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sheet-in" id="sheetBody"></div></div>
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const fa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DAY=86400000;
+function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600);}
+function openSheet(h){$('sheetBody').innerHTML=h;$('sheet').classList.add('open');}
+function closeSheet(){$('sheet').classList.remove('open');}
+function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));$('p-'+p).classList.add('on');window.scrollTo(0,0);
+  if(p==='dash')renderDash();if(p==='courses')renderCourses();if(p==='skills')renderSkills();
+  if(p==='vehicles')renderVehicles();if(p==='logbook')renderLog();if(p==='exam')renderExam();
+  if(p==='library')renderLibrary();if(p==='lab')renderLab();if(p==='guide')renderGuide();
+  if(p==='plan')renderPlanHint();}
+
+/* ================= دیتابیس مشترک (v6) ================= */
+let db;
+function openDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open('aem-db',6);
+    r.onupgradeneeded=()=>{
+      const d=r.result;
+      ['units','gaps','sessions','jobs','cars','lessons','skills','wlog','vehicles','research','guide'].forEach(n=>{
+        if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:'id',autoIncrement:true});
+      });
+    };
+    r.onsuccess=()=>{db=r.result;res();};
+    r.onerror=()=>rej(r.error);
+  });
+}
+const st=(n,m)=>db.transaction(n,m).objectStore(n);
+const req=r=>new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});
+const dbAll=n=>req(st(n,'readonly').getAll());
+const dbPut=(n,o)=>req(st(n,'readwrite').put(o));
+const dbDel=(n,id)=>req(st(n,'readwrite').delete(id));
+
+/* ================= پروفایل یادگیرنده ================= */
+let PROF={level:'zero',mentor:false,minutes:60,car:{make:'پژو',model:'پارس',year:'۱۳۹۴',engine:'',trim:'',confirmed:false}};
+try{PROF=Object.assign(PROF,JSON.parse(localStorage.getItem('wk-prof')||'{}'));}catch{}
+function saveProf(){localStorage.setItem('wk-prof',JSON.stringify(PROF));}
+
+/* ================= ابزارها ================= */
+let TOOLS=['مولتی‌متر دیجیتال','چراغ تست (لامپی)','جامپر فیوزدار'];
+try{TOOLS=JSON.parse(localStorage.getItem('wk-tools')||'null')||TOOLS;}catch{}
+function saveTools(){localStorage.setItem('wk-tools',JSON.stringify(TOOLS));}
+
+/* ================= داده دوره‌ها ================= */
+/* هر درس: ۲۰ فیلد استاندارد بخش پنجم */
+const COURSES=[
+{id:0,title:'دوره ۰: ایمنی و آمادگی کار',icon:'🛡️',prereq:[],
+ desc:'پیش‌نیاز همه‌ی تمرین‌های عملی. بدون گذراندن آزمون این دوره، درس‌های پرخطر باز نمی‌شوند.',
+ lessons:[
+  {id:'s0-1',title:'ایمنی پایه: جریان را باهوش قطع کن',skill:'ایمنی پایه',danger:false,
+   goal:'بتوانی قبل از هر کار برقی، نقاط خطر را شناسایی و راه امن را انتخاب کنی.',prereq:[],tools:['مولتی‌متر دیجیتال'],
+   cost:'۰ تومان',minutes:15,
+   theory:'باتری ۱۲ ولت شما را «برق‌گرفتگی» نمی‌دهد، اما انرژی فوق‌العاده بالایی دارد. اتصال کوتاه دو قطب با یک آچار فلزی، در یک لحظه صدها آمپر جریان می‌فرستد: جرقه، آتش سیم، و احتمال آسیب به ECU. پس قانون اول: ابزار فلزی هرگز بین قطب مثبت و بدنه راه باز نگذارد.',
+   steps:[
+    {t:'شناسایی نقاط خطر',b:'قطب مثبت باتری، درپوش جعبه فیوز، و هر سیم قرمز/نارنجی. نارنجی در پارس نیست ولی اگر روزی خودروی هیبریدی دیدی، هرگز لمس نکن.'},
+    {t:'قانون درآوردن ابزار فلزی',b:'هرگز آچار/انبردست فلزی را هم‌زمان روی قطب مثبت و بدنه نگذار. هنگام بازکردن قطب مثبت، آچار را با یک دست بگیر تا بدن مسیر جریان نشود.'},
+    {t:'ترتیب قطع اتصال',b:'برای قطع برق، اول منفی را باز کن، بعد مثبت. برای وصل برعکس: اول مثبت، آخر منفی. این ترتیب جرقه‌ی نزدیک باتری را کم می‌کند.'},
+    {t:'شناسایی مدارهای حساس',b:'ایربگ و ECU را فقط با دستگاه دیاگ و توسط تعمیرکار مجاز بسته‌بندی می‌کنند. ما در کل این دوره پایه‌ی ایسیو و ایربگ را باز نمی‌کنیم.'},
+    {t:'تمرین ذهنی توقف',b:'سه شرط توقف را حفظ کن: بوی سوختگی، داغ شدن غیرعادی هر قطعه، و ندانستن اینکه چه چیزی را وصل می‌کنی. هر سه یعنی: دست بکش.'}],
+   results:[{c:'پیدا کردن قطب مثبت و منفی',i:'علامت + یا رنگ قرمز؛ منفی همیشه به بدنه شاسی می‌رود'},{c:'تمرین ترتیب قطع/وصل',i:'در ذهنت روی باتری خشک (نه وصل به ماشین) اجراش کن'}],
+   dangers:['هرگز دو قطب را با ابزار فلزی هم‌زمان نگیر','دستبند/انگشتر فلزی موقع کار روی باتری دربیاور','بوی سوختگی یا دود = فوری دور شو و منفی را جدا کن'],
+   stop:'اگر سوییچ روشن است و برای باتری کاری می‌روی، اول سوییچ را خاموش کن. اگر مطمئن نیستی کدام قطب مثبت است، تمرین را متوقف کن و در استادکار بپرس.',
+   practice:'روی خودروی خودت (یا عکس جلوی باتری)، قطب مثبت/منفی و مسیر اصلی سیم منفی به بدنه را پیدا و علامت‌گذاری کن (عکس بگیر).',
+   quiz:[{q:'برای قطع کامل برق خودرو، کدام قطب را اول باز می‌کنیم و چرا؟',a:'منفی — چون منفی به بدنه وصل است؛ جدا کردنش مدار کامل را می‌شکند و خطر جرقه‌ی ابزار روی مثبت از بین می‌رود.'},
+         {q:'چرا باتری ۱۲ ولت خطرناک است در حالی که برق‌گرفتگی نمی‌دهد؟',a:'به‌خاطر جریان فوق‌العاده زیادش در اتصال کوتاه — صدها آمپر: حرارت، جرقه، آتش سیم، آسیب ECU.'}],
+   exec:'بدون نگاه به متن، ترتیب قطع/وصل باتری را روی خودرو اجرا کن (سوییچ خاموش). یک عکس «قبل و بعد» ثبت کن.'},
+  {id:'s0-2',title:'پراب‌ها و شرط‌های توقف آزمایش',skill:'ایمنی پراب',danger:false,
+   goal:'پراب‌ها را درست بکار ببری و بدانی کی باید دست بکشی.',prereq:['s0-1'],tools:['مولتی‌متر دیجیتال'],
+   cost:'۰ تومان',minutes:15,
+   theory:'پراب مشکی همیشه به COM (منفی/بدنه) می‌رود. نکته‌ی مهم: پوسته‌ی لاستیکی سیم‌ها فرسوده می‌شود؛ سیم ترک‌خورده خطای اندازه‌گیری و خطر می‌آورد.',
+   steps:[
+    {t:'بازرسی پراب',b:'سیم هر دو پراب را از بدنه تا نوک بکش؛ ترک، لایی یا فلز لخت = سیم را عوض کن.'},
+    {t:'ترتیب اتصال',b:'مشکی اول (به بدنه تمیز، بدون رنگ)، قرمز دوم به نقطه‌ی تست. برعکس برای جدا کردن.'},
+    {t:'نقطه‌ی بدنه‌ی تمیز',b:'بدنه‌ی رنگ‌شده مقاومت اضافه دارد؛ پیچ/سوراخ بدون رنگ یا سر باتری منفی بهترین نقاط اتصال‌اند.'},
+    {t:'شرط‌های توقف',b:'مولتی‌متر داغ شد، عدد بی‌معنا پرید، یا مداری که انتظار داشتی برقدار باشد خاموش بود: توقف، بازبینی تنظیمات، بعد ادامه.'}],
+   results:[{c:'تست بدنه‌ی تمیز',i:'ولتاژ بدنه تا منفی باتری باید کمتر از ۰٫۱ ولت باشد'}],
+   dangers:['هرگز نوک پراب را در سوکت ECU نکن','هرگز پراب را در فیوز زیر بار به شکل «سری» نکن'],
+   stop:'اگر پراب سرگردان است و مطمئن نیستی کجا می‌گذاری، توقف. نوک پراب فقط جایی برود که در درس مشخص شده.',
+   practice:'سه نقطه‌ی بدنه‌ی تمیز روی پارس پیدا کن و موقعیتشان را یادداشت کن.',
+   quiz:[{q:'چرا نقطه‌ی اتصال بدنه باید بدون رنگ باشد؟',a:'رنگ مقاومت اضافه می‌آورد؛ عدد ولتاژ و اهم غلط می‌شود.'}],
+   exec:'با مرجع آزمایشگاه، تست پیوستگی بین دو نقطه‌ی بدنه‌ی تمیز را اجرا کن و نتیجه را ثبت کن.'}
+ ]},
+{id:1,title:'دوره ۱: مولتی‌متر از صفر',icon:'📟',prereq:[0],
+ desc:'کامل‌ترین ابزار موجود تو. این دوره پایه‌ی همه‌ی اندازه‌گیری‌های بعدی است.',
+ lessons:[
+  {id:'s1-1',title:'شناخت دستگاه: نمایشگر، کلید، ورودی‌ها',skill:'شناخت مولتی‌متر',danger:false,
+   goal:'هر سه حالت اصلی (V، Ω، A) را بشناسی و بدانی پراب‌ها کجا بروند.',prereq:['s0-1'],tools:['مولتی‌متر دیجیتال'],
+   cost:'۰ تومان',minutes:20,
+   theory:'سه کمیت متفاوت: ولتاژ (فشار برق — اندازه‌گیری موازی)، مقاومت (مانع جریان — فقط روی مدار خاموش)، جریان (مقدار گذر — اندازه‌گیری سری، خطرناک‌ترین حالت).',
+   steps:[
+    {t:'ورودی‌ها',b:'COM همیشه مشکی. قرمز در ولت/اهم به VΩ می‌رود و در آمپر به ورودی mA یا 10A. اگر حالت را عوض می‌کنی، جای پراب قرمز را هم چک کن.'},
+    {t:'ولتاژ DC',b:'علامت V با خط پیوسته و خط‌چین زیرش (V⎓). برای مدار خودرو. V~ (موج) برای برق شهری است — از آن دوری کن.'},
+    {t:'اگر رنج دستی است',b:'رنج را بالاتر از مقدار مورد انتظار بگذار؛ «OL» یا «1» یعنی مقدار از رنج بزرگ‌تر است — رنج را بالا ببر.'},
+    {t:'خطاهای رایج',b:'۱) اندازه‌گیری اهم روی مدار برقدار (عدد غلط، آسیب به دستگاه) ۲) پروب قرمز در ورودی آمپر در حالی که روی V هستی (اتصال کوتاه!) ۳) بدنه‌ی رنگی به‌جای گراند تمیز.'}],
+   results:[{c:'شناسایی حالت‌ها',i:'V⎓، Ω، A و ورودی COM/VΩ/10A را روی دستگاه خودت نشان بده'}],
+   dangers:['هرگز پراب قرمز در ورودی 10A نگذار و بعد روی مدار ولتاژ بزن — این همان فیوز سوختن مولتی‌متر و اتصال کوتاه است'],
+   stop:'اگر ورودی 10A قرمز جا مانده و قصد ولتاژگیری داری: توقف کامل تا جابه‌جایی.',
+   practice:'روی مولتی‌متر خودت (خاموش و بدون اتصال)، حالت‌ها و ورودی‌ها را پیدا و نام‌گذاری کن؛ عکس بگیر و ثبت کن.',
+   quiz:[{q:'اندازه‌گیری مقاومت روی مدار برقدار چه مشکلی دارد؟',a:'هم عدد غلط می‌دهد، هم می‌تواند مولتی‌متر را بسوزاند.'},
+         {q:'پراب مشکی همیشه به کدام ورودی می‌رود؟',a:'COM.'}],
+   exec:'در استادکار عملی، تعیین حالت مناسب برای «ولتاژ باتری» را مستقل اجرا کن.'},
+  {id:'s1-2',title:'ولتاژ DC و تست پیوستگی — اولین اندازه‌گیری واقعی',skill:'اندازه‌گیری ولتاژ',danger:false,
+   goal:'ولتاژ باتری را درست بخوانی و تست پیوستگی را روی قطعه‌ی بی‌برق اجرا کنی.',prereq:['s1-1'],tools:['مولتی‌متر دیجیتال'],
+   cost:'۰ تومان',minutes:25,
+   theory:'ولتاژ بی‌باری (سوییچ خاموش) فقط وضعیت شارژ باتری را می‌گوید، نه سلامت مدار. پیوستگی (Continuity) یعنی «آیا دو نقطه به هم وصل‌اند» — با صدای بوق که روی مدار کاملاً خاموش معتبر است.',
+   steps:[
+    {t:'تنظیمات دقیق',b:'حالت V⎓، رنج 20 (یا Auto)، قرمز در VΩ، مشکی در COM. پروب قرمز روی قطب مثبت باتری، مشکی روی منفی.'},
+    {t:'خواندن',b:'۱۲٫۶ ولت یا بالاتر = کاملاً شارژ. ۱۲٫۰ تا ۱۲٫۴ = نیمه. زیر ۱۱٫۹ = ضعیف. (این بازه‌های عمومی باتری سرب-اسید است؛ عدد مرجع دقیق خودرو از دفترچه یا کتابخانه تأیید می‌شود.)'},
+    {t:'تست پیوستگی',b:'دستگاه روی نماد بوق/دیود یا Ω پایین. روی فیوز کشیده: بوق/نزدیک صفر = سالم. OL = قطع.'},
+    {t:'زمان نامعتبر بودن',b:'ولتاژ باتری چند دقیقه بعد از روشن کردن چراغ‌ها افت می‌کند؛ برای «وضعیت شارژ» چند دقیقه صبر کن یا اول سوییچ خاموش و ۳۰ دقیقه بی‌کار.'}],
+   results:[{c:'ولتاژ باتری سالم',i:'۱۲٫۵–۱۲٫۸ ولت بی‌باری (عمومی)'},
+            {c:'پیوستگی فیوز سالم',i:'بوق/۰ اهم'},{c:'فیوز سوخته',i:'OL یا چند مگااهم'}],
+   dangers:['هرگز روی مدار برقدار تست پیوستگی نکن','پراب‌ها را درون جای فیوز خالی قلاب نکن — دو پین کنار هم را اتصال کوتاه ندهی'],
+   stop:'عدد پرشی و بی‌ثبات = توقف؛ پراب‌ها را محکم و نوکشان را تمیز کن.',
+   practice:'ولتاژ باتری پارس را ۳ بار ثبت کن (فاصله‌ی ۵ دقیقه) و نتیجه را در دفتر بنویس؛ یک فیوز را با تست پیوستگی چک کن.',
+   quiz:[{q:'۱۱٫۸ ولت بی‌باری یعنی چه؟',a:'باتری ضعیف/تخلیه شده — قبل از قضاوت، شارژ کن و دوباره بگیر.'}],
+   exec:'بدون راهنما: ولتاژ باتری + تست پیوستگی یک فیوز، با ثبت نتایج.'},
+  {id:'s1-3',title:'مقاومت، دیود، و افت اشتباه‌های رایج',skill:'تست مقاومت',danger:false,
+   goal:'محدودیت‌های تست مقاومت و دیود را بشناسی و وقتی نتیجه نامعتبر است تشخیص بدهی.',prereq:['s1-2'],tools:['مولتی‌متر دیجیتال'],
+   cost:'۰ تومان',minutes:20,
+   theory:'تست مقاومت ولتاژ کوچکی از خود دستگاه می‌فرستد؛ پس مدار باید ۱۰۰٪ خاموش و قطعه جدا باشد. تست دیود در مولتی‌متر خودرویی فقط برای دیودهای کوچک معتبر است، نه دیودهای داخل آلترناتور روی خودرو.',
+   steps:[
+    {t:'مقاومت سیم',b:'همیشه سیم را از مدار جدا کن؛ تست روی مدار همه‌چیز را «پیوسته» نشان می‌دهد.'},
+    {t:'مقادیر انتظاری',b:'سیم سالم کمتر از ۱ اهم. سیم‌پیچ موتور برقی چند اهم تا چند ده اهم (بسته به قطعه). بی‌نهایت = قطع.'},
+    {t:'محدودیت',b:'مقاومتِ زیر بار متفاوت است؛ عدد سرد روی میز کار را به عدد خودروی گرم تعمیم نده.'},
+    {t:'دیود',b:'حالت دیود: جهت درست ≈ ۰٫۵–۰٫۷ ولت افت، جهت برعکس OL. اگر OL در هر دو جهت = قطع؛ صفر در هر دو = اتصال کوتاه.'}],
+   results:[{c:'سیم سالم',i:'< ۱ اهم'},{c:'سیم قطع',i:'OL'},{c:'دیود سالم',i:'۰٫۵–۰٫۷ در یک جهت'}],
+   dangers:['انگشت هر دو طرف قطعه را نگه داری = مقاومت بدن وارد مدار می‌شود و عدد غلط می‌شود'],
+   stop:'عددِ وسطِ بین دو حالت یا پرش‌دار = تست نامعتبر؛ قطعه را جدا کن و دوباره.',
+   practice:'یک فیوز و یک قطعه‌ی سیمی را جدا کن و مقاومتشان را ثبت کن.',
+   quiz:[{q:'چرا تست دیود آلترناتور روی خودرو معتبر نیست؟',a:'چون مدار اطرافش متصل است؛ باید جدا شود، که کار تخصصی است.'}],
+   exec:'مستقل: مقاومت یک قطعه‌ی سیمی جداشده را اندازه بگیر و تفسیر کن.'}
+ ]},
+{id:2,title:'دوره ۲: باتری و سیستم برق پایه',icon:'🔋',prereq:[1],
+ desc:'اولین سیستم واقعی خودرو که کامل از آست تا پشت یاد می‌گیری.',
+ lessons:[
+  {id:'s2-1',title:'باتری: ولتاژ، اتصالات، خوردگی',skill:'بررسی باتری',danger:false,
+   goal:'وضعیت باتری را با ولتاژ و بازرسی ظاهری بسنجی و مرز «نشانه» و «نتیجه قطعی» را بدانی.',prereq:['s1-2'],tools:['مولتی‌متر دیجیتال'],
+   cost:'۰ تومان (تستر باتری فقط اگر لازم شد — با توجیه)',minutes:30,
+   theory:'ولتاژ بی‌باری وضعیت شارژ را می‌گوید اما قدرت جریان‌دهی باتری را نه. تستر باتری (تست بار/هادی) تنها راه قطعی است — ولی قبل از خرید آن، ولتاژ و بازرسی ۸۰٪ مشکلات را می‌یابد.',
+   steps:[
+    {t:'بازرسی ظاهری',b:'جلوی قطب‌ها، بدنه (ترک، تورم)، درپوش‌ها. کف خاکستری/سبز = اکسید؛ پاک‌سازی با برس سیمی و آب جوشیده.'},
+    {t:'ولتاژ بی‌باری',b:'پس از سوییچ خاموش و ۳۰ دقیقه: ۱۲٫۶+ سالم، ۱۲٫۰–۱۲٫۴ نیمه، <۱۱٫۹ ضعیف.'},
+    {t:'ولتاژ استارت (زیر بار)',b:'سوییچ استارت را بچرخان و هم‌زمان بگیر: افت زیر ~۹٫۶ ولت در هوای معتدل = باتری ضعیف یا اتصالات مشکل‌دار.'},
+    {t:'کِی تستر لازم است؟',b:'اگر ولتاژ سالم است ولی استارت ضعیف و شارژ هم سالم: باتری سولفاته است → تستر/تعویض باتری با توجیه خرید.'}],
+   results:[{c:'ولتاژ سالم زیر بار استارت',i:'بالای ~۹٫۶ ولت (عمومی)'},
+            {c:'افت شدید زیر بار',i:'< ۹ ولت = باتری/اتصالات مشکل'}],
+   dangers:['هرگز دو قطب را با فلز نگیر','چشم‌ها را از محل باتری دور نکن — اسید خطرناک است'],
+   stop:'باتری ترک‌خورده یا نشتی اسید = تمرین متوقف؛ تعویض، میدان کار ما نیست.',
+   practice:'هر سه اندازه‌گیری (بی‌باری، زیر بار استارت، بازرسی) را روی پارس انجام بده و در دفتر ثبت کن.',
+   quiz:[{q:'ولتاژ بی‌باری سالم ولی استارت ضعیف — دو فرضیه؟',a:'۱) باتری توان جریان‌دهی ندارد (سولفاته) ۲) اتصالات/کابل مقاومت اضافه دارند. افت ولتاژ تمایز می‌دهد.'}],
+   exec:'مستقل: ولتاژ زیر بار استارت را بگیر و تفسیرش را به استادکار بگو.'},
+  {id:'s2-2',title:'سیستم شارژ و استارت — مرور کلی',skill:'درک شارژ/استارت',danger:false,
+   goal:'منطق دو سیستم را بشناسی؛ اندازه‌گیری تخصصی در دوره‌های بعد می‌آید.',prereq:['s2-1'],tools:['مولتی‌متر دیجیتال'],
+   cost:'۰ تومان',minutes:20,
+   theory:'آلترناتور برق تولید و باتری را شارژ می‌کند؛ ریگولاتور ولتاژ را کنترل می‌کند. استارتر با جریان بسیار بالا (۱۰۰–۳۰۰ آمپر) موتور را می‌چرخاند؛ به همین خاطر کابل‌هایش ضخیم‌اند.',
+   steps:[
+    {t:'ولتاژ شارژ',b:'موتور روشن: انتظار حدود ۱۳٫۸–۱۴٫۴ ولت (عمومی؛ عدد دقیق پارس را بعداً از منبع تأیید می‌کنیم).'},
+    {t:'نشان بدون قطعیت',b:'چراغ باتری روشن فقط «نشانه» است؛ ولتاژگیری «نتیجه» است. این تفکیک پایه‌ی حرفه‌ای بودن است.'},
+    {t:'محدودیت',b:'تست جریان شارژ و افت ولتاژ کابل‌ها به ابزار آمپر تنگ (C amp-clamp) نیاز دارد که فعلاً نداری؛ آن‌جا مرز کار تو تا زمان خرید ابزار است.'}],
+   results:[{c:'شارژ سالم',i:'۱۳٫۸–۱۴٫۴ ولت موتور روشن (عمومی)'}],
+   dangers:['دست/لباس از تسمه و فن دور بماند وقتی موتور روشن است'],
+   stop:'ولتاژ شارژ بالای ~۱۵ ولت = ریگولاتور مشکل؛ ماشین را روشن نگذار و تمرین را قطع کن.',
+   practice:'ولتاژ شارژ پارس را موتور روشن بگیر و در دفتر ثبت کن.',
+   quiz:[{q:'۱۵٫۲ ولت شارژ یعنی چه و چه اقدامی؟',a:'ولتاژ بالا — ریگولاتور مشکوک؛ موتور را خاموش کن و به تعمیرکار ارجاع بده.'}],
+   exec:'مستقل: سه‌گانه‌ی باتری/استارت/شارژ را پشت‌سرهم بگیر و تحلیل کن.'}
+ ]},
+{id:3,title:'دوره ۳: فیوز، رله و چراغ تست',icon:'⚡',prereq:[1],
+ desc:'انواع فیوز، پایه‌های رله، چراغ تست و جامپر فیوزدار — با قوانین سخت ایمنی.',
+ lessons:[{id:'s3-1',title:'(محتوا در نسخه بعدی فعال می‌شود)',skill:'فیوز/رله',danger:true,goal:'در حال تولید',prereq:['s1-3'],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''},
+ {id:'s3-2',title:'چراغ تست و جامپر فیوزدار',skill:'چراغ تست',danger:true,goal:'در حال تولید',prereq:['s3-1'],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]},
+{id:4,title:'دوره ۴: سیم‌کشی و اتصالات',icon:'🔌',prereq:[3],desc:'سیم، سوکت، پین، تعمیر اصولی و اشتباهات رایج.',
+ lessons:[{id:'s4-1',title:'سیم، سوکت، تست پیوستگی جداشده',skill:'سیم‌کشی',danger:false,goal:'در حال تولید',prereq:['s1-3'],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]},
+{id:5,title:'دوره ۵: نقشه‌خوانی برق خودرو',icon:'🗺️',prereq:[4],desc:'نمادها، مسیر جریان، شماره پایه‌ها و دنبال کردن مدار از نقشه تا خودرو. نقشه‌های پارس ۱۳۹۴ پس از تأیید موتور/تیپ توسط شما سازمان‌دهی می‌شود.',
+ lessons:[{id:'s5-1',title:'نمادها و مسیر جریان',skill:'نقشه‌خوانی',danger:false,goal:'در حال تولید',prereq:[],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]},
+{id:6,title:'دوره ۶: مدارهای متعارف',icon:'💡',prereq:[5],desc:'روشنایی، بوق، فن، شیشه‌بالابر، قفل مرکزی، برف‌پاک‌کن، استارت، شارژ — به ترتیب دشواری.',
+ lessons:[{id:'s6-1',title:'مدار چراغ — مشاهده تا عیب‌یابی',skill:'مدار چراغ',danger:false,goal:'در حال تولید',prereq:['s3-2'],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]},
+{id:7,title:'دوره ۷: تست سلامت قطعات',icon:'🧩',prereq:[4],desc:'چه آزمایشی برای هر قطعه معتبر است، چه ابزاری لازم دارد و تا کجا نتیجه را ثابت می‌کند.',
+ lessons:[{id:'s7-1',title:'فیوز و رله — مرزهای تست',skill:'تست قطعه',danger:true,goal:'در حال تولید',prereq:['s3-2'],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]},
+{id:8,title:'دوره ۸: افت ولتاژ و عیب‌یابی سیستماتیک',icon:'📉',prereq:[6],desc:'تست زیر بار، فرضیه‌سازی، جلوگیری از تعویض حدسی، خرابی‌های متناوب.',
+ lessons:[{id:'s8-1',title:'افت ولتاژ — قوی‌ترین ابزار تعمیرکار',skill:'افت ولتاژ',danger:true,goal:'در حال تولید',prereq:['s6-1'],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]},
+{id:9,title:'دوره ۹: دیاگ و داده‌های زنده',icon:'🖥️',prereq:[6],desc:'OBD، کد خطا در برابر علت اصلی، داده زنده، آزمون فعال.',
+ lessons:[{id:'s9-1',title:'کد خطا ≠ علت خرابی',skill:'دیاگ',danger:false,goal:'در حال تولید',prereq:[],tools:['دستگاه دیاگ (اختیاری)'],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]},
+{id:10,title:'دوره ۱۰: مهارت‌های پیشرفته',icon:'🌊',prereq:[8],desc:'اسیلوسکوپ، CAN/LIN، خرابی متناوب، برنامه‌ریزی یونیت — با مرزهای شفاف «نیاز به تجهیزات تخصصی».',
+ lessons:[{id:'s10-1',title:'محدودیت‌های من و ارجاع درست',skill:'پیشرفته',danger:true,goal:'در حال تولید',prereq:[],tools:[],cost:'',minutes:0,theory:'',steps:[],results:[],dangers:[],stop:'',practice:'',quiz:[],exec:''}]}
+];
+
+/* ================= موتور تسلط ================= */
+const LVL_NAMES=['آموزش داده نشده','آشنایی نظری','اجرا با راهنمایی کامل','اجرا با راهنمایی محدود','اجرای مستقل (شرایط استاندارد)','اجرای مستقل چندنمونه + تحلیل خطا'];
+const LVL_CRIT=['—','درس را خوانده و آزمون فهم را پاس کرده','یک اجرای موفق با راهنمایی کامل ثبت شده','دو اجرای موفق با ≤۲ راهنمایی','اجرای مستقل بدون راهنما + آزمون اجرا','سه اجرای مستقل در شرایط مختلف + تحلیل خطا ثبت‌شده'];
+function calcLevel(sk){
+  let s=1;
+  if(sk.quizPass>=1)s=1;
+  if(sk.guided>=1&&sk.errors===0)s=2;
+  if(sk.guided>=2&&sk.errors<=1&&sk.helpAvg<=1.5)s=3;
+  if(sk.indep>=1&&sk.execPass&&sk.errors===0)s=4;
+  if(sk.indep>=3&&sk.execPass&&sk.variants>=2&&sk.analysis>=2)s=5;
+  return s;
+}
+function getSkill(name){
+  return SKILLS[name]||(SKILLS[name]={quizPass:0,guided:0,errors:0,helpSum:0,helpN:0,indep:0,execPass:false,variants:0,analysis:0,last:0,due:0});
+}
+let SKILLS={};
+try{SKILLS=JSON.parse(localStorage.getItem('wk-skills')||'{}');}catch{}
+function saveSkills(){localStorage.setItem('wk-skills',JSON.stringify(SKILLS));}
+function helpAvg(sk){return sk.helpN?sk.helpSum/sk.helpN:3;}
+
+/* ================= ثبت تمرین ================= */
+async function logPractice(e){
+  const n=Date.now();
+  e.at=n;
+  await dbPut('wlog',e);
+  const sk=getSkill(e.skill);
+  if(e.dependence==='none')sk.indep++;else sk.guided++;
+  if(e.result==='out'||e.result==='fail')sk.errors++;
+  if(e.helpLevel>0){sk.helpSum+=e.helpLevel;sk.helpN++;}
+  if(e.analysis)sk.analysis++;
+  if(e.variant)sk.variants++;
+  if(e.execPass)sk.execPass=true;
+  sk.last=n;
+  const lvl=calcLevel(sk);
+  /* مرور فاصله‌دار بر پایه‌ی تسلط و خطا: پایه ۷ روز، خطا=۳ روز، سطح ۵=۳۰ روز */
+  sk.due=n+(lvl>=5?30:lvl>=4?14:(e.result==='out'||e.result==='fail')?3:7)*DAY;
+  saveSkills();
+  return lvl;
+}
+
+/* ================= رندر داشبورد ================= */
+async function renderDash(){
+  const warn=$('safetyWarn');
+  if(!PROF.car.engine){
+    warn.style.display='block';
+    warn.innerHTML='<b>⚠ پرونده خودرو ناقص است</b>موتور و تیپ پارس ۱۳۹۴ ثبت نشده — حدس نمی‌زنم. <button class="btn sm" onclick="askEngine()">الان مشخص کنم</button>';
+  } else if(!PROF.car.confirmed){
+    warn.style.display='block';
+    warn.innerHTML='<b>⚠ مشخصات خودرو تأیید نشده</b>موتور ثبت‌شده: '+esc(PROF.car.engine)+'. درست است؟ <button class="btn sm ghost" onclick="askEngine()">ویرایش/تأیید</button>';
+  } else warn.style.display='none';
+
+  const log=await dbAll('wlog');
+  log.sort((a,b)=>b.at-a.at);
+  const dueSkills=Object.entries(SKILLS).filter(([n,s])=>s.due&&s.due<=Date.now());
+  const nextL=COURSES[0].lessons[0];
+  const done=new Set((await dbAll('lessons')).map(x=>x.lid));
+  const nx=findNextLesson(done);
+  $('nextPractice').innerHTML= nx
+    ? '<b>▶ تمرین بعدی:</b> '+esc(nx.c.title)+' ← '+esc(nx.l.title)+' <button class="btn sm" onclick="openLesson(\''+nx.l.id+'\')">شروع</button>'
+    : '<b>🎉 همه‌ی درس‌های فعال را گذرانده‌ای — در پیام بعدیِ توسعه، محتوای دوره‌های ۳–۱۰ اضافه می‌شود.</b>';
+
+  const dueHtml=dueSkills.length
+    ? '<b>🧠 مرورهای عقب‌افتاده:</b> '+dueSkills.map(([n])=>esc(n)).join('، ')+' <button class="btn sm" onclick="go(\'skills\')">برو</button>'
+    : '<b>🧠 مرور:</b> چیزی سرسید نیست.';
+  $('planHint').textContent=PROF.minutes+' دقیقه · نوع جلسه از برنامه‌ریز';
+
+  const lvls=Object.entries(SKILLS).map(([n,s])=>({n,s,lvl:calcLevel(s)}));
+  const mastered=lvls.filter(x=>x.lvl>=4).length;
+  const wErrs={};log.filter(e=>e.errors&&e.errors.length).forEach(e=>e.errors.forEach(x=>wErrs[x]=(wErrs[x]||0)+1));
+  const topErr=Object.entries(wErrs).sort((a,b)=>b[1]-a[1])[0];
+  const week=log.filter(e=>e.at>Date.now()-7*DAY).length;
+  const res=await dbAll('research');
+  $('dashStats').innerHTML=
+    '<div class="row"><span>مهارت‌های مسلط (سطح ۴+)</span><b>'+fa(mastered)+' از '+fa(lvls.length||0)+'</b></div>'+
+    '<div class="row"><span>تمرین‌های هفته</span><b>'+fa(week)+'</b></div>'+
+    '<div class="row"><span>مرورهای عقب‌افتاده</span><b>'+fa(dueSkills.length)+'</b></div>'+
+    '<div class="row"><span>منابع دانش پردازش‌شده</span><b>'+fa(res.filter(r=>r.status==='done').length)+'</b></div>'+
+    (topErr?'<div class="row"><span>خطای تکرارشونده</span><b style="color:var(--warn)">'+esc(topErr[0])+' ('+fa(topErr[1])+' بار)</b></div>':'');
+
+  $('dashRecent').innerHTML=log.slice(0,5).length?log.slice(0,5).map(e=>
+    '<div class="row"><span>'+esc(e.skill)+' · '+esc(e.type==='main'?'🚗 اصلی':e.type==='other'?'⏱️ خودروی دیگر':'🧪 میزکار')+'</span><b>'+
+    (e.result==='ok'?'✓':e.result==='out'?'⚠ خارج مرجع':'✗')+'</b></div>').join('')
+    :'<p>هنوز تمرینی ثبت نشده. از «تمرین امروز» شروع کن.</p>';
+}
+function askEngine(){
+  openSheet('<h2>🚗 موتور و تیپ پارس ۱۳۹۴</h2><p class="note">این را حدس نمی‌زنم — از روی پلاک موتور یا کاتالوگ خودرو بگو. پارس ۱۳۹۴ معمولاً یکی از دو موتور زیر را داشته، ولی انتخاب من نیست؛ انتخاب توست.</p>'+
+  '<label>موتور</label><select class="fld" id="eng-sel"><option value="TU5">TU5 (۱۶‌سوپاپ EF7)</option><option value="XU7">XU7 (۸‌سوپاپ)</option><option value="unknown">مطمئن نیستم — بعداً می‌گویم</option></select>'+
+  '<label>تیپ/تجهیزات مهم (اختیاری)</label><input class="fld" id="eng-trim" placeholder="مثلاً: LX / اتوماتیک / سنسور...">'+
+  '<div class="btns"><button class="btn" onclick="saveEngine()">ثبت</button><button class="btn ghost" onclick="closeSheet()">بعداً</button></div>');
+}
+async function saveEngine(){
+  const v=$('eng-sel').value;
+  PROF.car.engine=v==='unknown'?'':v;
+  PROF.car.trim=$('eng-trim').value.trim();
+  PROF.car.confirmed=v!=='unknown';
+  saveProf();closeSheet();renderDash();
+  toast(v==='unknown'?'ثبت شد — تا زمان تأیید، اعداد اختصاصی پارس نشان داده نمی‌شود':'ثبت شد ✓');
+}
+function findNextLesson(done){
+  for(const c of COURSES){
+    if(c.lessons.every(l=>l.goal==='در حال تولید'))continue;
+    for(const l of c.lessons){
+      if(l.goal==='در حال تولید')continue;
+      if(done.has(l.id))continue;
+      if(l.prereq.some(p=>!done.has(p)))continue;
+      /* درس‌های danger: نیازمند گذراندن دوره ۰ */
+      if(l.danger&&!COURSES[0].lessons.every(x=>done.has(x.id)))return null;
+      return {c,l};
+    }
+  }
+  return null;
+}
+
+/* ================= دوره‌ها و درس ================= */
+async function renderCourses(){
+  const done=new Set((await dbAll('lessons')).map(x=>x.lid));
+  $('coursesList').innerHTML=COURSES.map(c=>{
+    const ok=c.lessons.filter(l=>done.has(l.id)).length;
+    const total=c.lessons.length;
+    const prereqOk=c.prereq.every(p=>COURSES[p].lessons.every(l=>done.has(l.id)));
+    const pct=total?Math.round(ok/total*100):0;
+    return '<div class="lesson '+(prereqOk?'':'locked')+'" onclick="'+(prereqOk?'openCourse('+c.id+')':'toast(\'اول دوره‌های قبلی را تمام کن\')')+'">'+
+      '<h3>'+c.icon+' '+esc(c.title)+'</h3><div class="meta">'+fa(ok)+' از '+fa(total)+' درس · پیش‌نیاز: '+(c.prereq.length?esc(COURSES[c.prereq[0]].title):'ندارد')+'</div>'+
+      '<div class="bar"><i style="width:'+pct+'%"></i></div></div>';
+  }).join('');
+}
+function openCourse(id){
+  renderCourses();
+  const c=COURSES[id];
+  openSheet('<h2>'+c.icon+' '+esc(c.title)+'</h2><p class="note">'+esc(c.desc)+'</p>'+
+    c.lessons.map((l,i)=>'<div class="lesson" onclick="closeSheet();openLesson(\''+l.id+'\')"><h3>'+fa(i+1)+') '+esc(l.title)+'</h3>'+
+    '<div class="meta">'+(l.goal==='در حال تولید'?'⏳ محتوا در نسخه بعدی':'⏱ '+fa(l.minutes)+' دقیقه · 🛠 '+esc((l.tools||[]).join('، ')||'—')+' · 💰 '+esc(l.cost||'۰'))+'</div></div>').join('')+
+    '<div class="btns"><button class="btn ghost full" onclick="closeSheet()">بستن</button></div>');
+}
+const LESSONS=allLessons();
+function allLessons(){const a=[];COURSES.forEach(c=>c.lessons.forEach(l=>{if(l.goal!=='در حال تولید')a.push(l);}));return a;}
+function getLesson(id){return allLessons().find(l=>l.id===id);}
+
+async function openLesson(id){
+  const l=getLesson(id);if(!l)return;
+  const rec=await dbAll('lessons');
+  const mine=rec.find(r=>r.lid===id);
+  const doneSteps=mine?new Set(mine.steps||[]):new Set();
+  const course=COURSES.find(c=>c.lessons.some(x=>x.id===id));
+  $('lessonBody').innerHTML=
+    '<h1 class="t">'+esc(l.title)+'</h1>'+
+    '<span class="pill ok">دوره '+fa(course.id)+'</span>'+
+    (l.danger?'<span class="pill dg">🔒 نیازمند دوره‌ی ایمنی</span>':'')+
+    '<span class="pill">⏱ '+fa(l.minutes)+' دقیقه</span>'+
+    '<div class="card"><b>۱) هدف درس</b><p>'+esc(l.goal)+'</p>'+
+    '<b style="display:block;margin-top:8px">۲) پیش‌نیازها</b><p>'+(l.prereq.map(p=>{const pl=getLesson(p);return pl?esc(pl.title):p;}).join('، ')||'—')+'</p>'+
+    '<b style="display:block;margin-top:8px">۳) در پایان می‌توانی…</b><p>'+esc(l.goal)+'</p>'+
+    '<b style="display:block;margin-top:8px">۴) ابزار</b><p>'+esc((l.tools||[]).join('، ')||'—')+'</p>'+
+    '<b style="display:block;margin-top:8px">۵) هزینه احتمالی</b><p>'+esc(l.cost||'۰ تومان')+'</p>'+
+    '<b style="display:block;margin-top:8px">۶) مدت تمرین</b><p>'+fa(l.minutes)+' دقیقه</p>'+
+    '<b style="display:block;margin-top:8px">۷) توضیح علمی</b><p>'+esc(l.theory)+'</p></div>'+
+    '<div class="warnbox"><b>۱۳) خطرات و اشتباهات رایج</b><ul style="padding-right:18px">'+(l.dangers||[]).map(d=>'<li>'+esc(d)+'</li>').join('')+'</ul></div>'+
+    '<div class="stopbox"><b>۱۴) معیار توقف و ارجاع</b>'+esc(l.stop)+'</div>'+
+    '<h2 class="s">۹) مراحل اجرا — هر گام را جدا اجرا و تأیید کن</h2><div class="steps-list">'+
+    (l.steps||[]).map((s,i)=>'<div class="stepitem '+(doneSteps.has(i)?'done':'')+'" data-i="'+i+'">'+
+      '<div class="sh" onclick="this.parentElement.classList.toggle(\'open\')"><span><span class="num">'+fa(i+1)+'</span><b>'+esc(s.t)+'</b></span>'+
+      '<button class="btn sm '+(doneSteps.has(i)?'ghost':'')+'" onclick="toggleStep(\''+id+'\','+i+')">'+(doneSteps.has(i)?'✓ انجام شد':'تأیید گام')+'</button></div>'+
+      '<div class="sb">'+esc(s.b)+'</div></div>').join('')+'</div>'+
+    '<h2 class="s">۱۲) نتایج احتمالی و تفسیر</h2><table class="tbl"><tr><th>نتیجه</th><th>تفسیر</th></tr>'+
+    (l.results||[]).map(r=>'<tr><td>'+esc(r.c)+'</td><td>'+esc(r.i)+'</td></tr>').join('')+'</table>'+
+    '<h2 class="s">۱۵) تمرین عملی</h2><div class="okbox">'+esc(l.practice)+'</div>'+
+    '<h2 class="s">۱۶) آزمون فهم</h2><div id="quizBox">'+
+    (l.quiz||[]).map((q,i)=>'<div class="qa"><b>'+esc(q.q)+'</b><button class="btn ghost sm" onclick="this.nextElementSibling.style.display=\'block\';this.style.display=\'none\';logQuiz(\''+id+'\',1)">نمایش پاسخ</button><div style="display:none">'+esc(q.a)+'</div></div>').join('')+
+    '</div>'+
+    '<h2 class="s">۱۷) آزمون اجرای مستقل</h2><div class="infobox">'+esc(l.exec)+'</div>'+
+    '<h2 class="s">۱۸–۱۹) ثبت نتیجه واقعی و ارزیابی</h2><div class="card">'+
+    '<label>نوع جلسه</label><select class="fld" id="log-type"><option value="main">خودروی اصلی</option><option value="other">خودروی دیگر</option><option value="bench">بدون خودرو</option></select>'+
+    '<label>میزان وابستگی به راهنما</label><select class="fld" id="log-dep"><option value="none">مستقل اجرا کردم</option><option value="full">با راهنمایی کامل</option><option value="limited">با راهنمایی محدود</option></select>'+
+    '<label>نتیجه</label><select class="fld" id="log-result"><option value="ok">موفق و در محدوده</option><option value="out">اندازه‌گیری شد ولی خارج از انتظار</option><option value="fail">موفق نشدم</option></select>'+
+    '<label>مقادیر واقعی ثبت‌شده</label><textarea class="fld" id="log-vals" placeholder="مثلاً: ۱۲٫۶ ولت بی‌باری، ۱۱٫۹ زیر بار"></textarea>'+
+    '<label>خطاهای من (اختیاری — با صداقت بنویس، پروفایل مهارتی به آن نیاز دارد)</label><input class="fld" id="log-errors" placeholder="مثلاً: پراب قرمز در ورودی آمپر مانده بود">'+
+    '<label>چند بار راهنمایی خواستی؟ (۰–۳)</label><input class="fld" id="log-help" type="number" min="0" max="3" value="0">'+
+    '<label>تفسیر نتیجه را خودم نوشتم</label><select class="fld" id="log-analysis"><option value="1">بله</option><option value="0">نه</option></select>'+
+    '<label>شرایط مشابه جدید هم امتحان کردم؟ (برای سطح ۵)</label><select class="fld" id="log-variant"><option value="1">بله</option><option value="0">نه</option></select>'+
+    '<label>آزمون اجرای مستقل را گذراندم</label><select class="fld" id="log-exec"><option value="1">بله، موفق</option><option value="0">نه</option></select>'+
+    '<div class="btns"><button class="btn full" onclick="submitLog(\''+id+'\')">ثبت نتیجه واقعی و محاسبه تسلط</button></div>'+
+    '<p class="note" id="logOut"></p></div>';
+  go('lesson');
+}
+let QUIZ_PASSED={};
+function logQuiz(id,n){QUIZ_PASSED[id]=(QUIZ_PASSED[id]||0)+n;}
+async function toggleStep(lid,i){
+  const rec=await dbAll('lessons');
+  let mine=rec.find(r=>r.lid===lid);
+  if(!mine){mine={lid,steps:[],done:false};mine.id=await dbPut('lessons',mine);}
+  mine.steps=mine.steps||[];
+  const idx=mine.steps.indexOf(i);
+  if(idx>=0)mine.steps.splice(idx,1);else mine.steps.push(i);
+  await dbPut('lessons',mine);
+  toast(idx>=0?'گام برداشته شد':'گام تأیید شد ✓');
+  openLesson(lid);
+}
+async function submitLog(lid){
+  const l=getLesson(lid);
+  const dep=$('log-dep').value,result=$('log-result').value;
+  const lvl=await logPractice({
+    skill:l.skill,type:$('log-type').value,dependence:dep,result,
+    vals:$('log-vals').value.trim(),errors:$('log-errors').value.trim().split('،').map(x=>x.trim()).filter(Boolean),
+    helpLevel:+$('log-help').value||0,analysis:$('log-analysis').value==='1',variant:$('log-variant').value==='1',
+    execPass:$('log-exec').value==='1',lesson:lid
+  });
+  /* آزمون فهم: فقط با پاس‌شدن هر دو سؤال، «آشنایی نظری» رسمی می‌شود */
+  const sk=getSkill(l.skill);
+  if((QUIZ_PASSED[lid]||0)>=2)sk.quizPass=Math.max(sk.quizPass,1);
+  saveSkills();
+  const rec=await dbAll('lessons');
+  const mine=rec.find(r=>r.lid===lid);
+  if(mine){mine.done=true;mine.at=Date.now();await dbPut('lessons',mine);}
+  $('logOut').innerHTML='✓ ثبت شد. <b>سطح فعلی مهارت «'+esc(l.skill)+'»:</b> '+fa(lvl)+' — '+esc(LVL_NAMES[lvl])+'<br>معیار سطح بعد: '+esc(LVL_CRIT[lvl+1]||'حداکثر سطح')+'<br>مرور بعدی این مهارت: '+new Date(sk.due).toLocaleDateString('fa-IR');
+  toast('ثبت شد — سطح '+fa(lvl));
+}
+
+/* ================= استادکار راهنمای عملی ================= */
+let MENT=null;
+function mentorStart(){
+  MENT={step:0,goal:'',car:PROF.car.engine?'پارس ۱۳۹۴ ('+PROF.car.engine+')':'',sym:'',danger:'',tool:'',setting:'',results:[],conclusion:''};
+  mentorRender();
+}
+const MENT_QS=[
+  {k:'goal',q:'هدف این جلسه چیست؟ (مثلاً: «چراغ پلاک کار نمی‌کند» یا «تمرین تست پیوستگی»)',fld:'input'},
+  {k:'sym',q:'علامت/شرایط دقیق چیست؟ چه کاری کرده و چه چیزی را می‌بینی؟',fld:'textarea'},
+];
+function mentorRender(){
+  const b=$('mentorBody');
+  if(!MENT){b.innerHTML='<div class="btns"><button class="btn full" onclick="mentorStart()">شروع جلسه‌ی راهنمایی</button></div>';return;}
+  const st=MENT.step;
+  let h='';
+  /* ۱–۲ هدف و شرایط */
+  if(st<MENT_QS.length){
+    const q=MENT_QS[st];
+    h='<div class="card"><b>'+(st+1)+') '+esc(q.q)+'</b>'+
+      (q.fld==='textarea'?'<textarea class="fld" id="m-val"></textarea>':'<input class="fld" id="m-val">')+
+      '<div class="btns"><button class="btn full" onclick="mentorNext()">بعدی</button></div></div>';
+  }
+  /* ۳ ایمنی */
+  else if(st===2){
+    const DANGER=[
+      ['ایربگ','مدار ایربگ (SRS) را هرگز با مولتی‌متر، لامپ تست یا ابزار برقی لمس نکن. فقط تعمیرکار مجاز و با دستگاه دیاگ.'],
+      ['srs','مدار ایربگ (SRS) را هرگز با مولتی‌متر، لامپ تست یا ابزار برقی لمس نکن. فقط تعمیرکار مجاز و با دستگاه دیاگ.'],
+      ['کیسه هوا','مدار ایربگ (SRS) را هرگز با مولتی‌متر، لامپ تست یا ابزار برقی لمس نکن. فقط تعمیرکار مجاز و با دستگاه دیاگ.'],
+      ['پیش‌کشنده','پیش‌کشنده‌ی کمربند ایمنی مواد منفجره دارد؛ هیچ اندازه‌گیری یا تست برقی روی آن انجام نده.'],
+      ['ولتاژ بالا','سیستم ولتاژ بالا (کابل نارنجی) خطر جانی دارد. فقط تعمیرکار دارای گواهی و تجهیزات ایمنی.'],
+      ['نارنجی','سیستم ولتاژ بالا (کابل نارنجی) خطر جانی دارد. فقط تعمیرکار دارای گواهی و تجهیزات ایمنی.'],
+      ['هیبرید','سیستم هیبرید ولتاژ بالا دارد و خطر جانی دارد. فقط تعمیرکار دارای گواهی.'],
+      ['برقی کامل','خودروی برقی ولتاژ بالا دارد و خطر جانی دارد. فقط تعمیرکار دارای گواهی.']
+    ];
+    const hit=DANGER.filter(d=>norm(MENT.sym+MENT.goal).includes(norm(d[0])));
+    MENT.danger=hit.map(x=>x[1]).join(' ');
+    if(hit.length){
+      h='<div class="warnbox"><b>🔒 توقف — این کار از مرز من خارج است</b>'+hit.map(x=>esc(x[1])).join('<br>')+
+        '<div class="btns"><button class="btn full" onclick="MENT=null;mentorRender()">پایان جلسه</button></div></div>';
+      $('mentorBody').innerHTML=h;return;
+    }
+    h='<div class="okbox"><b>✓ بررسی ایمنی: مانع مشخصی نیست.</b> ولی این سه قانون همیشه فعال است: ابزار فلزی بین قطب‌ها نه، پایه‌ی ECU نه، کار روی مدار برقدار با حالت آمپر نه.</div>'+
+      '<div class="btns"><button class="btn full" onclick="MENT.step=3;mentorRender()">ادامه</button></div>';
+  }
+  /* ۴–۵ ابزار و روش */
+  else if(st===3){
+    h='<div class="card"><b>۴) ابزار لازم را تأیید کن</b><p>برای این کار معمولاً مولتی‌متر کافی است. ابزارهای ثبت‌شده‌ی تو: '+esc(TOOLS.join('، '))+'</p>'+
+      '<label>چه ابزاری الان واقعاً در دسترس داری؟</label><input class="fld" id="m-val" value="'+esc(TOOLS[0])+'">'+
+      '<div class="btns"><button class="btn full" onclick="mentorNext()">تأیید و ادامه</button></div></div>';
+  }
+  else if(st===4){
+    h='<div class="card"><b>۵) تنظیمات دقیق دستگاه — قبل از هر تماسی باید تأیید شود</b>'+
+      '<ul style="padding-right:18px;font-size:var(--fs-body-sm)"><li>پراب مشکی → ورودی COM (همیشه)</li><li>پراب قرمز → ورودی VΩ (برای ولتاژ/پیوستگی)</li><li>کلید حالت → V⎓ برای ولتاژ، نماد بوق برای پیوستگی</li><li>اگر حالت را عوض کردی، جای پراب قرمز را دوباره چک کن</li></ul>'+
+      '<label>این چهار مورد را روی دستگاه چک کردی؟</label><select class="fld" id="m-val"><option value="yes">بله، همه را چک کردم</option><option value="no">نه — صبر کن</option></select>'+
+      '<div class="btns"><button class="btn full" onclick="mentorNext()">ثبت تأیید</button></div></div>';
+  }
+  /* ۶–۸ گام آزمایش */
+  else if(st===5){
+    h='<div class="card"><b>۶) گام اندازه‌گیری پیشنهادی</b>'+
+      '<p>بر اساس هدف «'+esc(MENT.goal)+'»، گام اول: <b class="val">ولتاژگیری نقطه‌ای با شرایط مشخص</b>. نقطه‌ی دقیق و مرجع عددی را از دانش‌نامه/درس مرتبط می‌گیرم — اگر مرجع معتبر نداشته باشم، صادقانه می‌گویم و حدس نمی‌زنم.</p>'+
+      '<label>نتیجه‌ی واقعی را همان‌طور که دیدی بنویس (عدد و شرایط)</label><textarea class="fld" id="m-val" placeholder="مثلاً: ۱۲٫۶ ولت، سوییچ خاموش"></textarea>'+
+      '<div class="btns"><button class="btn full" onclick="mentorNext()">نتیجه را ثبت می‌کنم</button>'+
+      '<button class="btn muted" onclick="mentorStop()">متوقف می‌کنم — مطمئن نیستم</button></div></div>';
+  }
+  /* ۹ تحلیل */
+  else if(st===6){
+    const last=MENT.results[MENT.results.length-1];
+    const hasNum=/\d/.test(last);
+    h='<div class="card"><b>۷) تحلیل نتیجه</b>'+
+      (hasNum
+        ?'<p>عدد ثبت شد: <span class="val">'+esc(last)+'</span>. میزان اطمینان من به این تحلیل <b>متوسط</b> است چون مرجع عددی اختصاصی این خودرو را تأیید نکرده‌ایم. برای قطعیت: عدد را با منبع معتبر (دفترچه/کتابخانه) تطبیق بده.</p>'
+        :'<p>عددی در نتیجه نبود؛ بدون عدد نمی‌توانم قضاوت اندازه‌گیری کنم. نتیجه‌ی کیفی می‌تواند «نشانه» باشد، نه «نتیجه».</p>')+
+      '<p>گام بعدی پیشنهادی: نتیجه را در دفتر ثبت کن و در صورت نیاز آزمایش دوم را در همین جلسه اجرا کن.</p>'+
+      '<div class="btns"><button class="btn" onclick="MENT.step=5;mentorRender()">آزمایش دوم</button>'+
+      '<button class="btn ghost" onclick="mentorFinish()">پایان و ثبت</button></div></div>';
+  }
+  b.innerHTML=h+(MENT.results.length?'<div class="card"><b>نتایج این جلسه:</b>'+MENT.results.map(r=>'<div class="row"><span>'+esc(r)+'</span></div>').join('')+'</div>':'');
+}
+function norm(s){return String(s||'').toLowerCase().replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/\s+/g,' ').trim();}
+function mentorNext(){
+  const v=$('m-val')?$('m-val').value.trim():'';
+  if(!v)return toast('جواب خالی است');
+  const st=MENT.step;
+  if(st===0)MENT.goal=v;
+  else if(st===1)MENT.sym=v;
+  else if(st===3)MENT.tool=v;
+  else if(st===4){if(v!=='yes'){toast('اول چک کن، بعد ادامه بده');return;}MENT.setting=v;}
+  else if(st===5)MENT.results.push(v);
+  MENT.step++;mentorRender();
+}
+function mentorStop(){
+  MENT.conclusion='توقف با اعلام خود کاربر — شرایط مبهم';
+  mentorFinish();
+}
+async function mentorFinish(){
+  MENT.conclusion=MENT.conclusion||('هدف: '+MENT.goal+' | نتایج: '+MENT.results.join('؛ '));
+  await dbPut('wlog',{at:Date.now(),skill:'راهنمایی استادکار',type:MENT._t||'main',dependence:'full',
+    result:MENT.results.length?'ok':'fail',vals:MENT.results.join('؛ '),errors:[],
+    helpLevel:2,analysis:false,variant:false,execPass:false,lesson:'',note:MENT.conclusion});
+  openSheet('<h2>📋 خلاصه جلسه</h2><p>'+esc(MENT.conclusion)+'</p><p class="note">ثبت شد در دفتر تمرین. هشدار: این ثبت، نتیجه‌ی راهنمایی است نه تأیید فنی مستقل.</p><div class="btns"><button class="btn full" onclick="closeSheet();MENT=null;mentorRender()">بستن</button></div>');
+}
+
+/* ================= آزمایشگاه ================= */
+const LAB=[
+  {n:'مولتی‌متر دیجیتال',use:'ولتاژ، مقاومت، پیوستگی، (آمپر سری با احتیاط)',limit:'تست دیود داخلی آلترناتور معتبر نیست؛ آمپر فقط سری و با ورودی درست'},
+  {n:'چراغ تست (لامپی)',use:'فقط روی مدارهای قدرت ساده (لامپ، سوئیچ)',limit:'روی مدارهای الکترونیکی/ECU ممنوع — جریان کشی آن می‌تواند ماژول بسوزاند. جای آن: مولتی‌متر با امپدانس بالا'},
+  {n:'جامپر فیوزدار',use:'تغذیه‌ی موقت بار کوچک از فیوز سالم',limit:'هرگز به مدار ناشناس، پمپ سوخت، ECU وصل نشود؛ همیشه فیوزش کمتر از فیوز مدار باشد'},
+  {n:'تستر باتری (پیشنهاد خرید مشروط)',use:'تنها راه قطعی سنجش توان باتری',limit:'خرید فقط با توجیه: ولتاژ سالم ولی استارت ضعیف تکرارشونده'},
+  {n:'آمپر تنگ / اسیلوسکوپ (بعداً)',use:'جریان شارژ، شکل موج سنسورها',limit:'فعلاً در دسترس نیست؛ مرز کار تو تا آن زمان مشخص است'}
+];
+async function renderLab(){
+  $('toolsList').innerHTML=TOOLS.map((t,i)=>'<div class="row"><span>🛠 '+esc(t)+'</span><button class="btn danger sm" onclick="delTool('+i+')">حذف</button></div>').join('')||'<p class="note">ابزاری ثبت نشده.</p>';
+  $('labBody').innerHTML=LAB.map(l=>{
+    const have=TOOLS.some(t=>norm(t).includes(norm(l.n).slice(0,6)));
+    return '<div class="lesson"><h3>'+(have?'✅ ':'⚪ ')+esc(l.n)+'</h3>'+
+      '<p><b>کاربرد:</b> '+esc(l.use)+'</p><p style="color:var(--warn)"><b>محدودیت:</b> '+esc(l.limit)+'</p></div>';
+  }).join('');
+}
+function delTool(i){TOOLS.splice(i,1);saveTools();renderLab();}
+function openToolAdd(){
+  openSheet('<h2>ابزار جدید</h2><input class="fld" id="t-name" placeholder="نام ابزار">'+
+  '<div class="btns"><button class="btn" onclick="addTool()">ثبت</button></div>');
+}
+function addTool(){const v=$('t-name').value.trim();if(!v)return;TOOLS.push(v);saveTools();closeSheet();renderLab();toast('ثبت شد ✓');}
+
+/* ================= برنامه‌ریز ================= */
+function renderPlanHint(){$('otherCarPrep').style.display=$('plan-type').value==='other'?'block':'none';}
+async function makePlan(){
+  const type=$('plan-type').value,tired=$('plan-energy').value;
+  const m=tired==='tired'?40:tired==='short'?25:PROF.minutes;
+  const scale=m/PROF.minutes;
+  const done=new Set((await dbAll('lessons')).map(x=>x.lid));
+  const nx=findNextLesson(done);
+  const due=Object.entries(SKILLS).filter(([n,s])=>s.due&&s.due<=Date.now());
+  const seg=(t,min,act)=>'<div class="row"><span>'+t+'</span><b>'+fa(min)+' دقیقه</b><button class="btn ghost sm" onclick="'+act+'">برو</button></div>';
+  const r=Math.round;
+  $('planOut').innerHTML='<div class="card"><h3>📋 برنامه‌ی امروز ('+fa(m)+' دقیقه)</h3>'+
+    seg('۱) یادگیری و مرور',r(10*scale),'go(\'skills\')')+
+    (due.length?seg('   ↳ مرور عقب‌افتاده: '+esc(due.map(d=>d[0]).join('، ')),r(10*scale),'go(\'skills\')'):'')+
+    seg('۲) تمرین عملی'+(nx?' — '+esc(nx.l.title):''),r(35*scale),nx?'openLesson(\''+nx.l.id+'\')':'go(\'courses\')')+
+    seg('۳) ثبت نتایج در دفتر',r(10*scale),'openLogAdd()')+
+    seg('۴) بازیابی از حافظه (بدون نگاه به متن، سه نکته‌ی درس را بازگو کن)',r(5*scale),'go(\'skills\')')+
+    (type==='other'?'<div class="stopbox">⚠ جلسه‌ی خودروی دیگر: قبل از رفتن، پرونده‌ی آن خودرو را بساز (مدل/موتور) و فقط سناریوی از پیش تعیین‌شده اجرا کن.</div>':'')+
+    (type==='bench'?'<div class="infobox">جلسه‌ی بدون خودرو: تست مقاومت قطعات جدا، تحلیل نقشه، مطالعه‌ی منابع کتابخانه.</div>':'')+
+    '</div>';
+  $('otherCarPrep').style.display=type==='other'?'block':'none';
+}
+
+/* ================= مهارت‌ها ================= */
+async function renderSkills(){
+  const due=Object.entries(SKILLS).filter(([n,s])=>s.due&&s.due<=Date.now());
+  $('skillsDue').innerHTML=due.length
+    ?'<b>🧠 سرسید مرور ('+fa(due.length)+'):</b> '+due.map(([n])=>esc(n)).join('، ')+
+     '<div class="btns"><button class="btn sm" onclick="dueReview(\''+esc(due[0][0])+'\')">مرور «'+esc(due[0][0])+'» — بازگویی بدون متن</button></div>'
+    :'<p>مروری سرسید نیست ✓</p>';
+  const keys=Object.keys(SKILLS);
+  $('skillsList').innerHTML=keys.length?keys.map(n=>{
+    const s=SKILLS[n],lvl=calcLevel(s);
+    return '<div class="lesson"><h3>'+esc(n)+' <span class="lvlchip">سطح '+fa(lvl)+'</span></h3>'+
+    '<p class="note">'+esc(LVL_CRIT[lvl])+'</p>'+
+    '<div class="row"><span>اجرای مستقل / با راهنما / خطا</span><b>'+fa(s.indep)+' / '+fa(s.guided)+' / '+fa(s.errors)+'</b></div>'+
+    '<div class="row"><span>وابستگی به راهنما (میانگین)</span><b>'+fa(s.helpN?(s.helpSum/s.helpN).toFixed(1):'—')+'</b></div>'+
+    '<div class="row"><span>مرور بعدی</span><b>'+(s.due?new Date(s.due).toLocaleDateString('fa-IR'):'—')+'</b></div></div>';
+  }).join(''):'<p class="note">با اولین ثبت تمرین، پروفایل مهارت‌ها ساخته می‌شود.</p>';
+}
+function dueReview(name){
+  openSheet('<h2>🧠 مرور: '+esc(name)+'</h2><p>بدون نگاه به متن درس، بازگو کن: ۱) هدف این مهارت ۲) تنظیمات ابزار ۳) یک اشتباه رایج ۴) نتیجه‌ی آخرین اجرا</p>'+
+  '<textarea class="fld" id="rev-txt"></textarea><div class="btns"><button class="btn" onclick="saveReview(\''+esc(name)+'\')">ثبت مرور</button></div>');
+}
+async function saveReview(name){
+  const t=$('rev-txt').value.trim();
+  if(t.length<20)return toast('بازگویی خیلی کوتاه است — صادقانه بنویس');
+  const s=SKILLS[name];
+  s.last=Date.now();
+  s.due=Date.now()+(calcLevel(s)>=4?14:7)*DAY;
+  saveSkills();closeSheet();renderSkills();toast('مرور ثبت شد ✓');
+}
+
+/* ================= خودروها ================= */
+async function renderVehicles(){
+  const cars=await dbAll('cars');
+  const veh=await dbAll('vehicles');
+  let h='<div class="card"><b>🚗 پرونده‌ی اصلی: پژو پارس ۱۳۹۴</b>'+
+    '<div class="row"><span>موتور</span><b>'+(PROF.car.engine?esc(PROF.car.engine):'⚠ ثبت نشده — حدس نمی‌زنم')+'</b></div>'+
+    '<div class="row"><span>تیپ/تجهیزات</span><b>'+esc(PROF.car.trim||'—')+'</b></div>'+
+    '<div class="row"><span>تأیید شما</span><b>'+(PROF.car.confirmed?'✓':'✗')+'</b></div>'+
+    '<div class="btns"><button class="btn sm" onclick="askEngine()">ویرایش مشخصات</button></div></div>';
+  h+=cars.map(c=>'<div class="lesson"><h3>'+esc(c.name)+' '+(c.year||'')+'</h3><div class="meta">'+esc(c.model||'')+'</div></div>').join('');
+  h+='<div class="btns"><button class="btn full" onclick="location.href=\'index.html\'">مدیریت گاراژ در اپ اصلی</button></div>';
+  h+='<h2 class="s">آزمایش‌های ثبت‌شده</h2>';
+  const logs=await dbAll('wlog');
+  const rel=logs.filter(e=>e.carId||e.type==='main').sort((a,b)=>b.at-a.at).slice(0,10);
+  h+=rel.length?rel.map(e=>'<div class="row"><span>'+esc(e.skill)+'</span><b>'+(e.result==='ok'?'✓':e.result==='out'?'⚠':'✗')+' '+new Date(e.at).toLocaleDateString('fa-IR')+'</b></div>').join(''):'<p class="note">هنوز آزمایشی ثبت نشده.</p>';
+  $('vehBody').innerHTML=h;
+}
+
+/* ================= دفتر ثبت ================= */
+function openLogAdd(){
+  openSheet('<h2>📓 ثبت تمرین</h2>'+
+  '<label>مهارت</label><input class="fld" id="lg-skill" placeholder="مثلاً: اندازه‌گیری ولتاژ">'+
+  '<label>نوع جلسه</label><select class="fld" id="lg-type"><option value="main">خودروی اصلی</option><option value="other">خودروی دیگر</option><option value="bench">بدون خودرو</option></select>'+
+  '<label>هدف و شرایط</label><textarea class="fld" id="lg-goal" placeholder="چه می‌خواستی بدانی؟"></textarea>'+
+  '<label>ابزار و تنظیمات</label><input class="fld" id="lg-tools" placeholder="مثلاً: مولتی‌متر روی V⎓ رنج ۲۰">'+
+  '<label>مقادیر واقعی</label><textarea class="fld" id="lg-vals"></textarea>'+
+  '<label>نتیجه</label><select class="fld" id="lg-result"><option value="ok">موفق/در محدوده</option><option value="out">خارج از انتظار</option><option value="fail">موفق نشد</option></select>'+
+  '<label>تفسیر اولیه‌ی خودم</label><textarea class="fld" id="lg-int"></textarea>'+
+  '<div class="btns"><button class="btn" onclick="saveLogSheet()">ثبت</button><button class="btn ghost" onclick="closeSheet()">انصراف</button></div>');
+}
+async function saveLogSheet(){
+  const skill=$('lg-skill').value.trim();if(!skill)return toast('مهارت لازم است');
+  await logPractice({skill,type:$('lg-type').value,dependence:'none',result:$('lg-result').value,
+    vals:$('lg-vals').value.trim(),goal:$('lg-goal').value.trim(),tools:$('lg-tools').value.trim(),
+    myInterpretation:$('lg-int').value.trim(),errors:[],helpLevel:0,analysis:!!$('lg-int').value.trim(),
+    variant:false,execPass:false,lesson:''});
+  closeSheet();renderLog();toast('ثبت شد ✓');
+}
+async function renderLog(){
+  const log=(await dbAll('wlog')).sort((a,b)=>b.at-a.at);
+  $('logBody').innerHTML=log.length?log.map(e=>'<div class="lesson"><h3>'+esc(e.skill)+' · '+new Date(e.at).toLocaleDateString('fa-IR')+'</h3>'+
+    '<div class="meta">'+(e.type==='main'?'🚗 اصلی':e.type==='other'?'⏱️ خودروی دیگر':'🧪 میزکار')+' · '+(e.result==='ok'?'✓ موفق':e.result==='out'?'⚠ خارج از انتظار':'✗ ناموفق')+'</div>'+
+    (e.goal?'<p><b>هدف:</b> '+esc(e.goal)+'</p>':'')+
+    (e.tools?'<p><b>ابزار:</b> '+esc(e.tools)+'</p>':'')+
+    (e.vals?'<p><b>مقادیر واقعی:</b> <span class="val">'+esc(e.vals)+'</span></p>':'')+
+    (e.myInterpretation?'<p><b>تفسیر من:</b> '+esc(e.myInterpretation)+'</p>':'')+
+    (e.errors&&e.errors.length?'<p style="color:var(--warn)"><b>خطاها:</b> '+esc(e.errors.join('، '))+'</p>':'')+
+    (e.note?'<p class="note">'+esc(e.note)+'</p>':'')+
+    '<div class="btns"><button class="btn danger sm" onclick="delLog('+e.id+')">حذف</button></div></div>').join('')
+    :'<p class="note">دفتر خالی است. اولین تمرین را ثبت کن.</p>';
+}
+async function delLog(id){if(!confirm('حذف شود؟'))return;await dbDel('wlog',id);renderLog();}
+
+/* ================= آزمون ================= */
+let EXAM=null;
+async function renderExam(){
+  const log=await dbAll('wlog');
+  const mastered=Object.entries(SKILLS).filter(([n,s])=>calcLevel(s)>=3);
+  const week=log.filter(e=>e.at>Date.now()-7*DAY).length;
+  const lastExam=+(localStorage.getItem('wk-lastexam')||0);
+  const weekly=Date.now()-lastExam>7*DAY;
+  $('examBody').innerHTML=
+    '<div class="card"><div class="row"><span>آزمون هفتگی ترکیبی</span><b>'+(weekly?'سرسید ✓':'پاس شده')+'</b></div>'+
+    (mastered.length?'<div class="btns"><button class="btn full" onclick="startExam()">شروع آزمون تسلط</button></div>'
+     :'<p class="note">آزمون تسلط بعد از رسیدن حداقل یک مهارت به سطح ۳ فعال می‌شود. اول تمرین کن.</p>')+'</div>'+
+    '<h2 class="s">آماده‌سازی آزمون اجرای مستقل</h2><div class="infobox">آزمون اجرای مستقل یعنی: بدون باز کردن متن درس، کار را اجرا کنی، نتیجه واقعی بگیری و آن را ثبت کنی. این در درس‌ها با فیلد «آزمون اجرای مستقل» و گزینه‌ی «بله، موفق» ثبت می‌شود.</div>';
+}
+function startExam(){
+  const qs=[];
+  COURSES.forEach(c=>c.lessons.forEach(l=>{if(l.goal!=='در حال تولید')(l.quiz||[]).forEach(q=>qs.push({...q,skill:l.skill}));}));
+  if(!qs.length)return toast('سؤالی موجود نیست');
+  qs.sort(()=>Math.random()-.5);
+  EXAM={qs:qs.slice(0,6),i:0,correct:0};
+  examDraw();
+}
+function examDraw(){
+  const e=EXAM;
+  if(e.i>=e.qs.length){
+    const pct=Math.round(e.correct/e.qs.length*100);
+    const pass=pct>=70;
+    localStorage.setItem('wk-lastexam',String(Date.now()));
+    openSheet('<h2>نتیجه آزمون</h2><div class="'+(pass?'okbox':'warnbox')+'"><b>'+fa(e.correct)+' از '+fa(e.qs.length)+' درست ('+fa(pct)+'٪)</b>'+
+      (pass?'تسلط حفظ شد ✓':'زیر ۷۰٪ — مرور عقب‌افتاده‌ها لازم است؛ مهارت‌های مربوط به سؤال‌های غلط، مرورشان جلو افتاد.')+'</div>'+
+      '<div class="btns"><button class="btn full" onclick="closeSheet();renderExam()">بستن</button></div>');
+    return;
+  }
+  const q=e.qs[e.i];
+  openSheet('<h2>📝 آزمون ('+fa(e.i+1)+'/'+fa(e.qs.length)+')</h2><div class="qa"><b>'+esc(q.q)+'</b>'+
+  '<textarea class="fld" id="ex-ans" placeholder="جواب را با جمله‌ی خودت بنویس"></textarea>'+
+  '<div class="btns"><button class="btn" onclick="examNext()">بعدی</button>'+
+  '<button class="btn ghost" onclick="examSelf(false)">نمی‌دانم</button></div>'+
+  '<p class="note">صادق باش؛ این آزمون برای توست نه برای من.</p></div>');
+}
+function examSelf(ok){if(ok)EXAM.correct++;EXAM.i++;examDraw();}
+function examNext(){
+  const v=$('ex-ans').value.trim();
+  const q=EXAM.qs[EXAM.i];
+  /* داوری معیار-based: کلیدواژه‌های پاسخ در جواب کاربر */
+  const kw=q.a.split(/[،\s]/).filter(w=>w.length>3);
+  const hit=kw.filter(w=>v.includes(w)).length;
+  examSelf(hit>=Math.min(2,kw.length));
+}
+
+/* ================= کتابخانه دانش ================= */
+const SEED=[
+  {name:'Bosch Training Solutions',url:'https://www.bosch-training-solutions.com/',note:'دوره‌های رسمی آموزشی بوش',type:'رسمی سازنده'},
+  {name:'Bosch Diagnostics Free Training',url:'https://www.boschdiagnostics.com/free-training',note:'آموزش تشخیصی رایگان',type:'رسمی سازنده'},
+  {name:'Fluke 88V User Manual',url:'https://assets.fluke.com/manuals/88v_____umeng0000.pdf',note:'راهنمای ایمنی و کار با مولتی‌متر خودرویی',type:'مستندات تجهیزات'}
+];
+async function renderLibrary(){
+  const res=await dbAll('research');
+  $('libStatus').innerHTML='<b>وضعیت تحقیق وب:</b> این نسخه‌ی اپ به سرویس جستجوی وب زنده دسترسی ندارد — این را جعل نمی‌کنم. منابع زیر نقطه‌ی شروع ثبت‌شده‌اند؛ برای تحلیل خودکار محیط صف و معماری آماده است و پس از اتصال به سرویس جستجو/دریافت محتوا فعال می‌شود. تا آن زمان: منابع را خودت باز کن، متن مهم را در اپ اصلی (دانش‌نامه) ذخیره کن تا ایندکس و قابل RAG شود.';
+  const done=res.filter(r=>r.status==='done').length;
+  $('resDash').innerHTML=
+    '<div class="card"><b>📊 داشبورد تحقیق</b>'+
+    '<div class="row"><span>منابع کشف‌شده</span><b>'+fa(SEED.length+res.length)+'</b></div>'+
+    '<div class="row"><span>پردازش‌شده/تأییدشده</span><b>'+fa(done)+'</b></div>'+
+    '<div class="row"><span>کمبود اطلاعات</span><b>مشخصات اختصاصی پارس ۱۳۹۴ (پس از تأیید موتور)</b></div>'+
+    '<div class="row"><span>نیازمند بررسی انسانی</span><b>هر محتوای منبع‌های تجربی</b></div></div>'+
+    '<h2 class="s">منابع شروع</h2>'+
+    SEED.map(s=>'<div class="lesson"><h3>'+esc(s.name)+'</h3><div class="meta">'+esc(s.type)+'</div><p>'+esc(s.note)+'</p>'+
+    '<div class="btns"><a class="btn ghost sm" style="text-decoration:none;text-align:center" href="'+esc(s.url)+'" target="_blank">بازکردن منبع</a>'+
+    '<button class="btn sm" onclick="markDone(\''+esc(s.name)+'\',\''+esc(s.url)+'\')">مطالعه کردم — ثبت در دانش</button></div></div>').join('')+
+    (res.length?'<h2 class="s">صف تحقیق</h2>'+res.map(r=>'<div class="row"><span>'+esc(r.q)+'</span><b>'+(r.status==='done'?'✓':'⏳ صف')+'</b></div>').join(''):'');
+}
+async function addResearch(){
+  const q=$('res-q').value.trim();if(!q)return;
+  await dbPut('research',{q,status:'queued',at:Date.now()});
+  renderLibrary();toast('به صف تحقیق اضافه شد ⏳ — پس از اتصال سرویس جستجو پردازش می‌شود');
+}
+async function markDone(name,url){
+  await dbPut('research',{q:name+' — '+url,status:'done',at:Date.now(),
+    note:'کاربر منبع را مطالعه و تأیید کرد؛ محتوای انتخابی باید در اپ اصلی (دانش‌نامه) ذخیره و بازبینی شود.'});
+  renderLibrary();
+  toast('ثبت شد — متن مهم را در دانش‌نامه‌ی اپ اصلی ذخیره کن تا ایندکس شود');
+}
+
+/* ================= راهنمای اپ ================= */
+const GUIDE=[
+  {t:'شروع: پروفایل و خودرو',steps:['در داشبورد، هشدار قرمز «پرونده خودرو ناقص» را با دکمه‌ی داخلش کامل کن','موتور و تیپ را فقط از روی واقعیت انتخاب کن','تأییدِ سبز یعنی می‌توانی وارد تمرین شوی'],practice:'پرونده‌ی پارس را کامل و تأیید کن.'},
+  {t:'مسیر یادگیری و قفل‌ها',steps:['«مسیر یادگیری» را باز کن','دوره‌های قفل‌شده را نمی‌توانی باز کنی — پیش‌نیاز واقعی است','درس‌های با نشان 🔒 فقط بعد از دوره‌ی ایمنی فعال می‌شوند'],practice:'درس اول دوره‌ی ۰ را باز کن و عنوان ۲۰ بخش درس را بشمار.'},
+  {t:'گام‌به‌گام در درس',steps:['هر درس ۲۰ بخش استاندارد دارد','گام‌ها را باز کن، اجرا کن، بعد «تأیید گام» بزن','گام تأییدنشده نباید رد شود — تکرار آزاد است'],practice:'یک گام را تأیید و بعد دوباره باز کن.'},
+  {t:'استادکار راهنمای عملی',steps:['هدف را بگو — من هدف را نمی‌دانم','پاسخ‌های ایمنی را رد کن','تنظیمات ابزار را قبل از هر تماس تأیید کن','نتیجه‌ی واقعی را همان‌طور که دیدی بنویس، نه همان‌طور که انتظار داری'],practice:'یک جلسه‌ی استادکار تا مرحله‌ی ثبت نتیجه برو.'},
+  {t:'ثبت نتیجه و تسلط',steps:['در پایان هر درس، فرم ثبت واقعی را پر کن','«میزان وابستگی» را صادقانه بگو — سطح تسلط از آن محاسبه می‌شود','خطاها را بنویس؛ پروفایل مهارتی به آن نیاز دارد'],practice:'یک تمرین ثبت کن و سطح محاسبه‌شده را ببین.'},
+  {t:'مرور هوشمند',steps:['مهارت‌ها تاریخ مرور دارند (بر اساس خطا و تسلط، نه فقط زمان)','در روز مرور، بازگویی بدون متن انجام بده','آزمون هفتگی خودکار سرسید می‌شود'],practice:'وضعیت مرورها را در تب تسلط ببین.'},
+  {t:'پشتیبان‌گیری',steps:['داده‌ها در همین گوشی ذخیره می‌شوند (IndexedDB مشترک با اپ اصلی)','از اپ اصلی: تنظیمات ← پشتیبان فایل','هفتگی پشتیبان بگیر — کارت یادآور در خانه‌ی اپ اصلی است'],practice:'یک پشتیبان فایل بگیر.'},
+  {t:'آفلاین و محدودیت‌ها',steps:['همه‌ی درس‌ها و ثبت‌ها آفلاین کار می‌کنند','جستجوی وب زنده فعلاً در دسترس نیست (صداقتاً گفته شد)','مدل هوشمند محلی از اپ اصلی استفاده می‌شود'],practice:'اینتنت را قطع کن و اپ را باز کن — باید کار کند.'}
+];
+function renderGuide(){
+  $('guideList').innerHTML=GUIDE.map((g,i)=>{
+    const done=new Set(JSON.parse(localStorage.getItem('wk-guide')||'[]'));
+    return '<div class="lesson"><h3>'+(done.has(i)?'✅ ':'')+'">'+fa(i+1)+') '+esc(g.t)+'</h3>'+
+    '<ol style="padding-right:18px;font-size:var(--fs-body-sm)">'+g.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol>'+
+    '<div class="btns"><button class="btn ghost sm" onclick="guideDone('+i+')">'+(done.has(i)?'علامت را بردار':'✓ این بخش را یاد گرفتم')+'</button></div>'+
+    '<p class="note">تمرین داخل اپ: '+esc(g.practice)+'</p></div>';
+  }).join('');
+}
+function guideDone(i){
+  const done=new Set(JSON.parse(localStorage.getItem('wk-guide')||'[]'));
+  done.has(i)?done.delete(i):done.add(i);
+  localStorage.setItem('wk-guide',JSON.stringify([...done]));
+  renderGuide();
+}
+
+/* ================= راه‌اندازی ================= */
+openDB().then(()=>{renderDash();}).catch(()=>toast('دیتابیس باز نشد'));
+</script>
+<script>
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js', {updateViaCache: 'none'})
+      .then(function (r) { if (r && r.update) r.update(); })
+      .catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>استاد برق خودرو</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+
+<div id="splash" onclick="hideSplash()">
+  <svg viewBox="0 0 96 96">
+    <path class="circuit" d="M8 48 H30 L40 28 L56 68 L66 48 H88"/>
+    <path class="spark-path" d="M8 48 H30 L40 28 L56 68 L66 48 H88"/>
+  </svg>
+  <h1>استاد برق خودرو</h1>
+</div>
+
+<div id="app">
+
+  <section class="screen active" id="s-home">
+    <div class="status">
+      <span class="pill" id="modePill"><i class="dot"></i><span id="modeText">آنلاین</span></span>
+      <span id="battery">باتری: ...</span>
+      <div class="bar"><i id="storBar"></i></div>
+      <span id="storText"></span>
+    </div>
+    <h2 class="greet" id="greet">سلام!</h2>
+    <button class="hero" onclick="go('diag')">
+      <svg viewBox="0 0 56 56"><path d="M32 4 L12 32 H26 L22 52 L44 22 H30 Z" fill="#FF9F1C"/></svg>
+      <b>عیب‌یابی جدید</b>
+      <span id="heroSub">حرف کارگاهی‌ات را می‌فهمم و با شواهد جلو می‌رویم.</span>
+    </button>
+    <button class="cont" id="contCard" onclick="go('diag')">▶ ادامه بده: عیب‌یابی نیمه‌کاره</button>
+    <div class="stats">
+      <div class="mini"><div class="n" id="kbCount">۰</div><div class="l">نکات دانشی</div></div>
+      <div class="mini"><div class="n" id="pendCount">۰</div><div class="l">در انتظار بازبینی</div></div>
+      <div class="mini"><div class="n" id="lastAdd">—</div><div class="l">آخرین افزودن</div></div>
+    </div>
+    <button class="learn" id="gsearchCard" onclick="openGlobalSearch()">
+      <b>🔎 جستجوی سراسری</b><span>در نکات، لغتنامه و تاریخچه‌ی جلسات — هم‌زمان. نکات نشان‌دار ⭐ اول می‌آیند.</span>
+    </button>
+    <div class="btns">
+      <button class="btn ghost" onclick="openGlossary()">📖 لغتنامه</button>
+      <button class="btn ghost" onclick="openTour()">🎯 تور راهنما</button>
+      <button class="btn ghost" onclick="location.href='voice.html'">🎙️ همراه</button>
+      <button class="btn ghost" onclick="location.href='workshop.html'">🔧 کارگاه</button>
+    </div>
+    <button class="learn bak" id="backupCard" onclick="exportAll()" style="display:none"></button>
+    <button class="learn srs" id="srsCard" onclick="openSRS()" style="display:none"></button>
+    <button class="learn" id="learnCard" onclick="doSuggested()" style="display:none"></button>
+  </section>
+
+  <section class="screen" id="s-chat">
+    <div class="chead">
+      <div class="avatar" id="avatar"><svg viewBox="0 0 26 26" fill="none"><path d="M5 15 A8 8 0 0 1 21 15" stroke="#FF9F1C" stroke-width="3" stroke-linecap="round"/></svg></div>
+      <h1 class="t">استاد</h1>
+      <button class="ttsbtn" id="voiceTog" onclick="toggleVoice()" style="margin-right:auto">🔊 صوتی: خاموش</button>
+    </div>
+    <div id="msgs"></div>
+    <div class="clr"><button onclick="clearChat()" style="color:inherit;text-decoration:underline">پاک کردن گفتگو</button></div>
+    <div class="chatbar"><div class="chatbar-in">
+      <div class="qchips" id="qchips"></div>
+      <div class="inrow">
+        <input id="chatIn" placeholder="سؤالت رو بپرس یا بگو..." autocomplete="off">
+        <button class="micbtn" id="chatMic" aria-label="گفتار" onclick="chatMic(this)">🎤</button>
+        <button id="sendBtn" disabled aria-label="ارسال">➤</button>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="screen" id="s-diag">
+    <h1 class="t">عیب‌یابی</h1>
+    <div class="garagebar">
+      <span class="gcar all" id="garageName" onclick="openGarage()">🚗 همه‌ی خودروها</span>
+      <button class="btn ghost sm" onclick="openGarage()">گاراژ</button>
+      <button class="btn sm" onclick="openQuickPath()">⚡ مسیر سریع</button>
+    </div>
+    <button class="hbtog" id="hbTog" onclick="toggleHB()"><span>🧤 حالت دست‌های درگیر</span><b id="hbState">خاموش</b></button>
+    <div class="btns" style="margin-bottom:var(--sp-2)">
+      <button class="btn ghost sm" onclick="openGlobalSearch()">🔎 جستجو</button>
+      <button class="btn ghost sm" onclick="openGlossary()">📖 لغتنامه</button>
+      <button class="btn ghost sm" onclick="openToolGuide()">🔧 مولتی‌متر</button>
+      <button class="btn ghost sm" onclick="location.href='workshop.html'">🎓 کارگاه</button>
+    </div>
+    <div id="diagBox"></div>
+  </section>
+
+  <section class="screen" id="s-kb">
+    <h1 class="t">دانش‌نامه</h1>
+    <div class="garagebar">
+      <span class="gcar all" id="kbGarageName" onclick="openGarage()">🚗 همه‌ی خودروها</span>
+      <button class="btn ghost sm" onclick="openGarage()">گاراژ</button>
+    </div>
+    <input class="search" id="q" type="search" placeholder="جستجو (غلط املایی و حرف کارگاهی اوکیه)...">
+    <div class="kbsum" id="kbSum"></div>
+    <div class="chips" id="chips"></div>
+    <div class="chips" id="qchips2"></div>
+    <button class="btn full addbtn" onclick="openAdd()">＋ افزودن نکته</button>
+    <div class="btns" style="margin-bottom:var(--sp-2)">
+      <button class="btn ghost" onclick="$('fileIn').click()">📄 فایل</button>
+      <button class="btn ghost" onclick="$('camIn').click()">📷 عکس</button>
+      <button class="btn ghost" onclick="openImport()">📥 متن</button>
+      <button class="btn ghost" id="revBtn" onclick="openReview()">🔍 بازبینی (۰)</button>
+    </div>
+    <input type="file" id="fileIn" accept=".pdf,.txt" style="display:none">
+    <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none">
+    <div id="list"></div>
+  </section>
+
+  <section class="screen" id="s-set">
+    <h1 class="t">تنظیمات</h1>
+    <div class="settabs">
+      <button class="settab on" data-st="gen">عمومی</button>
+      <button class="settab" data-st="kb">دانش و یادگیری</button>
+      <button class="settab" data-st="adv">پیشرفته</button>
+    </div>
+
+    <div class="setpane on" id="pane-gen">
+      <div class="card">
+        <h3>حالت من</h3>
+        <button class="hbtog" onclick="toggleBeg()"><span>🌱 حالت مبتدی</span><b id="begState">خاموش</b></button>
+        <button class="hbtog" onclick="toggleHB()"><span>🧤 دست‌های درگیر — دکمه‌های بزرگ</span><b id="hbState2">خاموش</b></button>
+      </div>
+      <div class="card">
+        <h3>🔧 کارگاه عملی</h3>
+        <p id="courseSetBox"></p>
+        <div class="btns"><button class="btn" onclick="location.href='workshop.html'">ورود به کارگاه</button></div>
+      </div>
+      <div class="card">
+        <h3>🧠 مرور فاصله‌دار</h3>
+        <div id="srsSetBox"></div>
+        <div class="btns">
+          <button class="btn" onclick="openSRS()">مرور امروز</button>
+          <button class="btn ghost" onclick="openSRSStats()">آمار مرور</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🚗 گاراژ</h3>
+        <div id="garageSet"></div>
+        <div class="btns"><button class="btn" onclick="openGarage()">مدیریت خودروها</button></div>
+      </div>
+      <div class="card">
+        <h3>وضعیت</h3>
+        <div class="row"><span>شبکه</span><b id="setMode">—</b></div>
+        <div class="row"><span>حالت کاری</span><b id="routeMode">—</b></div>
+        <p class="note" id="routeNote"></p>
+      </div>
+      <div class="card">
+        <h3>ظاهر و صدا</h3>
+        <button class="hbtog" onclick="toggleVoice()"><span>🔊 پاسخ صوتی چت</span><b id="voiceState2">خاموش</b></button>
+        <label>اندازه‌ی نوشته</label>
+        <input type="range" id="fsR" min="14" max="22" step="1">
+      </div>
+      <div class="card">
+        <h3>پشتیبان‌گیری و انتقال</h3>
+        <div class="row"><span>آخرین پشتیبان</span><b id="setLastBak">—</b></div>
+        <div class="btns">
+          <button class="btn" onclick="exportAll()">💾 فایل پشتیبان</button>
+          <button class="btn ghost" onclick="document.getElementById('imp').click()">📥 ورودی فایل</button>
+        </div>
+        <div class="btns">
+          <button class="btn ghost" onclick="openTransferOut()">🔗 کد انتقال (خروجی)</button>
+          <button class="btn ghost" onclick="openTransferIn()">📲 ورود با کد</button>
+        </div>
+        <input type="file" id="imp" accept=".json,application/json" style="display:none">
+      </div>
+      <div class="card">
+        <h3>حافظه</h3>
+        <div class="row"><span>مصرف‌شده</span><b id="setUsed">—</b></div>
+        <div class="row"><span>سقف</span><b id="setQuota">—</b></div>
+        <div class="row"><span>پایدار</span><b id="setPersist">—</b></div>
+        <div class="btns"><button class="btn ghost full" onclick="askPersist()">فعال‌سازی حافظه‌ی پایدار</button></div>
+      </div>
+      <div class="card">
+        <h3>نصب روی گوشی</h3>
+        <p id="installTxt">Chrome ← سه‌نقطه ← Add to Home screen. سپس MIUI ← باتری ← «بدون محدودیت».</p>
+        <div class="btns"><button class="btn ghost" onclick="doInstall()">نصب اپ</button></div>
+      </div>
+      <div class="card">
+        <h3>درباره</h3>
+        <p>استاد برق خودرو · نسخه‌ی ماژولار (v27) — ۵۷ مرحله + کارگاه عملی</p>
+        <div class="btns"><button class="btn ghost" onclick="openTour()">🎯 دیدن دوباره‌ی تور</button></div>
+      </div>
+    </div>
+
+    <div class="setpane" id="pane-kb">
+      <div class="card"><h3>📊 سلامت دانش</h3><div id="healthBox"></div></div>
+      <div class="card"><h3>🩺 عملکرد و پایداری داده</h3><div id="perfBox"></div>
+        <div class="btns"><button class="btn ghost" onclick="optimizeNow()">🔄 بهینه‌سازی کش‌ها</button></div>
+      </div>
+      <div class="card"><h3>📈 آمار پروژه</h3><div id="statsBox"></div></div>
+      <div class="card"><h3>🗂️ تاریخچه‌ی عیب‌یابی</h3><div id="histBox"></div></div>
+      <div class="card">
+        <h3>پروفایل مهارتی</h3>
+        <div id="skillBox"></div>
+        <div class="btns"><button class="btn ghost" onclick="openExercise()">تمرین کوتاه</button>
+        <button class="btn danger" onclick="delSkill()">پاک کردن</button></div>
+      </div>
+      <div class="card"><h3>خلأهای دانشی</h3><div id="gapList"></div></div>
+      <div class="card">
+        <h3>🧹 پاکسازی محتوا</h3>
+        <div id="cleanBox"></div>
+        <div class="btns"><button class="btn full" onclick="bulkClean()">پاکسازی کل دانش‌نامه</button></div>
+      </div>
+    </div>
+
+    <div class="setpane" id="pane-adv">
+      <div class="card">
+        <h3>مدل محلی (هوش روی گوشی)</h3>
+        <div class="mstat"><span id="mlStat">—</span></div>
+        <div class="jobprog" id="mlProgWrap" style="display:none"><i id="mlProg" style="width:0%"></i></div>
+        <div class="btns">
+          <button class="btn" id="mlDown" onclick="mlDownload()">دانلود</button>
+          <button class="btn ghost" id="mlToggle" onclick="mlToggleUse()" style="display:none">فعال در چت</button>
+          <button class="btn danger" id="mlDel" onclick="mlDelete()" style="display:none">حذف</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>تحلیل نقشه (آنلاین)</h3>
+        <label>آدرس API</label>
+        <input class="fld" id="map-url" dir="ltr" placeholder="https://...">
+        <label>کلید API</label>
+        <input class="fld" id="map-key" dir="ltr" type="password" placeholder="sk-...">
+        <label>نام مدل بینایی</label>
+        <input class="fld" id="map-model" dir="ltr" placeholder="gpt-4o-mini">
+        <div class="btns"><button class="btn" onclick="saveMapApi()">ذخیره</button></div>
+        <hr style="border-color:#242424;margin:10px 0">
+        <label>دسته‌جمعی: فایل منبع</label>
+        <select class="fld" id="mapFile"><option value="">— فایلی نیست —</option></select>
+        <div class="btns">
+          <input class="fld" id="mapFrom" type="number" min="1" value="1" inputmode="numeric" style="flex:1">
+          <input class="fld" id="mapTo" type="number" min="1" value="5" inputmode="numeric" style="flex:1">
+          <button class="btn" style="flex:2" onclick="batchMap()">🗺️ تحلیل</button>
+        </div>
+      </div>
+      <div class="card"><h3>صف استخراج و تحلیل</h3><div id="jobList"></div></div>
+    </div>
+  </section>
+
+</div>
+
+<div id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sheet-in" id="sheetBody"></div></div>
+<div id="toast"></div>
+
+<nav><div class="nav-in">
+  <button class="tab active" data-t="home"><span class="ic">🏠</span>خانه</button>
+  <button class="tab" data-t="chat"><span class="ic">💬</span>استاد</button>
+  <button class="tab center" data-t="diag"><span class="ic">🔍</span>عیب‌یابی</button>
+  <button class="tab" data-t="kb"><span class="ic">📚</span>دانش‌نامه</button>
+  <button class="tab" data-t="workshop" onclick="location.href='workshop.html'"><span class="ic">🔧</span>کارگاه</button>
+  <button class="tab" data-t="set"><span class="ic">⚙️</span>تنظیمات</button>
+</div></nav>
+
+<script src="script.js"></script>
+<script>
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js', {updateViaCache: 'none'})
+      .then(function (r) { if (r && r.update) r.update(); })
+      .catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
