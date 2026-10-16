@@ -1,0 +1,43 @@
+  window.scrollTo(0, document.body.scrollHeight);
+  LAST_SPEECH = a.speech || '';
+  status(LOOP ? 'جواب می‌آید؛ بعدش دوباره گوش می‌دهم…' : 'جواب می‌آید…');
+  speak(LAST_SPEECH);
+}
+
+function sendText(){
+  const i = $('qIn'); const q = (i.value||'').trim();
+  if (!q) return;
+  i.value = '';
+  stopListen();
+  try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch(e){}
+  ask(q, false);
+}
+document.addEventListener('keydown', ev => { if (ev.key === 'Enter' && ev.target && ev.target.id === 'qIn'){ ev.preventDefault(); sendText(); } });
+
+/* ==================== چیپ‌ها ==================== */
+async function renderChips(){
+  const all = await getLiveUnits();
+  const ac = activeCarId();
+  const pool = all.filter(u => !u.offdomain && (!ac || !u.carId || String(u.carId)===String(ac)))
+    .sort((a,b)=>((b.pin?1:0)-(a.pin?1:0)) || (b.quality||0)-(a.quality||0));
+  $('chips').innerHTML = pool.slice(0,6).map(u =>
+    `<button class="chip" data-q="${esc(u.title)}">${u.pin ? '⭐ ' : ''}${esc(u.title)}</button>`).join('');
+  $('chips').querySelectorAll('.chip').forEach(c => c.onclick = () => ask(c.dataset.q, false));
+}
+
+/* ==================== راه‌اندازی ==================== */
+openDB()
+  .then(async () => { await loadCars(); await renderChips(); })
+  .catch(() => { status('دیتابیس باز نشد — اول یک بار اپ اصلی را باز کن'); });
+</script>
+<script>
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js', {updateViaCache: 'none'})
+      .then(function (r) { if (r && r.update) r.update(); })
+      .catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
