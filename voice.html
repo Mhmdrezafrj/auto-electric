@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>همراه صوتی — استاد برق خودرو</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+:root{
+  --bg-base:#000;--bg-card:#121212;--bg-input:#0C0C0C;
+  --stroke-subtle:#242424;--stroke-strong:#383838;
+  --amber-500:#FF9F1C;--amber-glow:rgba(255,159,28,.12);
+  --safe:#2ECC71;--warn:#F39C12;--danger:#E74C3C;--info:#5DADE2;
+  --text-primary:#F2F2F2;--text-secondary:#A8A8A8;--text-muted:#666;--text-on-amber:#1A1206;
+  --fs-h1:19px;--fs-h2:16.5px;--fs-body:15px;--fs-body-sm:13.5px;--fs-caption:12px;
+  --r-md:11px;--r-lg:16px;--r-pill:999px;--sp-2:6px;--sp-3:9px;--sp-4:12px;--sp-6:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg-base);color:var(--text-primary);
+  font-family:'Vazirmatn',system-ui,sans-serif;font-size:var(--fs-body);line-height:1.75}
+button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+.top{position:sticky;top:0;background:rgba(10,10,10,.96);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--stroke-subtle);z-index:60;padding:var(--sp-3);
+  display:flex;align-items:center;gap:var(--sp-2);
+  padding-top:calc(var(--sp-3) + env(safe-area-inset-top))}
+.top h1{font-size:var(--fs-h1);font-weight:800;flex:1}
+.top a{font-size:12px;border:1px solid var(--stroke-strong);border-radius:var(--r-pill);
+  padding:4px 12px;color:var(--text-secondary);text-decoration:none}
+.app{max-width:680px;margin:0 auto;padding:var(--sp-4);padding-bottom:60px;text-align:center}
+.stage{margin:26px 0 8px;display:inline-block}
+#micBtn{width:126px;height:126px;border-radius:50%;background:var(--amber-500);color:var(--text-on-amber);
+  font-size:50px;box-shadow:0 0 34px rgba(255,159,28,.4);transition:transform .15s}
+#micBtn:active{transform:scale(.94)}
+#micBtn.rec{background:var(--danger);color:#fff;animation:pulse 1.1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 22px rgba(231,76,60,.15)}}
+#status{min-height:26px;color:var(--text-secondary);font-size:var(--fs-body-sm);margin-bottom:var(--sp-3)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:var(--sp-2);text-align:right}
+.chip{flex:none;padding:4px 13px;border-radius:var(--r-pill);border:1px solid var(--stroke-strong);
+  font-size:12px;color:var(--text-secondary);white-space:nowrap}
+.chip.on{background:var(--amber-500);color:var(--text-on-amber);border-color:var(--amber-500);font-weight:600}
+.msg{max-width:94%;padding:var(--sp-2) var(--sp-3);margin:var(--sp-2) auto;border-radius:var(--r-md);
+  font-size:var(--fs-body-sm);line-height:1.8;text-align:right;word-wrap:break-word}
+.msg.u{background:#2B2013;border:1px solid #4a3315}
+.msg.m{background:var(--bg-card);border:1px solid var(--stroke-subtle)}
+.fixednote{display:inline-block;font-size:11px;color:var(--info);background:rgba(93,173,226,.08);
+  border:1px dashed var(--info);border-radius:7px;padding:1px 8px;margin-top:4px}
+.safety{background:rgba(231,76,60,.12);border:2px solid var(--danger);border-radius:var(--r-md);
+  padding:var(--sp-2) var(--sp-3);margin:var(--sp-2) 0;color:#ffd7d2;font-size:var(--fs-body-sm);text-align:right}
+.safety b{color:var(--danger);display:block;font-size:var(--fs-body)}
+.fact{margin-top:var(--sp-2);padding-top:var(--sp-2);border-top:1px solid var(--stroke-subtle)}
+.fact b.ft{display:block;font-weight:600}
+.cite{display:inline-block;margin-top:4px;font-size:11px;color:var(--info);
+  border:1px solid var(--info);border-radius:var(--r-pill);padding:0 8px;line-height:1.9}
+.val{font-weight:800;color:var(--amber-500);text-shadow:0 0 8px var(--amber-glow)}
+.causal{border:1px solid var(--stroke-subtle);border-right:3px solid var(--info);border-radius:var(--r-md);
+  background:var(--bg-input);padding:var(--sp-2) var(--sp-3);margin:var(--sp-1) 0;font-size:var(--fs-body-sm);text-align:right}
+.causal b{color:var(--info)}
+.note{font-size:var(--fs-caption);color:var(--text-muted);margin-top:var(--sp-1)}
+.b{display:inline-block;font-size:10.5px;padding:0 8px;border-radius:var(--r-pill);
+  border:1px solid var(--stroke-strong);margin-left:4px;line-height:1.8;color:var(--text-secondary)}
+.b.car{color:#7FCB8F;border-color:#7FCB8F}
+.row2{display:flex;gap:var(--sp-2);justify-content:center;margin:var(--sp-2) 0}
+.tgl{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-body-sm);color:var(--text-secondary);
+  border:1px solid var(--stroke-strong);border-radius:var(--r-pill);padding:6px 14px}
+.tgl.on{border-color:var(--amber-500);color:var(--amber-500)}
+.hintbox{background:var(--bg-card);border:1px solid var(--stroke-subtle);border-radius:var(--r-md);
+  padding:var(--sp-3);margin:var(--sp-3) 0;text-align:right;font-size:var(--fs-body-sm);color:var(--text-secondary)}
+.txtrow{display:flex;gap:8px;margin:10px 0}
+.txtrow input{flex:1;min-width:0;background:var(--bg-input);color:#fff;border:1px solid var(--stroke-strong);border-radius:12px;padding:12px;font:inherit;font-size:16px}
+.txtrow input:focus{outline:none;border-color:#FF9F1C}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>🎙️ همراه صوتی <small style="font-size:12px;color:#FF9F1C;font-weight:600">نسخه ۲</small></h1>
+  <a href="index.html">→ اپ اصلی</a>
+</div>
+
+<div class="app">
+  <div class="stage"><button id="micBtn" aria-label="گفتن سؤال" onclick="toggleMic()">🎤</button></div>
+  <div id="status">دکمه را بزن و سؤالت را بگو — غلط املایی و حرف کارگاهی اوکیه.</div>
+
+  <div class="row2">
+    <button class="tgl on" id="loopTog" onclick="toggleLoop()">🔁 پیوسته: روشن</button>
+    <button class="tgl" onclick="repeatLast()">🔊 تکرار جواب</button>
+  </div>
+
+  <div class="txtrow"><input id="qIn" type="text" placeholder="یا بنویس… مثلاً: ماشین روشنه ۱۳٫۲" enterkeyhint="send" autocomplete="off"><button class="tgl" onclick="sendText()">ارسال</button></div>
+  <div class="chips" id="chips"></div>
+  <div id="log"></div>
+
+  <div class="hintbox">
+    <b>مخصوص کار با دست‌های درگیر:</b> سؤال را می‌گویی، از دانش‌نامه‌ی خودت (آفلاین) جواب می‌گیری و بلند می‌خواند.
+    هیچ عددی از خودش نمی‌سازد — اگر در دانش‌نامه نبود، صادقانه می‌گوید. هیچ چیز به اینترنت فرستاده نمی‌شود.
+    عدد اندازه‌گیری هم می‌فهمد: بگو «سیزده و هشت دهم ولت».
+  </div>
+</div>
+
+<script src="diag.js"></script>
+<script>
+if (typeof quickAnswer !== 'function'){
+  window.quickAnswer = () => null; window.dgNum = () => null; window.dgShow = x => String(x);
+  setTimeout(() => { try { status('⚠ فایل diag.js روی سایت نیست؛ تشخیص با عدد کار نمی‌کند. آن را کنار index.html آپلود کن.'); } catch(e){} }, 800);
+}
+'use strict';
+const $ = id => document.getElementById(id);
+const fa = s => String(s).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ==================== دیتابیس مشترک v6 ==================== */
+let db;
+function openDB(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('aem-db', 6);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      ['units','gaps','sessions','jobs','cars','lessons','skills','wlog','vehicles','research','guide'].forEach(n => {
+        if (!d.objectStoreNames.contains(n)) d.createObjectStore(n, {keyPath:'id', autoIncrement:true});
+      });
+    };
+    r.onsuccess = () => { db = r.result; res(); };
+    r.onerror = () => rej(r.error);
+  });
+}
+const st = (n,m) => db.transaction(n, m).objectStore(n);
+const req = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+
+/* ==================== موتور جستجو (فشرده، هماهنگ با اپ اصلی) ==================== */
+const norm = s => String(s||'').toLowerCase()
+  .replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\u200f]/g,' ')
+  .replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+  .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+  .replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();
+const STOP = new Set('و در به از که را این آن با برای چی چیه چرا چطور چگونه چقدر چند است هست باید می شود میشه میشود کنم کنیم کرد کن بگو بده یه یک من ما تو اگه اگر هم یا اما ولی بعد قبل وقتی خیلی چیست کدام کجا کی چه'.split(' '));
+function tokens(s){
+  return norm(s).split(/\s+/).filter(t => t.length>=2 && !STOP.has(t))
+    .map(t => t.replace(/(ها|های)$/,'')).filter(t=>t.length>=2);
+}
+const SYN = {
+  'دینام':['آلترناتور'],'آلترناتور':['دینام'],
+  'سوخت':['بنزین'],'بنزین':['سوخت'],
+  'گراند':['اتصال','بدنه'],'زمین':['اتصال','بدنه'],'بدنه':['اتصال'],
+  'چراغ':['روشنایی','لایت'],'لایت':['چراغ'],
+  'جرقه':['شمع'],'شمع':['جرقه'],
+  'ولتاژ':['ولت'],'ولت':['ولتاژ'],'آمپر':['جریان'],'جریان':['آمپر'],
+  'استارت':['استارتر'],'استارتر':['استارت'],
+  'شارژ':['باتری','دینام'],'باتری':['شارژ'],'فیوز':['رله']
+};
+function expandToks(toks){
+  const out = new Set(toks);
+  for (const t of toks) for (const s of (SYN[t]||[])) out.add(s);
+  return [...out];
+}
+function score(u, toks){
+  const T = norm(u.title), B = norm(u.body), M = norm([u.car,u.system,u.srcName].join(' '));
+  let s = 0, hit = 0;
+  for (const t of toks){
+    let h = 0;
+    if (T.includes(t)) h += 3;
+    if (B.includes(t)) h += 1.5;
+    if (M.includes(t)) h += 1;
+    if (h) hit++;
+    s += h;
+  }
+  return {s: s + hit*1.5, hit};
+}
+
+/* تصحیح املایی رایج (زیرمجموعه‌ی اپ اصلی — سبک برای این صفحه) */
+const TYPOS = {
+  'الترناتور':'آلترناتور','اترناتور':'آلترناتور','آلترنیتر':'آلترناتور',
+  'ریگلاتور':'ریگولاتور','رگولاتور':'ریگولاتور','بتری':'باتری','فوز':'فیوز',
+  'ریله':'رله','سویچ':'سوئیچ','ستارتر':'استارتر','کوئل':'کویل',
+  'انجکتور':'انژکتور','سنسر':'سنسور','کنکتور':'کانکتور','دیآگ':'دیاگ',
+  'مولتیمتر':'مولتی‌متر','مولتی متر':'مولتی‌متر','شمارژ':'شارژ',
+  'گراند':'اتصال بدنه','گرند':'اتصال بدنه','شورت':'اتصال کوتاه','امپر':'آمپر','اوم':'اهم'
+};
+function correctTypos(text){
+  let t = String(text||'');
+  for (const [a,b] of Object.entries(TYPOS)){
+    t = t.replace(new RegExp('(^|[\\s،.؛:؟!()«»])' + a + '($|[\\s،.؛:؟!()«»])', 'g'), '$1' + b + '$2');
+  }
+  return t;
+}
+
+/* ==================== ایمنی ==================== */
+const DANGER = [
+  {k:['ایربگ','airbag','srs','کیسه هوا'], t:'مدار ایربگ (SRS) را هرگز با مولتی‌متر یا لامپ تست اندازه‌گیری نکن. فقط توسط تعمیرکار مجاز و با دستگاه دیاگ.'},
+  {k:['ولتاژ بالا','نارنجی','هیبرید','برقی کامل'], t:'سیستم‌های ولتاژ بالا (کابل نارنجی) خطر جانی دارند. اندازه‌گیری‌شان فقط برای تعمیرکار دارای گواهی است.'}
+];
+function safetyFor(q){
+  const n = norm(q);
+  return DANGER.filter(d => d.k.some(k => n.includes(norm(k))));
+}
+
+/* ==================== علت‌ومعلولی (فشرده) ==================== */
+const CAUSAL = [
+  {sys:'شارژ', kws:['چراغ باتری','شارژ نمی','باتری خالی','باتری تخلیه','دینام','آلترناتور'],
+   causes:['تسمه‌ی آلترناتور شل یا پاره','آلترناتور یا ریگولاتور خراب','کانکتور یا سیم‌کشی مدار شارژ','خود باتری ضعیف/سولفاته']},
+  {sys:'استارت', kws:['استارت نمی','هیچ صدایی','کلیک می‌کند'],
+   causes:['باتری ضعیف یا قطب‌های کثیف','مدار سوئیچ یا رله‌ی استارت','استارتر یا سولنوئید خراب','اتصال بدنه در کابل منفی']},
+  {sys:'جرقه و احتراق', kws:['روشن نمی','گیر می‌کند','خفه','پاس می‌کند','دور ریگ','لرزش'],
+   causes:['شمع یا وایر شمع معیوب','کویل یا مدار جرقه','سنسور دور موتور (کرانک)','پرش زمان تسمه/زنجیر']},
+  {sys:'انژکتور و سوخت', kws:['سوخت نمی','بنزین','پمپ بنزین'],
+   causes:['فیوز یا رله‌ی پمپ بنزین','فشار کم سوخت','انژکتورهای مسدود','فیلتر بنزین مسدود']},
+  {sys:'سیم‌کشی و کانکتور', kws:['فیوز می‌سوزد','قطع برق','اتصال بدنه','قطع و وصل'],
+   causes:['اتصال کوتاه در بار مدار','اتصال بدنه (گراند) ضعیف','کانکتور اکسیدشده']}
+];
+function causalFor(q){
+  const n = norm(q);
+  return CAUSAL.filter(c => c.kws.some(k => n.includes(norm(k))));
+}
+function causalHtml(list){
+  return list.map(c => `<div class="causal"><b>🔍 ${esc(c.sys)} — فرضیه‌ها به ترتیب احتمال:</b>
+    <ol style="padding-right:18px;margin:6px 0 0">${c.causes.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`).join('');
+}
+
+/* ==================== مرجع عددی ==================== */
+const UMAP = {'ولت':'V','اهم':'Ω','آمپر':'A','هرتز':'Hz','V':'V','Ω':'Ω','A':'A','Hz':'Hz'};
+const UFA = {V:'ولت','Ω':'اهم',A:'آمپر',Hz:'هرتز'};
+const toNum = s => parseFloat(String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+  .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace('٫','.').replace('،','.'));
+function findRef(body){
+  const m = String(body).match(/([\d۰-۹]+(?:[٫.][\d۰-۹]+)?)\s*(?:تا|-|–)\s*([\d۰-۹]+(?:[٫.][\d۰-۹]+)?)\s*(ولت|اهم|آمپر|هرتز|V|Ω|A|Hz)/);
+  if (!m) return null;
+  const lo = toNum(m[1]), hi = toNum(m[2]);
+  if (isNaN(lo) || isNaN(hi)) return null;
+  return {lo:Math.min(lo,hi), hi:Math.max(lo,hi), unit:UMAP[m[3]]};
+}
+function hl(s){
+  return esc(s).replace(/([\d۰-۹]+(?:[٫.][\d۰-۹]+)?(?:\s*(?:تا|-|–)\s*[\d۰-۹]+(?:[٫.][\d۰-۹]+)?)?\s*(?:ولت|اهم|آمپر|هرتز|V|Ω|A|Hz))/g,'<span class="val">$1</span>');
+}
+
+/* ==================== گاراژ و کش ==================== */
+let CARS = [];
+async function loadCars(){
+  CARS = (await req(st('cars','readonly').getAll())).sort((a,b)=>b.created-a.created);
+}
+function activeCarId(){ return localStorage.getItem('aem-active-car') || ''; }
+function carNameById(id){
+  const c = CARS.find(c => String(c.id) === String(id));
+  return c ? c.name : '';
+}
+let LIVE = null;
+async function getLiveUnits(){
+  if (LIVE) return LIVE;
+  const raw = await req(st('units','readonly').getAll());
+  LIVE = raw.filter(u => !u.hidden && u.review !== 'pending' && u.review !== 'rejected');
+  return LIVE;
+}
+
+/* ==================== چت صوتی ==================== */
+let LOOP = true;
+const status = t => { $('status').textContent = t; };
+function toggleLoop(){
+  LOOP = !LOOP;
+  $('loopTog').classList.toggle('on', LOOP);
+  $('loopTog').textContent = LOOP ? '🔁 پیوسته: روشن' : '🔁 پیوسته: خاموش';
+}
+let FA_VOICE = null;
+function pickVoice(){
+  try { const vs = speechSynthesis.getVoices() || []; FA_VOICE = vs.find(v => /^fa/i.test(v.lang)) || null; return vs.length; }
+  catch(e){ return 0; }
+}
+if ('speechSynthesis' in window){ pickVoice(); try { speechSynthesis.onvoiceschanged = pickVoice; } catch(e){} }
+function speak(text){
+  if (!('speechSynthesis' in window) || !text){ return; }
+  const nv = pickVoice();
+  if (nv && !FA_VOICE){
+    status('صدای فارسی روی گوشی نصب نیست؛ جواب روی صفحه است. (تنظیمات گوشی › تبدیل متن به گفتار › موتور Google › زبان فارسی)');
+    return;
+  }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fa-IR'; u.rate = 1;
+  if (FA_VOICE) u.voice = FA_VOICE;
+  u.onend = () => { if (LOOP) setTimeout(startListen, 600); };
+  u.onerror = () => { status('صدا پخش نشد؛ جواب روی صفحه است.'); };
+  speechSynthesis.speak(u);
+}
+let RECOG = null, LISTENING = false;
+let ERR_SHOWN = false;
+function startListen(){
+  if (LISTENING) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR){ status('تشخیص گفتار اینجا کار نمی‌کند — Chrome اندروید لازم است؛ می‌توانی بنویسی'); return; }
+  try { if ('speechSynthesis' in window && speechSynthesis.speaking) return; } catch(e){}
+  const r = new SR();
+  r.lang = 'fa-IR'; r.interimResults = false; r.maxAlternatives = 3; r.continuous = false;
+  RECOG = r; LISTENING = true; ERR_SHOWN = false;
+  $('micBtn').classList.add('rec');
+  status('گوش می‌دهم… بگو 👂');
+  let got = false;
+  r.onresult = ev => {
+    got = true; LISTENING = false; $('micBtn').classList.remove('rec');
+    const alts = Array.from(ev.results[0] || []).map(a => String(a.transcript||'').trim()).filter(Boolean);
+    let pick = alts[0] || '';
+    if (pick && dgNum(pick, true) === null){
+      const alt = alts.find(a => dgNum(a, true) !== null);
+      if (alt) pick = alt;
+    }
+    if (pick) ask(pick, true);
+  };
+  r.onerror = ev => {
+    LISTENING = false; ERR_SHOWN = true; $('micBtn').classList.remove('rec');
+    const e = ev && ev.error;
+    status(
+      e === 'not-allowed' || e === 'service-not-allowed' ? 'اجازه‌ی میکروفون داده نشده — در Chrome روی قفل کنار آدرس بزن و میکروفون را مجاز کن' :
+      e === 'no-speech' ? 'صدایی نشنیدم — دوباره دکمه را بزن' :
+      e === 'network' ? 'تشخیص گفتار به اینترنت نیاز دارد' :
+      e === 'language-not-supported' ? 'فارسی روی این مرورگر پشتیبانی نمی‌شود؛ می‌توانی بنویسی' :
+      e === 'audio-capture' ? 'میکروفون پیدا نشد' :
+      'صدای واضحی نشنیدم — دوباره بگو');
+  };
+  r.onend = () => {
+    LISTENING = false; $('micBtn').classList.remove('rec');
+    if (!got && !ERR_SHOWN) status('چیزی نشنیدم — دکمه را بزن و بگو');
+  };
+  try { r.start(); }
+  catch(e){ LISTENING = false; $('micBtn').classList.remove('rec'); status('میکروفون شروع نشد — دوباره امتحان کن'); }
+}
+function stopListen(){
+  if (RECOG){ try{ RECOG.stop(); }catch{} }
+  LISTENING = false;
+  $('micBtn').classList.remove('rec');
+}
+function toggleMic(){
+  if (LISTENING) stopListen();
+  else startListen();
+}
+let LAST_SPEECH = '';
+function repeatLast(){
+  if (LAST_SPEECH){ const t = LAST_SPEECH; LAST_SPEECH=''; speak(t); }
+  else status('هنوز جوابی برای تکرار نیست');
+}
+
+/* ==================== جواب ==================== */
+async function answer(q, raw){
+  const qf = correctTypos(q);
+  const baseToks = tokens(qf);
+  const toks = expandToks(baseToks);
+  const safety = safetyFor(q).map(d=>`<div class="safety"><b>🔒 هشدار ایمنی</b>${esc(d.t)}</div>`).join('');
+  const qa = quickAnswer(q) || (raw && raw !== q ? quickAnswer(raw) : null);
+  if (qa) return {safety, speech: qa.speech, html: qa.html};
+  const ac = activeCarId();
+  const all = (await getLiveUnits()).filter(u=>!u.offdomain);
+
+  if (!all.length){
+    const cs = causalFor(q);
+    return {safety, speech:'دانش‌نامه هنوز خالیه. الگوی عمومی را می‌گویم: اول ولتاژ باتری را بگیر، بعد مدار را مشخص کن.',
+      html:'دانش‌نامه هنوز خالیه — در اپ اصلی منبع اضافه کن تا جواب‌های مستند بگیری.' + causalHtml(cs)};
+  }
+  const ranked = all.map(u=>({u, ...score(u,toks)}))
+    .filter(x=>x.s>0)
+    .map(x => ({...x, s: x.s + (ac && String(x.u.carId)===String(ac) ? 4 : 0) + (x.u.pin ? 3 : 0)}))
+    .sort((a,b)=>(b.s + ((b.u.quality||0)*0.2)) - (a.s + ((a.u.quality||0)*0.2))).slice(0,3);
+  const need = Math.max(1, Math.ceil(baseToks.length/2));
+  const good = ranked.filter(x => x.hit >= Math.min(need, baseToks.length));
+
+  if (!baseToks.length || !good.length){
+    try { await req((() => { const r = st('gaps','readwrite').add({q, at:Date.now(), done:false}); return r; })()); } catch(e){ console.error(e); }
+    const cs = causalFor(q);
+    let speech = 'در دانش‌نامه جواب مستقیمی نیافتم و ثبتش کردم. ';
+    let html = 'در دانش‌نامه جواب مستقیمی برای این سؤال نیافتم و حدس نمی‌زنم؛ سؤالت در اپ اصلی ثبت شد. ';
+    if (cs.length){
+      html += causalHtml(cs);
+      speech += 'اما طبق الگوی عمومی: ' + cs[0].causes.slice(0,3).join('، ') + '.';
+    }
+    return {safety, speech, html};
+  }
+  const hook = good.length===1 ? 'این را در دانش‌نامه‌ات یافتم:' : 'این چند مورد را یافتم:';
+  let speechText = good.length===1 ? 'این را یافتم: ' : 'این چند مورد را یافتم: ';
+  const facts = good.map((x,i)=>{
+    const u = x.u;
+    const body = u.body.length>500 ? u.body.slice(0,500)+'…' : u.body;
+    if (i < 2){ const first = (String(u.body).split(/[.!؟\n]/)[0] || u.body).trim().slice(0,140); speechText += u.title + '. ' + first + '. '; }
+    const carB = (u.carId && carNameById(u.carId)) ? `<span class="b car">🚗 ${esc(carNameById(u.carId))}</span>` : '';
+    const vals = (u.values||[]).length ? `<div style="margin:4px 0">${u.values.map(v=>`<span class="val" style="border:1px solid var(--amber-500);border-radius:7px;padding:1px 8px;font-size:12px">${esc(v)}</span>`).join(' ')}</div>` : '';
+    return `<div class="fact"><b class="ft">${esc(u.title)}</b><div>${hl(body)}</div>${vals}
+      <span class="cite">منبع: ${esc(u.srcName)} · ${esc(u.page)}</span> ${carB}</div>`;
+  }).join('');
+  const cs = causalFor(qf);
+  let cHtml = cs.length ? '<div class="causal"><b>🔍 اگر اندازه‌گیری خارج از محدوده بود، فرضیه‌های محتمل:</b><ol style="padding-right:18px;margin:6px 0 0">'
+    + cs[0].causes.map(x=>`<li>${esc(x)}</li>`).join('') + '</ol></div>' : '';
+  if (good.length > 2 || good.some(x => String(x.u.body).length > 140)) speechText += 'جزئیات کامل روی صفحه است.';
+  return {safety, speech:speechText, html: hook + facts + cHtml};
+}
+
+/* ==================== عدد گفتاری ==================== */
+const NUM_WORDS = {'صفر':0,'یک':1,'دو':2,'سه':3,'چهار':4,'پنج':5,'شش':6,'هفت':7,'هشت':8,'نه':9,'ده':10,
+  'یازده':11,'دوازده':12,'سیزده':13,'چهارده':14,'پانزده':15,'پونزده':15,'شانزده':16,'شونزده':16,
+  'هفده':17,'هجده':18,'هیجده':18,'نوزده':19,'بیست':20,'سی':30,'چهل':40,'پنجاه':50,'شصت':60,
+  'هفتاد':70,'هشتاد':80,'نود':90,'صد':100};
+function parseFaNum(s){
+  let total = 0;
+  for (const p of String(s).split(/و/).map(x=>x.trim()).filter(Boolean)){
+    const v = NUM_WORDS[p];
+    if (v === undefined) return null;
+    total += v;
+  }
+  return total;
+}
+function spokenNumber(text){
+  const t = String(text||'').replace(/[۰-۹]/g, d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+  if (/\d/.test(t)){
+    const m = t.match(/\d+(?:[٫.]\d+)?/);
+    return m ? m[0].replace('٫','.') : null;
+  }
+  const dec = t.match(/([\p{L}\s]+?)\s*(?:ممیز|و)\s*([\p{L}\s]+?)\s*(دهم|صدم|هزارم)\b/u);
+  if (dec){
+    const ip = parseFaNum(dec[1].trim()), fpp = parseFaNum(dec[2].trim());
+    if (ip != null && fpp != null){
+      const div = dec[3]==='دهم' ? 10 : dec[3]==='صدم' ? 100 : 1000;
+      return String(parseFloat((ip + fpp/div).toFixed(3)));
+    }
+  }
+  const whole = t.match(/(?:^|\s)((?:[\p{L}]+\s*(?:و\s*)?)+)\s*(?:ولت|اهم|آمپر|بار|هرتز|\.|$)/u);
+  if (whole){
+    const v = parseFaNum(whole[1].trim());
+    if (v != null && v > 0) return String(v);
+  }
+  return null;
+}
+function numSpeechNote(text){ return ''; }
+
+/* ==================== جریان چت ==================== */
+async function ask(q, fromMic){
+  q = (q||'').trim(); if (!q) return;
+  status('دارم در دانش‌نامه جستجو می‌کنم…');
+  const corrected = correctTypos(q);
+  const wasFixed = norm(corrected) !== norm(q) ? corrected : '';
+  let a;
+  try { a = await answer(corrected, q); }
+  catch(e){ console.error(e); status('خطا در جواب‌دادن — دوباره امتحان کن، یا اول یک بار اپ اصلی را باز کن'); return; }
+  const log = $('log');
+  const wrap = document.createElement('div');
+  wrap.innerHTML =
+    `<div class="msg u">${esc(q)}${wasFixed ? '<br><span class="fixednote">✎ برداشت من: «'+esc(wasFixed)+'»</span>' : ''}${numSpeechNote(q)}</div>`
+    + (a.safety||'')
+    + `<div class="msg m">${a.html}</div>`;
+  log.appendChild(wrap);
+  window.scrollTo(0, document.body.scrollHeight);
+  LAST_SPEECH = a.speech || '';
+  status(LOOP ? 'جواب می‌آید؛ بعدش دوباره گوش می‌دهم…' : 'جواب می‌آید…');
+  speak(LAST_SPEECH);
+}
+
+function sendText(){
+  const i = $('qIn'); const q = (i.value||'').trim();
+  if (!q) return;
+  i.value = '';
+  stopListen();
+  try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch(e){}
+  ask(q, false);
+}
+document.addEventListener('keydown', ev => { if (ev.key === 'Enter' && ev.target && ev.target.id === 'qIn'){ ev.preventDefault(); sendText(); } });
+
+/* ==================== چیپ‌ها ==================== */
+async function renderChips(){
+  const all = await getLiveUnits();
+  const ac = activeCarId();
+  const pool = all.filter(u => !u.offdomain && (!ac || !u.carId || String(u.carId)===String(ac)))
+    .sort((a,b)=>((b.pin?1:0)-(a.pin?1:0)) || (b.quality||0)-(a.quality||0));
+  $('chips').innerHTML = pool.slice(0,6).map(u =>
+    `<button class="chip" data-q="${esc(u.title)}">${u.pin ? '⭐ ' : ''}${esc(u.title)}</button>`).join('');
+  $('chips').querySelectorAll('.chip').forEach(c => c.onclick = () => ask(c.dataset.q, false));
+}
+
+/* ==================== راه‌اندازی ==================== */
+openDB()
+  .then(async () => { await loadCars(); await renderChips(); })
+  .catch(() => { status('دیتابیس باز نشد — اول یک بار اپ اصلی را باز کن'); });
+</script>
+<script>
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js', {updateViaCache: 'none'})
+      .then(function (r) { if (r && r.update) r.update(); })
+      .catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
